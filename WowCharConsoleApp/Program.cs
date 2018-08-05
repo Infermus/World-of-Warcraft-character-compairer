@@ -14,11 +14,6 @@ namespace WowCharConsoleApp
         {
             APIConnection apiConnection = new APIConnection();
 
-            HttpClient client = apiConnection.ConfigureHttpClient(new Uri(APIConf.CharacterAPIAddress), APIConf.ApiRequestTimeoutInSec);
-            HttpResponseMessage response = await apiConnection.GetResponseFromAPI(client);
-
         }
-
-
     }
 }

@@ -40,8 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CharacterModel.cs" />
     <Compile Include="APIConnection.cs" />
     <Compile Include="Configuration\APIConf.cs" />
+    <Compile Include="Configuration\BlizzardAPIProfileFields.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
