@@ -1,26 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using WowCharComparerLib;
+using WowCharComparerLib.Enums;
+using WowCharComparerWPF.Enums;
 
 namespace WowCharComparerWPF
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-        }
+            RealmComboBox.ItemsSource = Enum.GetValues(typeof(BlizzardRealms));
+            EULocateComboBox.ItemsSource = Enum.GetValues(typeof(EULocate));
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-             JsonResultTextBox.Text  = BlizzardAPIManager.GetDataAsJsonFromUrl();
         }
     }
 }
