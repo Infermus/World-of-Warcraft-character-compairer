@@ -41,10 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CharacterModel.cs" />
-    <Compile Include="APIConnection.cs" />
+    <Compile Include="BlizzardAPIManager.cs" />
     <Compile Include="Configuration\APIConf.cs" />
     <Compile Include="Configuration\BlizzardAPIProfileFields.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Enums\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
