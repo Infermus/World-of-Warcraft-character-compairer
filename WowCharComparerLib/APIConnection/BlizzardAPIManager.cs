@@ -58,12 +58,12 @@ namespace WowCharComparerLib.APIConnection
         }
 
         //example: https://eu.api.battle.net/wow/character/burning-legion/Selectus?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
-        private static Uri GenerateAPIRequestLink(string characterName, string realm, BlizzardLocales locale)
+        private static Uri GenerateAPIRequestLink(string characterName, BlizzardRealm realm)
         {
             string generatedLink = String.Format("{0}/{1}/{2}?locale={3}&apikey={4}", APIConf.BlizzardAPICharacterAddress,
-                                                                                      realm,
+                                                                                      realm.slag,
                                                                                       characterName,
-                                                                                      locale.ToString(),
+                                                                                      realm.locale,
                                                                                       APIConf.APIKey);
             return new Uri(generatedLink);
         }

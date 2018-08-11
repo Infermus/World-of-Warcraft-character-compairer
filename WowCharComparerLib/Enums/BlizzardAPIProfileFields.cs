@@ -12,6 +12,20 @@ namespace WowCharComparerLib.Enums
         Appearance,
         Feed,
         Guild,
-        // TODO add rest
+        HunterPets,
+        Items,
+        Mounts,
+        Pets,
+        PetSlots,
+        Professions,
+        Progression,
+        PVP, // :)))
+        Quests,
+        Reputation,
+        Statistic,
+        Stats,
+        Talents,
+        Title,
+        Audit
     }
 }

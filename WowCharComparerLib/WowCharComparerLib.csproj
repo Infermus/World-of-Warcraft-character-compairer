@@ -47,8 +47,6 @@
     <Compile Include="APIConnection\BlizzardAPIManager.cs" />
     <Compile Include="Configuration\APIConf.cs" />
     <Compile Include="Enums\BlizzardAPIProfileFields.cs" />
-    <Compile Include="Enums\BlizzardRealms.cs" />
-    <Compile Include="Enums\BlizzardLocales.cs" />
     <Compile Include="Models\Achievements.cs" />
     <Compile Include="Models\CharacterModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
