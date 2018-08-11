@@ -51,6 +51,8 @@
     <Compile Include="Enums\BlizzardLocales.cs" />
     <Compile Include="Models\Achievements.cs" />
     <Compile Include="Models\CharacterModel.cs" />
+    <Compile Include="Models\Realms.cs" />
+    <Compile Include="Models\RealmStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

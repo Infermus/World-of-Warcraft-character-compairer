@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using WowCharComparerLib.Configuration;
 using WowCharComparerLib.Enums;
 using WowCharComparerLib.Models;
+using Newtonsoft.Json;
 
 namespace WowCharComparerLib.APIConnection
 {
@@ -66,6 +67,11 @@ namespace WowCharComparerLib.APIConnection
                                                                                       locale.ToString(),
                                                                                       APIConf.APIKey);
             return new Uri(generatedLink);
+        }
+
+        public static void DeserialiseJson<T>(string jsonToParse)
+        {
+            var parsedJson = JsonConvert.DeserializeObject<T>(jsonToParse);
         }
     }
 }
