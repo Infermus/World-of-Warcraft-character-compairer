@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
+using WowCharComparerLib.APIConnection;
 using WowCharComparerLib.Enums;
-using WowCharComparerWPF.Enums;
 
 namespace WowCharComparerWPF
 {
@@ -10,9 +10,14 @@ namespace WowCharComparerWPF
         public MainWindow()
         {
             InitializeComponent();
-            RealmComboBox.ItemsSource = Enum.GetValues(typeof(BlizzardRealms));
-            EULocateComboBox.ItemsSource = Enum.GetValues(typeof(EULocate));
+            RealmComboBox.ItemsSource = Enum.GetValues(typeof(BlizzardRealms.BlizzardRealmEnum));
+            EULocateComboBox.ItemsSource = Enum.GetValues(typeof(BlizzardLocales));
+        }
 
+        private async void GetApiDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            var result = await BlizzardAPIManager.GetCharacterDataAsJsonAsync("Selectus", BlizzardRealms.GetWrappedBlizzardRealm(BlizzardRealms.BlizzardRealmEnum.BurningLegion), BlizzardLocales.en_GB);
+            apiresponsetextbox_temp.Text = result.Data;
         }
     }
 }

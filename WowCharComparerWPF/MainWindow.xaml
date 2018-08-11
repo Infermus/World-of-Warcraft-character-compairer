@@ -13,5 +13,7 @@
         </Grid.ColumnDefinitions>
         <ComboBox x:Name="RealmComboBox" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top" Width="120"/>
         <ComboBox x:Name="EULocateComboBox" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="GetApiDataButton" Content="GetData" HorizontalAlignment="Left" Margin="166,102,0,0" VerticalAlignment="Top" Width="75" Click="GetApiDataButton_Click"/>
+        <TextBox x:Name="apiresponsetextbox_temp" HorizontalAlignment="Left" Height="259" Margin="10,150,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="231"/>
     </Grid>
 </Window>

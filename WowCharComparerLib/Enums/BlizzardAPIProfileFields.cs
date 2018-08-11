@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WowCharComparerLib.Configuration
+namespace WowCharComparerLib.Enums
 {
     public enum BlizzardAPIProfileFields
     {
