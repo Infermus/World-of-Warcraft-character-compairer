@@ -2,7 +2,7 @@
 
 namespace WowCharComparerLib.Models
 {
-    class CharacterModel
+    public class CharacterModel
     {
         public long LastModified { get; set; }
 
