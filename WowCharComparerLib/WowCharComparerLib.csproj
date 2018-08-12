@@ -43,13 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\BlizzardAPIFields\RealmFields.cs" />
+    <Compile Include="Enums\BlizzardAPIProfiles.cs" />
     <Compile Include="Models\BlizzardAPIResponse.cs" />
     <Compile Include="APIConnection\BlizzardAPIManager.cs" />
     <Compile Include="Configuration\APIConf.cs" />
-    <Compile Include="Enums\BlizzardAPIProfileFields.cs" />
+    <Compile Include="Enums\BlizzardAPIFields\CharacterFields.cs" />
     <Compile Include="Models\Achievements.cs" />
     <Compile Include="Models\CharacterModel.cs" />
-    <Compile Include="Models\Realms.cs" />
+    <Compile Include="Models\Realm.cs" />
     <Compile Include="Models\RealmStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -5,15 +5,52 @@ using WowCharComparerLib.Configuration;
 using WowCharComparerLib.Enums;
 using WowCharComparerLib.Models;
 using Newtonsoft.Json;
+using WowCharComparerLib.Enums.BlizzardAPIFields;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WowCharComparerLib.APIConnection
 {
-    public class BlizzardAPIManager
+    public static class BlizzardAPIManager
     {
-        public static async Task<BlizzardAPIResponse> GetCharacterDataAsJsonAsync(string characterName, string realm, BlizzardLocales locale)
+        ///<summary>Gets API data for character profile</summary>
+        public static async Task<BlizzardAPIResponse> GetAPIDataAsJsonAsync(BlizzardAPIProfiles profile, Realm realm, string characterName, List<CharacterFields> characterFields)
+        {
+            List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+
+            if (characterFields.Any())
+            {
+                string localFields = string.Empty;
+
+                foreach (CharacterFields field in characterFields)
+                {
+                    string lowerField = field.ToString().ToLower();
+                    localFields = localFields.AddFieldToUrl(lowerField);
+                }
+
+                localFields = localFields.EndsWith("%2C+") ? localFields.Remove(localFields.Length - 4, 4) : localFields;
+
+                parameters.Add(new KeyValuePair<string, string>("?fields", localFields));
+            }
+
+            parameters.Add(new KeyValuePair<string, string>("locale", realm.Locale));
+            parameters.Add(new KeyValuePair<string, string>("apikey", APIConf.APIKey));
+
+
+            Uri uriAddress = GenerateAPIRequestLink(BlizzardAPIProfiles.Character, parameters, realm.Slug, characterName);
+            return await GetDataByHttpClient(uriAddress);
+        }
+
+        ///<summary>Gets API data for realm status</summary>
+        //public static async Task<BlizzardAPIResponse> GetAPIDataAsJsonAsync(BlizzardAPIProfiles profile, RealmFields realmField, Realm realm)
+        //{
+        //    Uri uriAddress = GenerateAPIRequestLink(profile, realmField, realm);
+        //    return await GetDataByHttpClient(uriAddress);
+        //}
+
+        private static async Task<BlizzardAPIResponse> GetDataByHttpClient(Uri uriAddress)
         {
             BlizzardAPIResponse blizzardAPIResponse = new BlizzardAPIResponse();
-            Uri uriAddress = GenerateAPIRequestLink(characterName, realm, locale);
 
             try
             {
@@ -34,44 +71,71 @@ namespace WowCharComparerLib.APIConnection
             return blizzardAPIResponse;
         }
 
-        public static BlizzardAPIResponse GetCharacterDataAsJson(string characterName, string realm, BlizzardLocales locale)
-        {
-            BlizzardAPIResponse blizzardAPIResponse = new BlizzardAPIResponse();
-            Uri uriAddress = GenerateAPIRequestLink(characterName, realm, locale);
-
-            try
-            {
-                using (HttpClient httpClient = new HttpClient())
-                {
-                    blizzardAPIResponse.Data = httpClient.GetStringAsync(uriAddress.AbsoluteUri).Result;
-                }
-            }
-            catch (Exception ex)
-            {
-                blizzardAPIResponse = new BlizzardAPIResponse()
-                {
-                    Data = string.Empty,
-                    Exception = ex
-                };
-            }
-
-            return blizzardAPIResponse;
-        }
-
         //example: https://eu.api.battle.net/wow/character/burning-legion/Selectus?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
-        private static Uri GenerateAPIRequestLink(string characterName, BlizzardRealm realm)
+        //         https://eu.api.battle.net/wow/achievement/2144?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
+        //         https://eu.api.battle.net/wow/guild/burning-legion/united%20katharsis?fields=challenge&locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
+
+        private static Uri GenerateAPIRequestLink(BlizzardAPIProfiles profile, List<KeyValuePair<string,string>> parameters, string endPointPart1 = null, string endPointPart2 = null)
         {
-            string generatedLink = String.Format("{0}/{1}/{2}?locale={3}&apikey={4}", APIConf.BlizzardAPICharacterAddress,
-                                                                                      realm.slag,
-                                                                                      characterName,
-                                                                                      realm.locale,
-                                                                                      APIConf.APIKey);
-            return new Uri(generatedLink);
+            string apiHttpAddress = string.Empty;
+
+            apiHttpAddress = apiHttpAddress.AddToEndPointSampleToUrl(APIConf.BlizzardAPICharacterCoreAddress);
+
+            apiHttpAddress = apiHttpAddress.AddToEndPointSampleToUrl(profile.ToString().ToLower());
+            apiHttpAddress = apiHttpAddress.AddToEndPointSampleToUrl(endPointPart1);
+            apiHttpAddress = apiHttpAddress.AddToEndPointSampleToUrl(endPointPart2);
+
+            apiHttpAddress = apiHttpAddress.EndsWith("/") ? apiHttpAddress.Remove(apiHttpAddress.Length - 1, 1) : apiHttpAddress;
+
+            foreach (KeyValuePair<string, string> parameter in parameters)
+            {
+                apiHttpAddress = apiHttpAddress.AddParameterToUrl(parameter.Key + "=" + parameter.Value);
+            }
+
+            apiHttpAddress = apiHttpAddress.EndsWith("&") ? apiHttpAddress.Remove(apiHttpAddress.Length - 1, 1) : apiHttpAddress;
+
+            return new Uri(apiHttpAddress);
         }
 
-        public static void DeserialiseJson<T>(string jsonToParse)
+        private static string AddToEndPointSampleToUrl(this string baseText, string textToAdd)
         {
-            var parsedJson = JsonConvert.DeserializeObject<T>(jsonToParse);
+            string localText = baseText;
+
+            if (String.IsNullOrEmpty(textToAdd) == false)
+            {
+                localText = baseText + textToAdd + "/";
+            }
+
+            return localText;
+        }
+
+        private static string AddParameterToUrl(this string baseText, string textToAdd)
+        {
+            string localText = baseText;
+
+            if (String.IsNullOrEmpty(textToAdd) == false)
+            {
+                localText = baseText + textToAdd + "&";
+            }
+
+            return localText;
+        }
+
+        private static string AddFieldToUrl(this string baseText, string textToAdd)
+        {
+            string localText = baseText;
+
+            if (String.IsNullOrEmpty(textToAdd) == false)
+            {
+                localText = baseText + textToAdd + "%2C+";
+            }
+
+            return localText;
+        }
+
+        public static T DeserializeJsonData<T>(string jsonToParse) where T : class
+        {
+            return JsonConvert.DeserializeObject<T>(jsonToParse);
         }
     }
 }

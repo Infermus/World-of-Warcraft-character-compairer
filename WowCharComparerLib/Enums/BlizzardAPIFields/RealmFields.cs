@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WowCharComparerLib.Models
+namespace WowCharComparerLib.Enums.BlizzardAPIFields
 {
-    class RealmStatus
+    public enum RealmFields
     {
-        public List<Realm> Realms { get; set; }
+        Status
     }
 }

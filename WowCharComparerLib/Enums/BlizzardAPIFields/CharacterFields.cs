@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WowCharComparerLib.Enums
+namespace WowCharComparerLib.Enums.BlizzardAPIFields
 {
-    public enum BlizzardAPIProfileFields
+    public enum CharacterFields
     {
         Achievements,
         Appearance,
