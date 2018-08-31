@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using WowCharComparerLib.APIConnection;
 using WowCharComparerLib.Enums;
@@ -31,13 +30,13 @@ namespace WowCharComparerWPF
         {
             var result = await BlizzardAPIManager.GetAPIDataAsJsonAsync(BlizzardAPIProfiles.Character,
                                                                         new Realm("burning-legion", "en_GB"),
-                                                                        "Selectus",
+                                                                        "Wykminiacz",
                                                                         new List<CharacterFields>()
                                                                         {
-                                                                            CharacterFields.PVP,
-                                                                            CharacterFields.Quests,
-                                                                            CharacterFields.Guild,
+                                                                           CharacterFields.Title
+                                                                            
                                                                         });
+            //Remember to rebuild library everytime you changed fields
 
             apiresponsetextbox_temp.Text = result.Data;
             CharacterModel model = BlizzardAPIManager.DeserializeJsonData<CharacterModel>(result.Data);

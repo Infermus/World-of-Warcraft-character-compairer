@@ -70,7 +70,6 @@ namespace WowCharComparerLib.APIConnection
 
             return blizzardAPIResponse;
         }
-
         //example: https://eu.api.battle.net/wow/character/burning-legion/Selectus?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
         //         https://eu.api.battle.net/wow/achievement/2144?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
         //         https://eu.api.battle.net/wow/guild/burning-legion/united%20katharsis?fields=challenge&locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64

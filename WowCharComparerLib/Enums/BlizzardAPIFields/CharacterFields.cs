@@ -1,31 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace WowCharComparerLib.Enums.BlizzardAPIFields
 {
     public enum CharacterFields
     {
-        Achievements,
-        Appearance,
-        Feed,
-        Guild,
-        HunterPets,
-        Items,
-        Mounts,
-        Pets,
-        PetSlots,
-        Professions,
-        Progression,
-        PVP, // :)))
-        Quests,
-        Reputation,
-        Statistic,
-        Stats,
-        Talents,
-        Title,
-        Audit
+        Achievements, // Completed
+        Appearance, // Completed
+        Feed, // TODO
+        Guild, // Completed
+        HunterPets, // TODO Wrong URL Link
+        Items, // Completed
+        Mounts, // Completed
+        Pets, // Completed
+        PetSlots, // TODO Wrong URL Link
+        Professions, // Completed
+        Progression, // Completed
+        PVP, // :))) Completed :)))
+        Quests, // Completed
+        Reputation, // Completed
+        Statistic, // TODO Wrong URL Link
+        Stats, // Completed
+        Talents, // Completed
+        Title, // TODO Wrong URL Link
+        Audit // TODO
     }
 }
