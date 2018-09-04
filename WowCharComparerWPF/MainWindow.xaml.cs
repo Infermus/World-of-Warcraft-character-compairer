@@ -30,10 +30,11 @@ namespace WowCharComparerWPF
         {
             var result = await BlizzardAPIManager.GetAPIDataAsJsonAsync(BlizzardAPIProfiles.Character,
                                                                         new Realm("burning-legion", "en_GB"),
-                                                                        "Wykminiacz",
+                                                                        "Avvril",
                                                                         new List<CharacterFields>()
                                                                         {
-                                                                           CharacterFields.Title
+                                                                           CharacterFields.PetSlots,
+                                                                           CharacterFields.Guild
                                                                             
                                                                         });
             //Remember to rebuild library everytime you changed fields

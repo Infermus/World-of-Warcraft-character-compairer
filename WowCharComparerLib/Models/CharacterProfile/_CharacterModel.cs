@@ -6,7 +6,6 @@ using WowCharComparerLib.Models.CharacterProfile.HunterPets;
 using WowCharComparerLib.Models.CharacterProfile.Items;
 using WowCharComparerLib.Models.CharacterProfile.Mounts;
 using WowCharComparerLib.Models.CharacterProfile.Pets;
-using WowCharComparerLib.Models.CharacterProfile.PetSlots;
 using WowCharComparerLib.Models.CharacterProfile.Progression;
 using WowCharComparerLib.Models.CharacterProfile.Pvp;
 using WowCharComparerLib.Models.CharacterProfile.Reputation;
@@ -58,7 +57,7 @@ namespace WowCharComparerLib.Models
 
         public Pets Pets { get; set; }
 
-        public PetSlots PetSlots { get; set; }
+        public PetSlots[] PetSlots { get; set; }
 
         public Professions Professions { get; set; }
 

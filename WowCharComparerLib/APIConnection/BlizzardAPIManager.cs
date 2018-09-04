@@ -24,8 +24,8 @@ namespace WowCharComparerLib.APIConnection
 
                 foreach (CharacterFields field in characterFields)
                 {
-                    string lowerField = field.ToString().ToLower();
-                    localFields = localFields.AddFieldToUrl(lowerField);
+                    string wrappedField = EnumDictonaryWrapper.characterFieldsDicWrapper[field];
+                    localFields = localFields.AddFieldToUrl(wrappedField);
                 }
 
                 localFields = localFields.EndsWith("%2C+") ? localFields.Remove(localFields.Length - 4, 4) : localFields;

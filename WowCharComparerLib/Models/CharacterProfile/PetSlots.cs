@@ -1,5 +1,7 @@
 ﻿
-namespace WowCharComparerLib.Models.CharacterProfile.PetSlots
+using System;
+
+namespace WowCharComparerLib.Models.CharacterProfile
 {
     public class PetSlots
     {
@@ -11,6 +13,6 @@ namespace WowCharComparerLib.Models.CharacterProfile.PetSlots
 
         public bool IsLocked { get; set; }
 
-        public Abilities [] Abilities { get; set; }
+        public short[] Abilities { get; set; }
     }
 }

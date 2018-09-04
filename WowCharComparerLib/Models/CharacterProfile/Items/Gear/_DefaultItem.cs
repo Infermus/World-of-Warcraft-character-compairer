@@ -23,7 +23,7 @@ namespace WowCharComparerLib.Models.CharacterProfile.Items.Gear
 
         public string Context { get; set; }
 
-        public int [] BonusLists { get; set; } //TODO in progress, throwing null
+        public int [] BonusLists { get; set; }
 
         public int ArtifactId { get; set; }
 
