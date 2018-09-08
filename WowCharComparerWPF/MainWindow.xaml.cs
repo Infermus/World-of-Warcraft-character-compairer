@@ -33,9 +33,7 @@ namespace WowCharComparerWPF
                                                                         "Avvril",
                                                                         new List<CharacterFields>()
                                                                         {
-                                                                           CharacterFields.PetSlots,
-                                                                           CharacterFields.Guild
-                                                                            
+                                                                            CharacterFields.PVP
                                                                         });
             //Remember to rebuild library everytime you changed fields
 

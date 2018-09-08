@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WowCharComparerLib.Enums.BlizzardAPIFields;
 
 namespace WowCharComparerLib.Enums
@@ -13,13 +9,23 @@ namespace WowCharComparerLib.Enums
         {
             { CharacterFields.Achievements, "achievements" },
             { CharacterFields.Appearance, "appearance" },
-            { CharacterFields.Items, "items" },
+            { CharacterFields.Feed, "feed" },
             { CharacterFields.Guild, "guild" },
-            { CharacterFields.PetSlots, "petSlots" },
-            //TODO add rest;
-
             { CharacterFields.HunterPets, "hunterPets" },
+            { CharacterFields.Items, "items" },
+            { CharacterFields.Mounts, "mounts" },
+            { CharacterFields.Pets, "pets" },
+            { CharacterFields.PetSlots, "petSlots" },
+            { CharacterFields.Professions, "professions" },
+            { CharacterFields.Progression, "progression" },
+            { CharacterFields.PVP, "pvp" },
+            { CharacterFields.Quests, "quests" },
+            { CharacterFields.Reputation, "reputation" },
+            { CharacterFields.Statistics, "statistics" },
+            { CharacterFields.Stats, "stats" },
+            { CharacterFields.Talents, "talents" },
+            { CharacterFields.Titles, "titles" },
+            { CharacterFields.Audit, "audit" },
         };
-
     }
 }

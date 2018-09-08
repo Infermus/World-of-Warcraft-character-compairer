@@ -98,6 +98,7 @@
     <Compile Include="Models\CharacterProfile\Pvp\Pvp.cs" />
     <Compile Include="Models\CharacterProfile\Pvp\PvPModel.cs" />
     <Compile Include="Models\CharacterProfile\Reputation.cs" />
+    <Compile Include="Models\CharacterProfile\Statistics\Model.cs" />
     <Compile Include="Models\CharacterProfile\Statistics\Statistics.cs" />
     <Compile Include="Models\CharacterProfile\Statistics\Stats.cs" />
     <Compile Include="Models\CharacterProfile\Statistics\SubCat.cs" />

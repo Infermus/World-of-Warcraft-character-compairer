@@ -2,12 +2,8 @@
 
 namespace WowCharComparerLib.Models.CharacterProfile.Statistics
 {
-    public class SubCategories
+    public class SubCategories : Model
     {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
         [JsonProperty(PropertyName = "Statistics")]
         public Stats [] Stats { get; set; }
 
