@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowCharComparerLib", "WowCh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowCharComparerWPF", "WowCharComparerWPF\WowCharComparerWPF.csproj", "{E671D65B-A144-491F-A146-C8DC2E8813A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowCharComparerWebApp", "WowCharComparerWebApp\WowCharComparerWebApp.csproj", "{5DD21260-0A5A-499C-8803-0A41DEF39FFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E671D65B-A144-491F-A146-C8DC2E8813A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E671D65B-A144-491F-A146-C8DC2E8813A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E671D65B-A144-491F-A146-C8DC2E8813A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
