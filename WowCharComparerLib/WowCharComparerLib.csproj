@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\BlizzardAPIFields\RealmFields.cs" />
     <Compile Include="Enums\BlizzardAPIProfiles.cs" />
     <Compile Include="Enums\EnumDictonaryWrapper.cs" />
     <Compile Include="Models\CharacterProfile\Appearance.cs" />

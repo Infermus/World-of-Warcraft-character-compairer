@@ -5,7 +5,7 @@ namespace WowCharComparerLib.Enums.BlizzardAPIFields
     {
         Achievements,
         Appearance,
-        Feed, // TODO
+        Feed, // TODO implement it if needed
         Guild,
         HunterPets,
         Items,
@@ -21,6 +21,6 @@ namespace WowCharComparerLib.Enums.BlizzardAPIFields
         Stats, 
         Talents, 
         Titles,
-        Audit // TODO
+        Audit // TODO implement it if needed
     }
 }

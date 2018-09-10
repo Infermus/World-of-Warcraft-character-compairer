@@ -41,13 +41,6 @@ namespace WowCharComparerLib.APIConnection
             return await GetDataByHttpClient(uriAddress);
         }
 
-        ///<summary>Gets API data for realm status</summary>
-        //public static async Task<BlizzardAPIResponse> GetAPIDataAsJsonAsync(BlizzardAPIProfiles profile, RealmFields realmField, Realm realm)
-        //{
-        //    Uri uriAddress = GenerateAPIRequestLink(profile, realmField, realm);
-        //    return await GetDataByHttpClient(uriAddress);
-        //}
-
         private static async Task<BlizzardAPIResponse> GetDataByHttpClient(Uri uriAddress)
         {
             BlizzardAPIResponse blizzardAPIResponse = new BlizzardAPIResponse();
@@ -70,10 +63,8 @@ namespace WowCharComparerLib.APIConnection
 
             return blizzardAPIResponse;
         }
-        //example: https://eu.api.battle.net/wow/character/burning-legion/Selectus?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
-        //         https://eu.api.battle.net/wow/achievement/2144?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
-        //         https://eu.api.battle.net/wow/guild/burning-legion/united%20katharsis?fields=challenge&locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
 
+        //example: https://eu.api.battle.net/wow/character/burning-legion/Selectus?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
         private static Uri GenerateAPIRequestLink(BlizzardAPIProfiles profile, List<KeyValuePair<string,string>> parameters, string endPointPart1 = null, string endPointPart2 = null)
         {
             string apiHttpAddress = string.Empty;

@@ -1,9 +1,7 @@
-﻿
-namespace WowCharComparerLib.Models.CharacterProfile.Feed
+﻿namespace WowCharComparerLib.Models.CharacterProfile.Feed
 {
     public class Feed : CharacterModel
     {
-            //TODO 
-
+        //TODO Feed add if needed
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace WowCharComparerLib.Configuration
+﻿namespace WowCharComparerLib.Configuration
 {
     public static class APIConf
     {
