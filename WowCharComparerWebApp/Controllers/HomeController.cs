@@ -19,37 +19,9 @@ namespace WowCharComparerWebApp.Controllers
             return View();
         }
 
-        public IActionResult About()
-        {
-            //ViewData["Message"] = "Your application description page.";
-            var result =  BlizzardAPIManager.GetAPIDataAsJsonAsync(BlizzardAPIProfiles.Character,
-                                                                        new Realm("burning-legion", "en_GB"),
-                                                                        "Avvril",
-                                                                        new List<CharacterFields>()
-                                                                        {
-                                                                            CharacterFields.PVP
-                                                                        }).Result;
-            ViewData["CharacterData"] = result.Data;
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public IActionResult CharacterCompaler()
-        {
-
-            return View();
         }
     }
 }

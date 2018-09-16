@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "CharacterComparatorView";
+}
+
+<h2>CharacterComparatorView</h2>
+
+<form action="GetFirstCharacterName" method="post">
+    <div class="input-group">
+
+        <div class="input-group-prepend">
+            <span class="input-group-text">Character Name:</span>
+        </div>
+
+        <input name="firstNickToCompare"
+               type="text"
+               aria-label="FirstCharacterName"
+               class="form-control"
+               placeholder="Write nick to compare">
+
+        <button type="submit" 
+                class="btn btn-secondary btn-sm pull-left">Pass nickname</button>
+    </div>
+</form>

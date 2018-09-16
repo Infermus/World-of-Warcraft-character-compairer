@@ -22,4 +22,4 @@ namespace WowCharComparerWebApp
                 .UseStartup<Startup>()
                 .Build();
     }
-}
+} 
