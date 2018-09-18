@@ -16,6 +16,16 @@ namespace WowCharComparerWebApp.Controllers
     {
         public IActionResult Index()
         {
+            //var result = BlizzardAPIManager.GetCharacterDataAsJsonAsync(
+            //                                                            new Realm("burning-legion", "en_GB"),
+            //                                                            "Avvril",
+            //                                                            new List<CharacterFields>()
+            //                                                            {
+            //                                                                CharacterFields.PVP
+            //                                                            }).Result;
+            BlizzardAPIResponse response = BlizzardAPIManager.GetRealmDataAsJsonAsync(Locale.en_GB, "status").Result;
+            RealmStatus realmStatus = BlizzardAPIManager.DeserializeJsonData<RealmStatus>(response.Data);
+
             return View();
         }
 

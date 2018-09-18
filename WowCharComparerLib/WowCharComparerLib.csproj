@@ -45,6 +45,9 @@
   <ItemGroup>
     <Compile Include="Enums\BlizzardAPIProfiles.cs" />
     <Compile Include="Enums\EnumDictonaryWrapper.cs" />
+    <Compile Include="Enums\Locale.cs" />
+    <Compile Include="Enums\Realms.cs" />
+    <Compile Include="Enums\Region.cs" />
     <Compile Include="Models\CharacterProfile\Appearance.cs" />
     <Compile Include="Models\CharacterProfile\Items\Gear\Back.cs" />
     <Compile Include="Models\CharacterProfile\Items\Gear\Chest.cs" />

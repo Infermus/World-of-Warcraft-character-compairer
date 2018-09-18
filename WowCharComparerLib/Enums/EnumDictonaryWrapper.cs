@@ -27,5 +27,15 @@ namespace WowCharComparerLib.Enums
             { CharacterFields.Titles, "titles" },
             { CharacterFields.Audit, "audit" },
         };
+
+
+        public static Dictionary<Realms, string> realmWrapper = new Dictionary<Realms, string>()
+        {
+            {Realms.AmanThul,"Aman'Thul" },
+            {Realms.BurningLegion,"Burning Legion" },
+
+            //TODO Add rest
+        };
+
     }
 }

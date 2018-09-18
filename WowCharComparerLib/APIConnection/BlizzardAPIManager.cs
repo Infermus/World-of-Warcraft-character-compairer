@@ -14,7 +14,7 @@ namespace WowCharComparerLib.APIConnection
     public static class BlizzardAPIManager
     {
         ///<summary>Gets API data for character profile</summary>
-        public static async Task<BlizzardAPIResponse> GetAPIDataAsJsonAsync(BlizzardAPIProfiles profile, Realm realm, string characterName, List<CharacterFields> characterFields)
+        public static async Task<BlizzardAPIResponse> GetCharacterDataAsJsonAsync(Realm realm, string characterName, List<CharacterFields> characterFields)
         {
             List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
 
@@ -41,6 +41,17 @@ namespace WowCharComparerLib.APIConnection
             return await GetDataByHttpClient(uriAddress);
         }
 
+        // https://eu.api.battle.net/wow/realm/status?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
+        public static async Task<BlizzardAPIResponse> GetRealmDataAsJsonAsync(Locale locale, string status)
+        {
+            List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+            parameters.Add(new KeyValuePair<string, string>("?locale", locale.ToString()));
+            parameters.Add(new KeyValuePair<string, string>("apikey", APIConf.APIKey));
+            Uri uriAddress = GenerateAPIRequestLink(BlizzardAPIProfiles.Realm, parameters, status);
+            return await GetDataByHttpClient(uriAddress);
+        }
+
+
         private static async Task<BlizzardAPIResponse> GetDataByHttpClient(Uri uriAddress)
         {
             BlizzardAPIResponse blizzardAPIResponse = new BlizzardAPIResponse();
@@ -65,7 +76,7 @@ namespace WowCharComparerLib.APIConnection
         }
 
         //example: https://eu.api.battle.net/wow/character/burning-legion/Selectus?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
-        private static Uri GenerateAPIRequestLink(BlizzardAPIProfiles profile, List<KeyValuePair<string,string>> parameters, string endPointPart1 = null, string endPointPart2 = null)
+        private static Uri GenerateAPIRequestLink(BlizzardAPIProfiles profile, List<KeyValuePair<string, string>> parameters, string endPointPart1 = null, string endPointPart2 = null)
         {
             string apiHttpAddress = string.Empty;
 

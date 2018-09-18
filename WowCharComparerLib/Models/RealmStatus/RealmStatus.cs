@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WowCharComparerLib.Models
 {
-    class RealmStatus
+    public class RealmStatus
     {
         public List<Realm> Realms { get; set; }
     }

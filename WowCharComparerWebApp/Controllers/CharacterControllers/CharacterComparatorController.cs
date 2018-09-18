@@ -13,10 +13,10 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             return View();
         }
 
-        public IActionResult GetFirstCharacterName(string firstNickToCompare)
+        public IActionResult GetFirstCharacterName(string firstNickToCompare, string secondNickToCompare)
         {
-            string passedInput = firstNickToCompare;
-
+            string firstTextBoxPassedInput = firstNickToCompare;
+            string secondTextBoxPassedInput = secondNickToCompare;
             return Ok();
         }
     }

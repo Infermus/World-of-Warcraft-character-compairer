@@ -7,18 +7,34 @@
 
 <form action="GetFirstCharacterName" method="post">
     <div class="input-group">
-
         <div class="input-group-prepend">
-            <span class="input-group-text">Character Name:</span>
+            <span class="input-group-text">Characters Name:</span>
         </div>
 
-        <input name="firstNickToCompare"
-               type="text"
-               aria-label="FirstCharacterName"
-               class="form-control"
-               placeholder="Write nick to compare">
+        <div class="form-inline">
 
-        <button type="submit" 
-                class="btn btn-secondary btn-sm pull-left">Pass nickname</button>
+
+            <input name="firstNickToCompare"
+                   type="text"
+                   aria-label="FirstCharacterName"
+                   class="form-control"
+                   placeholder="Write nick to compare"
+                   style="width: 200px" />
+
+           @Html.DropDownList("Region", 
+           new SelectList(Enum.GetValues(typeof(WowCharComparerLib.Enums.Region))),
+           WowCharComparerLib.Enums.Region.Europe)
+        </div>
+            <input name="secondNickToCompare"
+                   type="text"
+                   aria-label="FirstCharacterName"
+                   class="form-control"
+                   placeholder="Write nick to compare" 
+            style="width: 200px"/>
+
+        <button type="submit"
+                class="btn btn-secondary btn-sm pull-left">
+            Pass nickname
+        </button>
     </div>
 </form>
