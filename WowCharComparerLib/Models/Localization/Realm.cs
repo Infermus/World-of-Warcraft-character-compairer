@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WowCharComparerLib.Models
+namespace WowCharComparerLib.Models.Localization
 {
     public class Realm
     {

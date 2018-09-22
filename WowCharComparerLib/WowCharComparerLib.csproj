@@ -43,10 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APIConnection\Helpers\RequestLinkFormater.cs" />
+    <Compile Include="APIConnection\Helpers\ResponseResultFormater.cs" />
+    <Compile Include="APIConnection\RequestsRepository.cs" />
     <Compile Include="Enums\BlizzardAPIProfiles.cs" />
     <Compile Include="Enums\EnumDictonaryWrapper.cs" />
-    <Compile Include="Enums\Locale.cs" />
-    <Compile Include="Enums\Realms.cs" />
+    <Compile Include="Enums\Locale\EULocale.cs" />
+    <Compile Include="Enums\Locale\KRLocale.cs" />
+    <Compile Include="Enums\Locale\TWLocale.cs" />
+    <Compile Include="Enums\Locale\USLocale.cs" />
     <Compile Include="Enums\Region.cs" />
     <Compile Include="Models\CharacterProfile\Appearance.cs" />
     <Compile Include="Models\CharacterProfile\Items\Gear\Back.cs" />
@@ -122,8 +127,9 @@
     <Compile Include="Models\CharacterProfile\HunterPets\HunterPets.cs" />
     <Compile Include="Models\CharacterProfile\HunterPets\Spec.cs" />
     <Compile Include="Models\CharacterProfile\_CharacterModel.cs" />
-    <Compile Include="Models\RealmStatus\Realm.cs" />
-    <Compile Include="Models\RealmStatus\RealmStatus.cs" />
+    <Compile Include="Models\Localization\Realm.cs" />
+    <Compile Include="Models\Localization\RealmStatus.cs" />
+    <Compile Include="APIConnection\Models\RequestLocalization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,7 @@ namespace WowCharComparerLib.Enums
 {
     public static class EnumDictonaryWrapper
     {
-        public static Dictionary<CharacterFields, string> characterFieldsDicWrapper = new Dictionary<CharacterFields, string>()
+        public static Dictionary<CharacterFields, string> characterFieldsWrapper = new Dictionary<CharacterFields, string>()
         {
             { CharacterFields.Achievements, "achievements" },
             { CharacterFields.Appearance, "appearance" },
@@ -28,14 +28,12 @@ namespace WowCharComparerLib.Enums
             { CharacterFields.Audit, "audit" },
         };
 
-
-        public static Dictionary<Realms, string> realmWrapper = new Dictionary<Realms, string>()
+        public static Dictionary<Region, string> regionsWrapper = new Dictionary<Region, string>()
         {
-            {Realms.AmanThul,"Aman'Thul" },
-            {Realms.BurningLegion,"Burning Legion" },
-
-            //TODO Add rest
+            { Region.Europe, "EU" },
+            { Region.America, "US" },
+            { Region.Korea, "KR" },
+            { Region.Taiwan, "TW" }
         };
-
     }
 }

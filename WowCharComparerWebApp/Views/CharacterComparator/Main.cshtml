@@ -1,18 +1,30 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "CharacterComparatorView";
+
+    HashSet<string> realmListTest = new HashSet<string>()
+    {
+        "burning-legion"
+    };
 }
 
 <h2>CharacterComparatorView</h2>
 
-<form action="GetFirstCharacterName" method="post">
+
+<form action="CompareResult" method="post">
+    
+    Regions
+    @Html.DropDownList("Region",
+                 new SelectList(WowCharComparerLib.Enums.EnumDictonaryWrapper.regionsWrapper.Keys))
+
+    Realms
+    @Html.DropDownList("Realm", new SelectList(realmListTest))
+
+
     <div class="input-group">
         <div class="input-group-prepend">
             <span class="input-group-text">Characters Name:</span>
         </div>
-
         <div class="form-inline">
-
 
             <input name="firstNickToCompare"
                    type="text"
@@ -20,17 +32,13 @@
                    class="form-control"
                    placeholder="Write nick to compare"
                    style="width: 200px" />
-
-           @Html.DropDownList("Region", 
-           new SelectList(Enum.GetValues(typeof(WowCharComparerLib.Enums.Region))),
-           WowCharComparerLib.Enums.Region.Europe)
         </div>
-            <input name="secondNickToCompare"
-                   type="text"
-                   aria-label="FirstCharacterName"
-                   class="form-control"
-                   placeholder="Write nick to compare" 
-            style="width: 200px"/>
+        <input name="secondNickToCompare"
+               type="text"
+               aria-label="FirstCharacterName"
+               class="form-control"
+               placeholder="Write nick to compare"
+               style="width: 200px" />
 
         <button type="submit"
                 class="btn btn-secondary btn-sm pull-left">

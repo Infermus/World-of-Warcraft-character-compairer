@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WowCharComparerLib.Enums
+namespace WowCharComparerLib.Enums.Locale
 {
-    public enum Region
+    public enum TWLocale
     {
-        Europe,
-        America,
-        Taiwan,
-        Korea
+        zh_TW
     }
 }
