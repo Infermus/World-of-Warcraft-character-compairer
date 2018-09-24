@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WowCharComparerLib.APIConnection.Helpers
 {
-    internal class ResponseResultFormater
+    public class ResponseResultFormater
     {
         public static T DeserializeJsonData<T>(string jsonToParse) where T : class
         {
