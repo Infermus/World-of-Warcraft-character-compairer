@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using WowCharComparerLib.APIConnection;
 using WowCharComparerLib.APIConnection.Models;
@@ -26,18 +29,9 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                 Realm = new Realm(realm, "en_GB")
             };
 
-            var realmResponse = RequestsRepository.GetRealmsDataAsJsonAsync(requestLocalization);
-
             BlizzardAPIResponse characterResponse = RequestsRepository.GetCharacterDataAsJsonAsync(firstNickToCompare, requestLocalization, new System.Collections.Generic.List<WowCharComparerLib.Enums.BlizzardAPIFields.CharacterFields>()).Result;
 
-            RealmStatus realmStatus = WowCharComparerLib.APIConnection.Helpers.ResponseResultFormater.DeserializeJsonData<RealmStatus>(realmResponse.Result.Data);
-
-            List<string> realms = new List<string>();
-
-            foreach (Realm realmsData in realmStatus.Realms)
-            {
-               realms.Add(realmsData.Name);
-            }
+            RealmStatusController.AddRealmsToList(requestLocalization);
             return View();
         }
     }
