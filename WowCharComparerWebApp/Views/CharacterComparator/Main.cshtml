@@ -5,20 +5,21 @@
     {
         "burning-legion"
     };
+
 }
 
 <h2>CharacterComparatorView</h2>
 
 
 <form action="CompareResult" method="post">
-    
+    @Html.Encode(ViewData["Realms"])
+
     Regions
     @Html.DropDownList("Region",
                  new SelectList(WowCharComparerLib.Enums.EnumDictonaryWrapper.regionsWrapper.Keys))
 
     Realms
-    @Html.DropDownList("Realm", new SelectList(realmListTest))
-
+    @*@Html.DropDownList("Realms", new SelectList(WowCharComparerWebApp.Controllers.RealmStatusController.AddRealmsToList()))*@
 
     <div class="input-group">
         <div class="input-group-prepend">
@@ -45,4 +46,5 @@
             Pass nickname
         </button>
     </div>
+
 </form>
