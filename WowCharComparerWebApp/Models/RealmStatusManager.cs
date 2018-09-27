@@ -1,21 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json.Linq;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using WowCharComparerLib.APIConnection;
 using WowCharComparerLib.APIConnection.Models;
-using WowCharComparerLib.Configuration;
-using WowCharComparerLib.Enums;
-using WowCharComparerLib.Models;
 using WowCharComparerLib.Models.Localization;
 
-namespace WowCharComparerWebApp.Controllers
+namespace WowCharComparerWebApp.Models
 {
-    public class RealmStatusController
+    public class RealmStatusManager
     {
-        public static List<string> AddRealmsToList(RequestLocalization requestLocalization)
+        public static List<string> GetRealmsList(string region)
         {
+
+            RequestLocalization requestLocalization = new RequestLocalization()
+            {
+                Realm = new Realm() { Locale = region }
+            };
+
             var realmResponse = RequestsRepository.GetRealmsDataAsJsonAsync(requestLocalization);
 
             RealmStatus realmStatus = WowCharComparerLib.APIConnection.Helpers.ResponseResultFormater.DeserializeJsonData<RealmStatus>(realmResponse.Result.Data);

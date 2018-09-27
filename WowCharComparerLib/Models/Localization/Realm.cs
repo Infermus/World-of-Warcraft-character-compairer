@@ -8,12 +8,6 @@ namespace WowCharComparerLib.Models.Localization
 {
     public class Realm
     {
-        public Realm(string slug, string locale)
-        {
-            Slug = slug;
-            Locale = locale;
-        }
-
         public string Type { get;  set; }
 
         public string Population { get;  set; }

@@ -16,6 +16,50 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
     {
         public IActionResult Main()
         {
+            string region = "en_GB"; // change it to real input
+
+            List<string> realms = new List<string>();
+
+            RequestLocalization requestLocalization = new RequestLocalization()
+            {
+                Realm = new Realm() { Locale = region }
+            };
+
+            var realmResponse = RequestsRepository.GetRealmsDataAsJsonAsync(requestLocalization);
+
+            RealmStatus realmStatus = WowCharComparerLib.APIConnection.Helpers.ResponseResultFormater.DeserializeJsonData<RealmStatus>(realmResponse.Result.Data);
+            foreach (Realm realmsData in realmStatus.Realms)
+            {
+                realms.Add(realmsData.Name);
+            }
+
+            ViewBag.ListOfRealms = realms;
+
+
+
+            return View();
+        }
+
+        public IActionResult LoadRealmData()
+        {
+            //string region = string.Empty; // TODO CHANGE!!
+            //List<string> realms = new List<string>();
+
+            //RequestLocalization requestLocalization = new RequestLocalization()
+            //{
+            //    Realm = new Realm() { Locale = region }
+            //};
+
+            //var realmResponse = RequestsRepository.GetRealmsDataAsJsonAsync(requestLocalization);
+
+            //RealmStatus realmStatus = WowCharComparerLib.APIConnection.Helpers.ResponseResultFormater.DeserializeJsonData<RealmStatus>(realmResponse.Result.Data);
+            //foreach (Realm realmsData in realmStatus.Realms)
+            //{
+            //    realms.Add(realmsData.Name);
+            //}
+
+            //ViewBag.ListOfRealms = realms;
+
             return View();
         }
 
@@ -26,12 +70,15 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             RequestLocalization requestLocalization = new RequestLocalization()
             {
                 CoreRegionUrlAddress = APIConf.BlizzardAPIWowEUAddress,
-                Realm = new Realm(realm, "en_GB")
+                Realm = new Realm()
+                {
+                    Slug = realm,
+                    Locale = "en_GB"
+                }
             };
 
             BlizzardAPIResponse characterResponse = RequestsRepository.GetCharacterDataAsJsonAsync(firstNickToCompare, requestLocalization, new System.Collections.Generic.List<WowCharComparerLib.Enums.BlizzardAPIFields.CharacterFields>()).Result;
 
-            RealmStatusController.AddRealmsToList(requestLocalization);
             return View();
         }
     }
