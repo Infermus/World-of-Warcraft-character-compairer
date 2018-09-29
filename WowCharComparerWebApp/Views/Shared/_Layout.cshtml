@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TITLE</title>
+    <title>WoW Comparator</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -27,12 +27,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">WowCharComparerWebApp</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Start</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="CharacterComparator" asp-action="Main">Character comparator</a></li>
+                    <li><a asp-area="" asp-controller="CharacterComparator" asp-action="Index">Character comparator</a></li>
+                    <li><a asp-area="" asp-controller="Login" asp-action="Index">Login</a></li>
                 </ul>
             </div>
         </div>
@@ -42,7 +42,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - WowCharComparerWebApp</p>
+            <p>&copy; 2018 - World Of Warcraft Comparator</p>
         </footer>
     </div>
 

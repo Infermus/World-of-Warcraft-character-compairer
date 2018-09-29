@@ -18,8 +18,4 @@
     <ProjectReference Include="..\WowCharComparerLib\WowCharComparerLib.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\CharacterComparator\" />
-  </ItemGroup>
-
 </Project>
