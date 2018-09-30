@@ -1,5 +1,5 @@
 ﻿
-namespace WowCharComparerWebApp.Models.CharacterProfile.Reputation
+namespace WowCharComparerWebApp.Models.CharacterProfile
 {
     public class Reputation
     {

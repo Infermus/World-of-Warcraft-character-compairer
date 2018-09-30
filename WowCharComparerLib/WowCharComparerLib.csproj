@@ -43,10 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="APIConnection\Helpers\RequestLinkFormater.cs" />
-    <Compile Include="APIConnection\Helpers\ResponseResultFormater.cs" />
-    <Compile Include="APIConnection\RequestsRepository.cs" />
-    <Compile Include="APIConnection\BlizzardAPIManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

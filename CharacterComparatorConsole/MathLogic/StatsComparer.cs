@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using WowCharComparerLib.Models;
+using WowCharComparerWebApp.Models;
+using WowCharComparerWebApp.Models.CharacterProfile;
 
 namespace CharacterComparatorConsole.MathLogic
 {

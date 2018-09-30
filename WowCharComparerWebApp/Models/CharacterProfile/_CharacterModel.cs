@@ -1,18 +1,17 @@
 ﻿using Newtonsoft.Json;
-using WowCharComparerWebApp.Models.CharacterProfile;
-using WowCharComparerWebApp.Models.CharacterProfile.Feed;
-using WowCharComparerWebApp.Models.CharacterProfile.Guild;
-using WowCharComparerWebApp.Models.CharacterProfile.HunterPets;
-using WowCharComparerWebApp.Models.CharacterProfile.Items;
-using WowCharComparerWebApp.Models.CharacterProfile.Mounts;
-using WowCharComparerWebApp.Models.CharacterProfile.Pets;
-using WowCharComparerWebApp.Models.CharacterProfile.Progression;
-using WowCharComparerWebApp.Models.CharacterProfile.Pvp;
-using WowCharComparerWebApp.Models.CharacterProfile.Reputation;
-using WowCharComparerWebApp.Models.CharacterProfile.Statistics;
-using WowCharComparerWebApp.Models.CharacterProfile.Talents;
+using WowCharComparerWebApp.Models.CharacterProfile.FeedModels;
+using WowCharComparerWebApp.Models.CharacterProfile.GuildModels;
+using WowCharComparerWebApp.Models.CharacterProfile.HunterPetsModels;
+using WowCharComparerWebApp.Models.CharacterProfile.MountsModels;
+using WowCharComparerWebApp.Models.CharacterProfile.PetsModels;
+using WowCharComparerWebApp.Models.CharacterProfile.ProfessionModels;
+using WowCharComparerWebApp.Models.CharacterProfile.ProgressionModels;
+using WowCharComparerWebApp.Models.CharacterProfile.PvpModels;
+using WowCharComparerWebApp.Models.CharacterProfile.StatisticsModels;
+using WowCharComparerWebApp.Models.CharacterProfile.TalentsModels;
+using WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Gear;
 
-namespace WowCharComparerWebApp.Models
+namespace WowCharComparerWebApp.Models.CharacterProfile
 {
     public class CharacterModel
     {
@@ -51,7 +50,7 @@ namespace WowCharComparerWebApp.Models
 
         public HunterPets [] HunterPets { get; set; }
 
-        public Items Items { get; set; }
+        public ItemsModels.Others.Items Items { get; set; }
 
         public Mounts Mounts { get; set; }
 
@@ -67,11 +66,11 @@ namespace WowCharComparerWebApp.Models
 
         public int [] Quests { get; set; }
 
-        public Reputation [] Reputation { get; set; }
+        public Reputation[] Reputation { get; set; }
 
         public Statistics Statistics { get; set; }
 
-        public CharacterProfile.Stats Stats { get; set; }
+        public Stats Stats { get; set; }
 
         public Talents [] Talents { get; set; }
 

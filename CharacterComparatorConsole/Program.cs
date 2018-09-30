@@ -1,9 +1,8 @@
 ﻿using CharacterComparatorConsole.MathLogic;
 using System.Collections.Generic;
-using WowCharComparerLib.APIConnection.Models;
-using WowCharComparerLib.Enums.BlizzardAPIFields;
-using WowCharComparerLib.Models;
-using WowCharComparerLib.Models.Localization;
+using WowCharComparerWebApp.Enums.BlizzardAPIFields;
+using WowCharComparerWebApp.Models.CharacterProfile;
+using WowCharComparerWebApp.Models.Servers;
 
 namespace CharacterComparatorConsole
 {
@@ -13,8 +12,8 @@ namespace CharacterComparatorConsole
         {
             RequestLocalization requestLocalization = new RequestLocalization()
             {
-                CoreRegionUrlAddress = WowCharComparerLib.Configuration.APIConf.BlizzardAPIWowEUAddress,
-                Realm = new Realm("burning-legion", "en_GB")
+                CoreRegionUrlAddress = WowCharComparerWebApp.Configuration.APIConf.BlizzardAPIWowEUAddress,
+                Realm = new Realm() {  Slug = "burning-legion", Locale = "en_GB"}
             };
 
             List<string> characterNamesToCompare = new List<string>
@@ -26,17 +25,17 @@ namespace CharacterComparatorConsole
             List<CharacterModel> parsedResultList = new List<CharacterModel>();
             foreach (string name in characterNamesToCompare)
             {
-                var result = WowCharComparerLib.APIConnection.RequestsRepository.GetCharacterDataAsJsonAsync(name,
+                var result = WowCharComparerWebApp.Data.RequestsRepository.GetCharacterDataAsJsonAsync(name,
                                                                             requestLocalization,
                                                                             new List<CharacterFields>()
                                                                             {
                                                                             CharacterFields.Stats
                                                                             }).Result;
 
-                CharacterModel parsedResult = WowCharComparerLib.APIConnection.Helpers.ResponseResultFormater.DeserializeJsonData<CharacterModel>(result.Data);
-                parsedResultList.Add(parsedResult);                                                       
+                CharacterModel parsedResult = WowCharComparerWebApp.Data.Helpers.ResponseResultFormater.DeserializeJsonData<CharacterModel>(result.Data);
+                parsedResultList.Add(parsedResult);
             }
-        
+
             StatsComparer.ComparePrimaryCharacterStats(parsedResultList);
 
         }
