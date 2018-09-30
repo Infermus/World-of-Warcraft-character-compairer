@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using WowCharComparerLib.APIConnection;
-using WowCharComparerLib.Enums;
-using WowCharComparerLib.Enums.BlizzardAPIFields;
-using WowCharComparerLib.Models;
 using WowCharComparerWebApp.Models;
 
 namespace WowCharComparerWebApp.Controllers

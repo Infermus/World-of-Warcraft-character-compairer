@@ -1,0 +1,14 @@
+﻿.single-character-column {
+    padding: 10px;
+    text-align: center;
+    margin: auto;
+    width: auto;
+    display: block;
+}
+
+.list-group {
+    max-height: 300px;
+    margin-bottom: 10px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}

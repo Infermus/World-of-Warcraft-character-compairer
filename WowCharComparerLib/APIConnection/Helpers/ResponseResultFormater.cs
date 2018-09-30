@@ -1,17 +1,24 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using Newtonsoft.Json;
+//using System;
 
-namespace WowCharComparerLib.APIConnection.Helpers
-{
-    public class ResponseResultFormater
-    {
-        public static T DeserializeJsonData<T>(string jsonToParse) where T : class
-        {
-            return JsonConvert.DeserializeObject<T>(jsonToParse);
-        }
-    }
-}
+//namespace WowCharComparerLib.APIConnection.Helpers
+//{
+//    public class ResponseResultFormater
+//    {
+//        public static T DeserializeJsonData<T>(string jsonToParse) where T : class
+//        {
+//            object deserializeObject = null;
+
+//            try
+//            {
+//                deserializeObject = JsonConvert.DeserializeObject<T>(jsonToParse);
+//            }
+//            catch (Exception)
+//            {
+//                deserializeObject = null;
+//            }
+
+//            return (T) deserializeObject;
+//        }
+//    }
+//}
