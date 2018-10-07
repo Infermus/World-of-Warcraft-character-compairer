@@ -10,6 +10,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             return View();
         }
 
+        //[Route("region-selected")]
         public IActionResult LoadRealmData()
         {
             //string region = string.Empty; // TODO CHANGE!!
