@@ -8,6 +8,8 @@ namespace CharacterComparatorConsole.MathLogic
     {
         public static List<KeyValuePair<Stats, decimal>> ComparePrimaryCharacterStats(List<CharacterModel> parsedResultList)
         {
+            List<KeyValuePair<Stats, decimal>> countedPrimaryStatsPercent = new List<KeyValuePair<Stats, decimal>>();
+
             try
             {
                 if (parsedResultList.Count == 2)
@@ -27,16 +29,16 @@ namespace CharacterComparatorConsole.MathLogic
                                                     Math.Max(parsedResultList[0].Stats.Sta, parsedResultList[1].Stats.Sta),
                                                     Math.Min(parsedResultList[0].Stats.Sta, parsedResultList[1].Stats.Sta)),
                     };
-                    List<KeyValuePair<Stats, decimal>> countedPrimaryStatsPercent = PrimaryStatsPercentCalculation(minMaxPrimaryStatsTuple);
 
-                    return countedPrimaryStatsPercent;
+                    countedPrimaryStatsPercent = PrimaryStatsPercentCalculation(minMaxPrimaryStatsTuple);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);               
             }
-            return new List<KeyValuePair<Stats, decimal>>();
+
+            return countedPrimaryStatsPercent;
         }
 
         public static List<KeyValuePair<Stats, decimal>> PrimaryStatsPercentCalculation(List<Tuple<Stats, int, int>> primaryStats)

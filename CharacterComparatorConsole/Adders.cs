@@ -10,12 +10,14 @@ namespace CharacterComparatorConsole
 
         public static string AddMinusToPrimaryStatPercent(string TextToAdd)
         {
+            string localText = string.Empty;
+
             if (!TextToAdd.Equals("0"))
             {
-                return "-" + TextToAdd + "%";
+                localText = "-" + TextToAdd + "%";
             }
-            return TextToAdd + "%";
-        }
 
+            return localText + "%";
+        }
     }
 }

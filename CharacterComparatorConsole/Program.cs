@@ -47,11 +47,10 @@ namespace CharacterComparatorConsole
             var countedPrimaryStatsPercent = StatsComparer.ComparePrimaryCharacterStats(parsedResultList);
             List<string> finalResultList = new List<string>();
 
-            for (int index = 0; index < 4; index++)
+            for (int index = 0; index < countedPrimaryStatsPercent.Count; index++)
             {
-                var result = primaryStatsList[index].Key > primaryStatsList[index].Value ?
-                 Adders.AddPlusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString()) :
-                 Adders.AddMinusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString());
+                string result = primaryStatsList[index].Key > primaryStatsList[index].Value ? Adders.AddPlusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString()) 
+                                                                                            : Adders.AddMinusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString());
 
                 finalResultList.Add(result);
             }
