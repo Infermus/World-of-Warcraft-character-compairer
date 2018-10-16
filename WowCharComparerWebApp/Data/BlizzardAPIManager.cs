@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WowCharComparerWebApp.Models;
 
@@ -15,6 +16,8 @@ namespace WowCharComparerWebApp.Data
             {
                 using (HttpClient httpClient = new HttpClient())
                 {
+                    //EUgdMwWv3xVgi0fERGdGHwP6EvSaPdfB58
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "EUgdMwWv3xVgi0fERGdGHwP6EvSaPdfB58");
                     blizzardAPIResponse.Data = await httpClient.GetStringAsync(uriAddress.AbsoluteUri);
                 }
             }
