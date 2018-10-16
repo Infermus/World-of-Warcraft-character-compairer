@@ -64,15 +64,17 @@ namespace CharacterComparatorConsole
             //        finalResultList.Add(new KeyValuePair<MathLogic.Stats, string>(countedPrimaryStatsPercentKeys[index], result));
             //    }
 
-            Dictionary<string, int> statisticDictionary = new Dictionary<string, int>();
+            Dictionary<int, string> statisticDictionary = new Dictionary<int, string>();
             Statistics JsonData = JsonProcessing.GetDataFromJsonFile(@"\Statistics.json");
 
             for (int index = 0; index < JsonData.BonusStats.Length; index++)
             {
-                statisticDictionary.Add(JsonData.BonusStats[index].Name, JsonData.BonusStats[index].Id);
+                statisticDictionary.Add(JsonData.BonusStats[index].Id, JsonData.BonusStats[index].Name);
                 //TODO There is a problem with names, versatility peforming two times 
                 //Check if both are needed, indexes: 35,62
             }
+
+            Console.WriteLine(statisticDictionary[7]);
            // return finalResultList;
         }      
     }
