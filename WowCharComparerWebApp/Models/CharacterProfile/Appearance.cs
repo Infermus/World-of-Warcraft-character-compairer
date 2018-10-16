@@ -17,6 +17,6 @@ namespace WowCharComparerWebApp.Models.CharacterProfile
 
         public bool ShowCloak { get; set; }
 
-        public int[] CustomDisplayOptions { get; set; }
+        public int [] CustomDisplayOptions { get; set; }
     }
 }

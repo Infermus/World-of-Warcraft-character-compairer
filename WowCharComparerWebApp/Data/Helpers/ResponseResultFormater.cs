@@ -13,9 +13,9 @@ namespace WowCharComparerWebApp.Data.Helpers
             {
                 deserializeObject = JsonConvert.DeserializeObject<T>(jsonToParse);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                deserializeObject = null;
+                deserializeObject = ex.Message;
             }
 
             return (T)deserializeObject;

@@ -68,7 +68,7 @@ namespace WowCharComparerWebApp.Models.CharacterProfile
 
         public Reputation[] Reputation { get; set; }
 
-        public Statistics Statistics { get; set; }
+        public StatisticsModels.Statistics Statistics { get; set; }
 
         public Stats Stats { get; set; }
 

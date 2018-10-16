@@ -1,7 +1,7 @@
 ﻿
 namespace CharacterComparatorConsole
 {
-    public static class Adders
+    public static class MainStatsPercentFormater
     {
         public static string AddPlusToPrimaryStatPercent(string TextToAdd)
         {

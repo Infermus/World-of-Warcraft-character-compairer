@@ -13,6 +13,6 @@ namespace WowCharComparerWebApp.Models.CharacterProfile
 
         public bool IsLocked { get; set; }
 
-        public short[] Abilities { get; set; }
+        public short [] Abilities { get; set; }
     }
 }
