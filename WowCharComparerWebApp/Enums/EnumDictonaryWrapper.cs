@@ -5,7 +5,7 @@ namespace WowCharComparerWebApp.Enums
 {
     public static class EnumDictonaryWrapper
     {
-        public static Dictionary<CharacterFields, string> characterFieldsWrapper = new Dictionary<CharacterFields, string>()
+        public static Dictionary<   CharacterFields, string> characterFieldsWrapper = new Dictionary<CharacterFields, string>()
         {
             { CharacterFields.Achievements, "achievements" },
             { CharacterFields.Appearance, "appearance" },

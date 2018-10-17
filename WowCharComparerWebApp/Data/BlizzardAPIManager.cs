@@ -16,8 +16,7 @@ namespace WowCharComparerWebApp.Data
             {
                 using (HttpClient httpClient = new HttpClient())
                 {
-                    //EUgdMwWv3xVgi0fERGdGHwP6EvSaPdfB58
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "EUgdMwWv3xVgi0fERGdGHwP6EvSaPdfB58");
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "placeToToken");
                     blizzardAPIResponse.Data = await httpClient.GetStringAsync(uriAddress.AbsoluteUri);
                 }
             }

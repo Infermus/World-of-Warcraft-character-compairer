@@ -65,7 +65,7 @@ namespace CharacterComparatorConsole
             //    }
 
             Dictionary<int, string> statisticDictionary = new Dictionary<int, string>();
-            Statistics JsonData = JsonProcessing.GetDataFromJsonFile(@"\Statistics.json");
+            Statistics JsonData = JsonProcessing.GetDataFromJsonFile<Statistics>(@"\Statistics.json");
 
             for (int index = 0; index < JsonData.BonusStats.Length; index++)
             {

@@ -12,8 +12,6 @@ namespace WowCharComparerWebApp.Data
 {
     public class RequestsRepository
     {
-        //ex: https://eu.api.battle.net/wow/character/burning-legion/Selectus?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
-        //ex2: https://eu.api.battle.net/wow/character/burning-legion/Selectus?fields=stats&?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
         public static async Task<BlizzardAPIResponse> GetCharacterDataAsJsonAsync(string characterName, RequestLocalization requestLocalization, List<CharacterFields> characterFields)
         {
             List<KeyValuePair<string, string>> characterParams = new List<KeyValuePair<string, string>>();
