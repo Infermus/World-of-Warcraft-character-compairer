@@ -7,9 +7,7 @@ using WowCharComparerWebApp.Models.CharacterProfile.PetsModels;
 using WowCharComparerWebApp.Models.CharacterProfile.ProfessionModels;
 using WowCharComparerWebApp.Models.CharacterProfile.ProgressionModels;
 using WowCharComparerWebApp.Models.CharacterProfile.PvpModels;
-using WowCharComparerWebApp.Models.CharacterProfile.StatisticsModels;
 using WowCharComparerWebApp.Models.CharacterProfile.TalentsModels;
-using WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Gear;
 
 namespace WowCharComparerWebApp.Models.CharacterProfile
 {
