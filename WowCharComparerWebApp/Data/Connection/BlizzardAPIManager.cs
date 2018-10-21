@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WowCharComparerWebApp.Models;
 
-namespace WowCharComparerWebApp.Data
+namespace WowCharComparerWebApp.Data.Connection
 {
     internal static class BlizzardAPIManager
     {
@@ -16,7 +16,7 @@ namespace WowCharComparerWebApp.Data
             {
                 using (HttpClient httpClient = new HttpClient())
                 {
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "placeToToken");
+                   // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthorizationManager.);
                     blizzardAPIResponse.Data = await httpClient.GetStringAsync(uriAddress.AbsoluteUri);
                 }
             }
