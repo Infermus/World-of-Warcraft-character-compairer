@@ -73,7 +73,8 @@ namespace CharacterComparatorConsole
             // return finalResultList;
             // ------------------------------------------------------------------------
             // Getting data from Json file
-            var jsonData = JsonProcessing.GetDataFromJsonFile(@"\Statistics.json");
+            var jsonData = JsonProcessing.GetDataFromJsonFile<Statistics>(@"\Statistics.json");
+
             Dictionary<int,string> jsonDataInDictionary = JsonProcessing.AddDataToDictionary(jsonData);
 
         }      

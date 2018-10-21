@@ -20,7 +20,6 @@ namespace WowCharComparerWebApp.Data.Helpers
             processingUriAddress = processingUriAddress.EndsWith("/") ? processingUriAddress.Remove(processingUriAddress.Length - 1, 1) : processingUriAddress;
 
             parameters.Add(new KeyValuePair<string, string>("?locale", requestLocalization.Realm.Locale));
-           // parameters.Add(new KeyValuePair<string, string>("apikey", APIConf.APIKey));
 
             foreach (KeyValuePair<string, string> parameter in parameters)
             {
