@@ -7,6 +7,7 @@ using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.Servers;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
+using WowCharComparerWebApp.Data.Connection;
 
 namespace WowCharComparerWebApp.Data
 {
@@ -37,8 +38,6 @@ namespace WowCharComparerWebApp.Data
             return await BlizzardAPIManager.GetDataByHttpClient(uriAddress);
         }
 
-
-        // https://eu.api.battle.net/wow/realm/status?locale=en_GB&apikey=v6nnhsgdtax6u4f4nkdj5q88e56dju64
         public static async Task<BlizzardAPIResponse> GetRealmsDataAsJsonAsync(RequestLocalization requestLocalization)
         {
             List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
