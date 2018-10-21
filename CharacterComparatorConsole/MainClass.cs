@@ -73,9 +73,9 @@ namespace CharacterComparatorConsole
             // return finalResultList;
             // ------------------------------------------------------------------------
             // Getting data from Json file
-            var jsonData = JsonProcessing.GetDataFromJsonFile<Statistics>(@"\Statistics.json");
+            var jsonData = JsonProcessing.GetDataFromJsonFile<WowCharComparerWebApp.Models.Achievement.Achievement>(@"\AchievementData.json");
 
-            Dictionary<int,string> jsonDataInDictionary = JsonProcessing.AddDataToDictionary(jsonData);
+            //Dictionary<int,string> jsonDataInDictionary = JsonProcessing.AddDataToDictionary(jsonData);
 
         }      
     }
