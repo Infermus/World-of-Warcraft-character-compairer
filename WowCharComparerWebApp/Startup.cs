@@ -11,6 +11,8 @@ namespace WowCharComparerWebApp
 {
     public class Startup
     {
+        private string defaultConnectionString;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -22,7 +24,8 @@ namespace WowCharComparerWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            ValidateDatabaseConnection();
+            defaultConnectionString = Configuration["ConnectionStrings:DefaultConnection"];
+            InitializeDatabaseConnection(defaultConnectionString);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,11 +53,9 @@ namespace WowCharComparerWebApp
             });
         }
 
-        private void ValidateDatabaseConnection()
+        private void InitializeDatabaseConnection(string connectionString)
         {
             bool correctDbType = default(bool);
-
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             if (string.IsNullOrEmpty(connectionString))
             {
