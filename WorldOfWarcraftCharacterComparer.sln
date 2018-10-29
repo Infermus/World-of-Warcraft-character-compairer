@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WowCharComparerWebApp", "WowCharComparerWebApp\WowCharComparerWebApp.csproj", "{5DD21260-0A5A-499C-8803-0A41DEF39FFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharacterComparatorConsole", "CharacterComparatorConsole\CharacterComparatorConsole.csproj", "{D81C7BDB-95DF-462B-9384-151C7B3EF237}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D81C7BDB-95DF-462B-9384-151C7B3EF237}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D81C7BDB-95DF-462B-9384-151C7B3EF237}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D81C7BDB-95DF-462B-9384-151C7B3EF237}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D81C7BDB-95DF-462B-9384-151C7B3EF237}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

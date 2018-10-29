@@ -1,10 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using WowCharComparerWebApp.Models.Statistics;
 
-namespace CharacterComparatorConsole
+namespace WowCharComparerWebApp.Data.Helpers
 {
    public static class JsonProcessing
     {
@@ -17,7 +16,7 @@ namespace CharacterComparatorConsole
                 using (StreamReader reader = new StreamReader(Directory.GetCurrentDirectory() + fileName))
                 {
                     string json = reader.ReadLine();
-                    parsedResult = WowCharComparerWebApp.Data.Helpers.ResponseResultFormater.DeserializeJsonData<T>(json);
+                    parsedResult = ResponseResultFormater.DeserializeJsonData<T>(json);
                 }
             }
             catch (Exception ex)

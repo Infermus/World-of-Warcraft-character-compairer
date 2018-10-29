@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace WowCharComparerWebApp.Models.Achievement
 { 
     public class Achievements 
     {
+        [Key]
         [JsonProperty(PropertyName = "Id")]
         public int GlobalId { get; set; }
 

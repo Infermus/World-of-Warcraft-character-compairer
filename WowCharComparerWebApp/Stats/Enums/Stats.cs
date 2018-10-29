@@ -1,7 +1,7 @@
 ﻿
-namespace CharacterComparatorConsole.MathLogic
+namespace WowCharComparerWebApp.Stats.Enums
 {
-    enum Stats
+    public enum Stats
     {
         Str,
         Agi,

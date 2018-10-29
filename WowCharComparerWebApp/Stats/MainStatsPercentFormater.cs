@@ -1,5 +1,5 @@
 ﻿
-namespace CharacterComparatorConsole
+namespace WowCharComparerWebApp.Stats
 {
     public static class MainStatsPercentFormater
     {

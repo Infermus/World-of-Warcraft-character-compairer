@@ -1,46 +1,48 @@
-﻿using CharacterComparatorConsole.MathLogic;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
-using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
-using WowCharComparerWebApp.Models.Statistics;
+using WowCharComparerWebApp.Stats;
 
-namespace CharacterComparatorConsole
+namespace WowCharComparerWebApp
 {
-    class MainClass
+    public static class TemporarySolutions
     {
-        static void Main(string[] args)
+        public static void Request()
         {
+            List<CharacterModel> parsedResultList = new List<CharacterModel>();
             RequestLocalization requestLocalization = new RequestLocalization()
             {
-                CoreRegionUrlAddress = WowCharComparerWebApp.Configuration.APIConf.BlizzardAPIWowEUAddress,
+                CoreRegionUrlAddress = Configuration.APIConf.BlizzardAPIWowEUAddress,
                 Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB" }
             };
 
             List<string> characterNamesToCompare = new List<string>
-                {
+            {
                     "Selectus",
                     "Wykminiacz"
-                };
+            };
 
-            List<CharacterModel> parsedResultList = new List<CharacterModel>();
             foreach (string name in characterNamesToCompare)
             {
-                var result = WowCharComparerWebApp.Data.RequestsRepository.GetCharacterDataAsJsonAsync(name,
+                var result = Data.RequestsRepository.GetCharacterDataAsJsonAsync(name,
                                                                             requestLocalization,
                                                                             new List<CharacterFields>()
                                                                             {
-                                                                                CharacterFields.Achievements
+                                                                                CharacterFields.Stats
                                                                             }).Result;
 
-                CharacterModel parsedResult = WowCharComparerWebApp.Data.Helpers.ResponseResultFormater.DeserializeJsonData<CharacterModel>(result.Data);
+                CharacterModel parsedResult = Data.Helpers.ResponseResultFormater.DeserializeJsonData<CharacterModel>(result.Data);
                 parsedResultList.Add(parsedResult);
             }
+           StatsOperations(parsedResultList);
+        }
+
+        public static List<KeyValuePair<Stats.Enums.Stats, string>> StatsOperations(List<CharacterModel> parsedResultList)
+        {
+            List<KeyValuePair<Stats.Enums.Stats, string>> finalResultList = new List<KeyValuePair<Stats.Enums.Stats, string>>();
             try
             {
                 List<KeyValuePair<int, int>> primaryStatsList = new List<KeyValuePair<int, int>>()
@@ -52,17 +54,16 @@ namespace CharacterComparatorConsole
                 };
 
                 var countedPrimaryStatsPercent = StatsComparer.ComparePrimaryCharacterStats(parsedResultList);
-                List<KeyValuePair<MathLogic.Stats, string>> finalResultList = new List<KeyValuePair<MathLogic.Stats, string>>();
 
-                List<MathLogic.Stats> countedPrimaryStatsPercentKeys = (from list in countedPrimaryStatsPercent
-                                                                        select list.Key).ToList();
+                List<Stats.Enums.Stats> countedPrimaryStatsPercentKeys = (from list in countedPrimaryStatsPercent
+                                                              select list.Key).ToList();
 
                 for (int index = 0; index < countedPrimaryStatsPercent.Count; index++)
                 {
                     string result = primaryStatsList[index].Key > primaryStatsList[index].Value ? MainStatsPercentFormater.AddPlusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString())
                                                                                                 : MainStatsPercentFormater.AddMinusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString());
 
-                    finalResultList.Add(new KeyValuePair<MathLogic.Stats, string>(countedPrimaryStatsPercentKeys[index], result));
+                    finalResultList.Add(new KeyValuePair<Stats.Enums.Stats, string>(countedPrimaryStatsPercentKeys[index], result));
                 }
             }
 
@@ -70,13 +71,16 @@ namespace CharacterComparatorConsole
             {
                 Console.WriteLine(ex);
             }
-            // return finalResultList;
-            // ------------------------------------------------------------------------
-            // Getting data from Json file
-            var jsonData = JsonProcessing.GetDataFromJsonFile<WowCharComparerWebApp.Models.Achievement.Achievement>(@"\AchievementData.json");
 
-            //Dictionary<int,string> jsonDataInDictionary = JsonProcessing.AddDataToDictionary(jsonData);
+            return finalResultList;
+        }
 
-        }      
+        // ------------------------------------------------------------------------
+        // Getting data from Json file
+        //var jsonData = JsonProcessing.GetDataFromJsonFile<Models.Achievement.Achievement>(@"\AchievementData.json");
+
+        //Dictionary<int,string> jsonDataInDictionary = JsonProcessing.AddDataToDictionary(jsonData);
+
+
     }
 }

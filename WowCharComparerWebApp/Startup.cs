@@ -12,7 +12,7 @@ namespace WowCharComparerWebApp
     public class Startup
     {
         private string defaultConnectionString;
-
+ 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -23,6 +23,7 @@ namespace WowCharComparerWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            TemporarySolutions.Request();
             services.AddMvc();
             defaultConnectionString = Configuration["ConnectionStrings:DefaultConnection"];
             InitializeDatabaseConnection(defaultConnectionString);

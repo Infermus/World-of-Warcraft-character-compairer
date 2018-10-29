@@ -1,8 +1,11 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace WowCharComparerWebApp.Models.Achievement
 {
     public class AchievementsData
     {
+        [Key]
         public int Id { get; set; }
 
         public string Title { get; set; }
@@ -13,7 +16,7 @@ namespace WowCharComparerWebApp.Models.Achievement
 
         public string Reward { get; set; }
 
-        public RewardItems [] RewardItems { get; set; }
+        //public RewardItems [] RewardItems { get; set; }
 
         public string Icon { get; set; }
 
