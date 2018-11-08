@@ -9,9 +9,9 @@ using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Data.Connection;
 
-namespace WowCharComparerWebApp.Data
+namespace WowCharComparerWebApp.Data.ApiRequests
 {
-    public class RequestsRepository
+    public class CharacterRequests
     {
         public static async Task<BlizzardAPIResponse> GetCharacterDataAsJsonAsync(string characterName, RequestLocalization requestLocalization, List<CharacterFields> characterFields)
         {
@@ -34,14 +34,6 @@ namespace WowCharComparerWebApp.Data
                 characterParams.Add(new KeyValuePair<string, string>("?fields", localFields));
             }
             Uri uriAddress = RequestLinkFormater.GenerateAPIRequestLink(BlizzardAPIProfiles.Character, requestLocalization, characterParams, requestLocalization.Realm.Slug, characterName); // generates link for request
-
-            return await BlizzardAPIManager.GetDataByHttpClient(uriAddress);
-        }
-
-        public static async Task<BlizzardAPIResponse> GetRealmsDataAsJsonAsync(RequestLocalization requestLocalization)
-        {
-            List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
-            Uri uriAddress = RequestLinkFormater.GenerateAPIRequestLink(BlizzardAPIProfiles.Realm, requestLocalization, parameters, "status");
 
             return await BlizzardAPIManager.GetDataByHttpClient(uriAddress);
         }

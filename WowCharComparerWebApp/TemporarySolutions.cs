@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WowCharComparerWebApp.Data.ApiRequests;
+using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
@@ -19,6 +21,9 @@ namespace WowCharComparerWebApp
                 Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB" }
             };
 
+            var achievementsResourcesData = DataResources.GetCharacterAchievements(requestLocalization);
+
+
             List<string> characterNamesToCompare = new List<string>
             {
                     "Selectus",
@@ -27,17 +32,17 @@ namespace WowCharComparerWebApp
 
             foreach (string name in characterNamesToCompare)
             {
-                var result = Data.RequestsRepository.GetCharacterDataAsJsonAsync(name,
+                var result = CharacterRequests.GetCharacterDataAsJsonAsync(name,
                                                                             requestLocalization,
                                                                             new List<CharacterFields>()
                                                                             {
                                                                                 CharacterFields.Stats
                                                                             }).Result;
 
-                CharacterModel parsedResult = Data.Helpers.ResponseResultFormater.DeserializeJsonData<CharacterModel>(result.Data);
+                CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
                 parsedResultList.Add(parsedResult);
             }
-           StatsOperations(parsedResultList);
+            StatsOperations(parsedResultList);
         }
 
         public static List<KeyValuePair<Stats.Enums.Stats, string>> StatsOperations(List<CharacterModel> parsedResultList)
@@ -55,8 +60,8 @@ namespace WowCharComparerWebApp
 
                 var countedPrimaryStatsPercent = StatsComparer.ComparePrimaryCharacterStats(parsedResultList);
 
-                List<Stats.Enums.Stats> countedPrimaryStatsPercentKeys = (from list in countedPrimaryStatsPercent
-                                                              select list.Key).ToList();
+                List<Stats.Enums.Stats> countedPrimaryStatsPercentKeys = (from list in countedPrimaryStatsPercent select list.Key).ToList();
+
 
                 for (int index = 0; index < countedPrimaryStatsPercent.Count; index++)
                 {
