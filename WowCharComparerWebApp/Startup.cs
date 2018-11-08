@@ -23,10 +23,10 @@ namespace WowCharComparerWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            TemporarySolutions.Request();
             services.AddMvc();
             defaultConnectionString = Configuration["ConnectionStrings:DefaultConnection"];
             InitializeDatabaseConnection(defaultConnectionString);
+            TemporarySolutions.Request();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

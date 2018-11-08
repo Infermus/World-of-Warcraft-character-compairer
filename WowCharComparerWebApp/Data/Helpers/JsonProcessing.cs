@@ -26,18 +26,5 @@ namespace WowCharComparerWebApp.Data.Helpers
 
             return parsedResult;
         }
-
-        public static Dictionary<int,string> AddDataToDictionary(Statistics jsonData)
-        {
-            Dictionary<int, string> statisticDictionary = new Dictionary<int, string>();
-
-            for (int index = 0; index < jsonData.BonusStats.Length; index++)
-            {
-                statisticDictionary.Add(jsonData.BonusStats[index].Id, jsonData.BonusStats[index].Name);
-                //TODO There is a problem with names, versatility peforming two times 
-                //Check if both are needed, indexes: 35,62
-            }
-            return statisticDictionary;
-        }
     }
 }

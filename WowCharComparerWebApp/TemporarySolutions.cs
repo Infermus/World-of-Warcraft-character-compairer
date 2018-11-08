@@ -1,7 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
+using WowCharComparerWebApp.Data.Database;
+using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
+using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
 using WowCharComparerWebApp.Stats;
@@ -34,10 +39,31 @@ namespace WowCharComparerWebApp
                                                                                 CharacterFields.Stats
                                                                             }).Result;
 
-                CharacterModel parsedResult = Data.Helpers.ResponseResultFormater.DeserializeJsonData<CharacterModel>(result.Data);
+                CharacterModel parsedResult = ResponseResultFormater.DeserializeJsonData<CharacterModel>(result.Data);
                 parsedResultList.Add(parsedResult);
             }
-           StatsOperations(parsedResultList);
+            StatsOperations(parsedResultList);
+            var parsedJsonData = JsonProcessing.GetDataFromJsonFile<Models.Statistics.Statistics>(@"\Statistics.json");
+
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
+            {
+                using (var db = new ComparerDatabaseContext())
+                {
+                    db.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT dbo.BonusStats ON");
+                    for (int index = 0; index < parsedJsonData.BonusStats.Length; index++)
+                    {
+                        db.BonusStats.AddRange(new BonusStats()
+                        {
+                            Id = Guid.NewGuid(),
+                            StatisticId = parsedJsonData.BonusStats[index].StatisticId,
+                            Name = parsedJsonData.BonusStats[index].Name
+                        });
+                    }
+                    db.SaveChanges();
+                    db.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT dbo.BonusStats OFF");
+                    scope.Complete();
+                }
+            }
         }
 
         public static List<KeyValuePair<Stats.Enums.Stats, string>> StatsOperations(List<CharacterModel> parsedResultList)
@@ -56,7 +82,7 @@ namespace WowCharComparerWebApp
                 var countedPrimaryStatsPercent = StatsComparer.ComparePrimaryCharacterStats(parsedResultList);
 
                 List<Stats.Enums.Stats> countedPrimaryStatsPercentKeys = (from list in countedPrimaryStatsPercent
-                                                              select list.Key).ToList();
+                                                                          select list.Key).ToList();
 
                 for (int index = 0; index < countedPrimaryStatsPercent.Count; index++)
                 {
@@ -77,10 +103,7 @@ namespace WowCharComparerWebApp
 
         // ------------------------------------------------------------------------
         // Getting data from Json file
-        //var jsonData = JsonProcessing.GetDataFromJsonFile<Models.Achievement.Achievement>(@"\AchievementData.json");
-
         //Dictionary<int,string> jsonDataInDictionary = JsonProcessing.AddDataToDictionary(jsonData);
-
 
     }
 }

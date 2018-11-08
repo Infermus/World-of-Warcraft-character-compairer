@@ -1,10 +1,20 @@
-﻿
+﻿using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace WowCharComparerWebApp.Models
 {
     public class BonusStats
     {
-        public int Id { get; set; }
+        [JsonIgnore]
+        [Key]
+        public Guid Id { get; set; }
 
+        [Required]
+        [JsonProperty(PropertyName = "Id")]
+        public int StatisticId { get; set; }
+        
+        [Required]
         public string Name { get; set; }
     }
 }
