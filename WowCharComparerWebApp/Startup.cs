@@ -12,7 +12,7 @@ namespace WowCharComparerWebApp
     public class Startup
     {
         private string defaultConnectionString;
- 
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,8 +25,7 @@ namespace WowCharComparerWebApp
         {
             services.AddMvc();
             defaultConnectionString = Configuration["ConnectionStrings:DefaultConnection"];
-            InitializeDatabaseConnection(defaultConnectionString);
-            TemporarySolutions.Request();
+            CheckDatabaseValidation(defaultConnectionString);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,24 +53,30 @@ namespace WowCharComparerWebApp
             });
         }
 
-        private void InitializeDatabaseConnection(string connectionString)
+        private void CheckDatabaseValidation(string connectionString)
         {
-            bool correctDbType = default(bool);
-
-            if (string.IsNullOrEmpty(connectionString))
+            try
             {
-                throw new Exception(InternalMessages.ConnectionStringIsEmpty);
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    throw new Exception(InternalMessages.ConnectionStringIsEmpty);
+                }
+
+                using (DbContext dbContext = new ComparerDatabaseContext(connectionString))
+                {
+                    dbContext.Database.EnsureCreated();
+
+                    if (dbContext.Database.IsSqlServer() == false)
+                    {
+                        throw new Exception(InternalMessages.InvalidDbType);
+                    }
+                    dbContext.Database.OpenConnection();
+                    dbContext.Database.CloseConnection();
+                }
             }
-
-            using (DbContext dbContext = new ComparerDatabaseContext(connectionString))
+            catch (Exception ex)
             {
-                correctDbType = dbContext.Database.IsSqlServer();
-                dbContext.Database.EnsureCreated();
-            }
-
-            if (correctDbType == false)
-            {
-                throw new Exception(InternalMessages.InvalidDbType);
+                Console.WriteLine(ex.Message);
             }
         }
     }

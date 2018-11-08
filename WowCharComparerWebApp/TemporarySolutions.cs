@@ -5,6 +5,8 @@ using System.Linq;
 using System.Transactions;
 using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Helpers;
+using WowCharComparerWebApp.Data.ApiRequests;
+using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.CharacterProfile;
@@ -24,6 +26,9 @@ namespace WowCharComparerWebApp
                 Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB" }
             };
 
+            var achievementsResourcesData = DataResources.GetCharacterAchievements(requestLocalization);
+
+
             List<string> characterNamesToCompare = new List<string>
             {
                     "Selectus",
@@ -32,14 +37,14 @@ namespace WowCharComparerWebApp
 
             foreach (string name in characterNamesToCompare)
             {
-                var result = Data.RequestsRepository.GetCharacterDataAsJsonAsync(name,
+                var result = CharacterRequests.GetCharacterDataAsJsonAsync(name,
                                                                             requestLocalization,
                                                                             new List<CharacterFields>()
                                                                             {
                                                                                 CharacterFields.Stats
                                                                             }).Result;
 
-                CharacterModel parsedResult = ResponseResultFormater.DeserializeJsonData<CharacterModel>(result.Data);
+                CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
                 parsedResultList.Add(parsedResult);
             }
             StatsOperations(parsedResultList);

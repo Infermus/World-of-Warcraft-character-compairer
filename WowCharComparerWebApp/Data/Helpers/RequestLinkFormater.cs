@@ -13,13 +13,15 @@ namespace WowCharComparerWebApp.Data.Helpers
             string processingUriAddress = string.Empty;
 
             processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(requestLocalization.CoreRegionUrlAddress);
+
             processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(profile.ToString().ToLower());
-            processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(endPointPart1);
-            processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(endPointPart2);
+            processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(endPointPart1.ToLower());
+            processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(endPointPart2.ToLower());
 
             processingUriAddress = processingUriAddress.EndsWith("/") ? processingUriAddress.Remove(processingUriAddress.Length - 1, 1) : processingUriAddress;
 
-            parameters.Add(new KeyValuePair<string, string>("?locale", requestLocalization.Realm.Locale));
+            if (requestLocalization.Realm != null)
+                parameters.Add(new KeyValuePair<string, string>("?locale", requestLocalization.Realm.Locale));
 
             foreach (KeyValuePair<string, string> parameter in parameters)
             {

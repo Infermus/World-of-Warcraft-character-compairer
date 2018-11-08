@@ -1,12 +1,29 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using WowCharComparerWebApp.Models.Statistics;
 
 namespace WowCharComparerWebApp.Data.Helpers
 {
-   public static class JsonProcessing
+   public class JsonProcessing
     {
+        public static T DeserializeJsonData<T>(string jsonToParse) where T : class
+        {
+            object deserializeObject = null;
+
+            try
+            {
+                deserializeObject = JsonConvert.DeserializeObject<T>(jsonToParse);
+            }
+            catch (Exception ex)
+            {
+                deserializeObject = ex.Message;
+            }
+
+            return (T)deserializeObject;
+        }
+
         public static T GetDataFromJsonFile<T>(string fileName) where T: class
         {
             T parsedResult = (T)Activator.CreateInstance(typeof(T));
@@ -16,7 +33,7 @@ namespace WowCharComparerWebApp.Data.Helpers
                 using (StreamReader reader = new StreamReader(Directory.GetCurrentDirectory() + fileName))
                 {
                     string json = reader.ReadLine();
-                    parsedResult = ResponseResultFormater.DeserializeJsonData<T>(json);
+                    parsedResult = DeserializeJsonData<T>(json);
                 }
             }
             catch (Exception ex)

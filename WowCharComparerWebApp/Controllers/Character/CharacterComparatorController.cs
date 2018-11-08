@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using WowCharComparerWebApp.Data.ApiRequests;
+using WowCharComparerWebApp.Enums.Locale;
+using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Controllers.CharacterControllers
 {
@@ -8,6 +11,27 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult TestActionOne()
+        {
+            var data = DataResources.GetCharacterAchievements(new RequestLocalization()
+            {
+                CoreRegionUrlAddress = Configuration.APIConf.BlizzardAPIWowEUAddress,
+                Realm = new Realm() {Locale = EULocale.en_GB.ToString() }
+            });
+
+            return Content(data.Result.Data);
+        }
+
+        public IActionResult TestActionTwo()
+        {
+            return Content("Empty action - action two");
+        }
+
+        public IActionResult TestActionThree()
+        {
+            return Content("Empty action - action three");
         }
 
         //[Route("region-selected")]
