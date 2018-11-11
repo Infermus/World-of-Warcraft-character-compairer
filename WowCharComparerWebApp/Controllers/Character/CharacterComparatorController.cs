@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using WowCharComparerWebApp.Data.ApiRequests;
+using WowCharComparerWebApp.Data.Connection;
+using WowCharComparerWebApp.Data.Database.Repository;
 using WowCharComparerWebApp.Enums.Locale;
+using WowCharComparerWebApp.Models.Internal;
 using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Controllers.CharacterControllers
@@ -15,23 +18,26 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         public IActionResult TestActionOne()
         {
-            var data = DataResources.GetCharacterAchievements(new RequestLocalization()
-            {
-                CoreRegionUrlAddress = Configuration.APIConf.BlizzardAPIWowEUAddress,
-                Realm = new Realm() {Locale = EULocale.en_GB.ToString() }
-            });
-
-            return Content(data.Result.Data);
+            return StatusCode(404);
         }
 
         public IActionResult TestActionTwo()
         {
-            return Content("Empty action - action two");
+            temp_DataPreparation.InsertBonusStatsTableFromJsonFile();
+
+            return Content("Action two - executed");
         }
 
         public IActionResult TestActionThree()
         {
-            return Content("Empty action - action three");
+
+            var data = DataResources.GetCharacterAchievements(new RequestLocalization()
+            {
+                CoreRegionUrlAddress = Configuration.APIConf.BlizzardAPIWowEUAddress,
+                Realm = new Realm() { Locale = EULocale.en_GB.ToString() }
+            });
+
+            return Content(data.Result.Data);
         }
 
         //[Route("region-selected")]

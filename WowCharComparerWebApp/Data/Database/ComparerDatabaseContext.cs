@@ -1,19 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WowCharComparerWebApp.Data.Database.DbModels;
 using WowCharComparerWebApp.Models;
-using WowCharComparerWebApp.Models.Achievement;
+using WowCharComparerWebApp.Models.Internal;
 
 namespace WowCharComparerWebApp.Data.Database
 {
     public class ComparerDatabaseContext : DbContext
     {
-        //Database table which holds info about tokens
-        public DbSet<OAuth2Token> OAuth2Tokens { get; set; }
+        // Hold API client information, to generate proper bearer token at request
+        public DbSet<APIClient> APIClient { get; set; }
 
-        //Database table which holds user's information
+        // Database table which holds user's information
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Models.Achievement.Achievements> Achievements { get; set; }
+        //public DbSet<Models.Achievement.Achievements> Achievements { get; set; }
 
         public DbSet<BonusStats> BonusStats { get; set; }
 

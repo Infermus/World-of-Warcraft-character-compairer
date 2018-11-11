@@ -18,7 +18,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
             Uri uriAddress = RequestLinkFormater.GenerateAPIRequestLink(BlizzardAPIProfiles.Realm, requestLocalization, parameters, "status"); //TODO replace string
             
 
-            return await BlizzardAPIManager.GetDataByHttpClient(uriAddress);
+            return await BlizzardAPIManager.GetDataByHttpRequest(uriAddress);
         }
     }
 }

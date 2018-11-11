@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WowCharComparerWebApp.Data.Database.DbModels
+namespace WowCharComparerWebApp.Models.Internal
 {
     public class User
     {

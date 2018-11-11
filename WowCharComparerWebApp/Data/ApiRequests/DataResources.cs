@@ -9,6 +9,7 @@ using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Models;
+using WowCharComparerWebApp.Models.Internal;
 using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Data.ApiRequests
@@ -22,7 +23,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
                                                                                                      BlizzardAPIProfiles.Character.ToString(), 
                                                                                                      EnumDictonaryWrapper.dataResourcesFieldsWrapper[DataResourcesFields.CharacterAchievements]);
 
-            return await BlizzardAPIManager.GetDataByHttpClient(generatedLink);
+            return await BlizzardAPIManager.GetDataByHttpRequest(generatedLink);
         }
     }
 }
