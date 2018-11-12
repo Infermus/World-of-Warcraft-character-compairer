@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WowCharComparerWebApp.Models.Internal
 {
+    /// <summary>
+    /// Information about API Client (they can be obtained from https://develop.battle.net)
+    /// </summary>
     public class APIClient
     {
         [Key]

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using WowCharComparerWebApp.Data.ApiRequests;
-using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database.Repository;
+using WowCharComparerWebApp.Data.Helpers;
+using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Enums.Locale;
-using WowCharComparerWebApp.Models.Internal;
+using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Controllers.CharacterControllers
@@ -18,6 +19,24 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         public IActionResult TestActionOne()
         {
+
+            RequestLocalization requestLocalization = new RequestLocalization()
+            {
+                CoreRegionUrlAddress = Configuration.APIConf.BlizzardAPIWowEUAddress,
+                Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB" }
+            };
+
+            var achievementsResourcesData = DataResources.GetCharacterAchievements(requestLocalization);
+
+            var result = CharacterRequests.GetCharacterDataAsJsonAsync("Selectus",
+                                                            requestLocalization,
+                                                            new List<CharacterFields>()
+                                                            {
+                                                                 CharacterFields.Items
+                                                            }).Result;
+
+            CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
+
             return StatusCode(404);
         }
 

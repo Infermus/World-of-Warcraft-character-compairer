@@ -42,7 +42,7 @@ namespace WowCharComparerWebApp.Logic.Character.Statistics
             return countedPrimaryStatsPercent;
         }
 
-        public static List<KeyValuePair<CharacterMainStats, decimal>> PrimaryStatsPercentCalculation(List<Tuple<CharacterMainStats, int, int>> primaryStats)
+        private static List<KeyValuePair<CharacterMainStats, decimal>> PrimaryStatsPercentCalculation(List<Tuple<CharacterMainStats, int, int>> primaryStats)
         {
             List<KeyValuePair<CharacterMainStats, decimal>> countedPrimaryStatsPercent = new List<KeyValuePair<CharacterMainStats, decimal>>();
 

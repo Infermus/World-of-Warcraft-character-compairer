@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WowCharComparerWebApp.Enums.Character;
 using WowCharComparerWebApp.Logic.Character.Statistics;
 using WowCharComparerWebApp.Models.CharacterProfile;

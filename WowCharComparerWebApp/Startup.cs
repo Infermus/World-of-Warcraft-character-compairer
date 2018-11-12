@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database;
@@ -29,7 +30,7 @@ namespace WowCharComparerWebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -43,6 +44,9 @@ namespace WowCharComparerWebApp
 
             // Adding css, js files
             app.UseStaticFiles();
+
+            // set configuration to logger 
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 
             // MVC configuration
             app.UseMvc(routes =>
