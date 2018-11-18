@@ -21,4 +21,8 @@
     <PackageReference Update="Microsoft.NETCore.App" Version="2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\test\" />
+  </ItemGroup>
+
 </Project>
