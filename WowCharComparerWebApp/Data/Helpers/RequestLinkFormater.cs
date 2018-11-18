@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using WowCharComparerWebApp.Configuration;
+using System.Runtime.CompilerServices;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Models.Servers;
+
+[assembly: InternalsVisibleTo("WowCharacterComparer.Tests")]
 
 namespace WowCharComparerWebApp.Data.Helpers
 {
@@ -15,13 +17,16 @@ namespace WowCharComparerWebApp.Data.Helpers
             processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(requestLocalization.CoreRegionUrlAddress);
 
             processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(profile.ToString().ToLower());
-            processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(endPointPart1.ToLower());
-            processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(endPointPart2.ToLower());
 
+            processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(endPointPart1 == null ? string.Empty : endPointPart1.ToLower());
+            processingUriAddress = processingUriAddress.AddToEndPointSampleToUrl(endPointPart2 == null ? string.Empty : endPointPart2.ToLower());
             processingUriAddress = processingUriAddress.EndsWith("/") ? processingUriAddress.Remove(processingUriAddress.Length - 1, 1) : processingUriAddress;
 
             if (requestLocalization.Realm != null)
+            {
                 parameters.Add(new KeyValuePair<string, string>("?locale", requestLocalization.Realm.Locale));
+            }
+
 
             foreach (KeyValuePair<string, string> parameter in parameters)
             {
