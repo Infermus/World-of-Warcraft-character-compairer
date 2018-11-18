@@ -1,13 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using WowCharComparerWebApp.Enums.Character;
 using WowCharComparerWebApp.Models.CharacterProfile;
+using WowCharComparerWebApp.Models.Mappers;
 
 namespace WowCharComparerWebApp.Logic.Character.Statistics
 {
-    internal class StatsComparer
+    internal class StatisticsComparer
     {
-        public static List<KeyValuePair<CharacterMainStats, decimal>> ComparePrimaryCharacterStats(List<CharacterModel> parsedResultList)
+        public static CharacterStatisticsCompareResult CompareCharacterStatistics(List<CharacterModel> parsedResultList)
+        {
+            List<KeyValuePair<CharacterMainStats, string>> finalResultList = new List<KeyValuePair<CharacterMainStats, string>>();
+            try
+            {
+                List<KeyValuePair<int, int>> primaryStatsList = new List<KeyValuePair<int, int>>()
+                {
+                    new KeyValuePair<int, int>(parsedResultList[0].Stats.Str,parsedResultList[1].Stats.Str),
+                    new KeyValuePair<int, int>(parsedResultList[0].Stats.Int,parsedResultList[1].Stats.Int),
+                    new KeyValuePair<int, int>(parsedResultList[0].Stats.Agi,parsedResultList[1].Stats.Agi),
+                    new KeyValuePair<int, int>(parsedResultList[0].Stats.Sta,parsedResultList[1].Stats.Sta)
+                };
+
+                var countedPrimaryStatsPercent = ComparePrimaryCharacterStats(parsedResultList);
+
+                List<CharacterMainStats> countedPrimaryStatsPercentKeys = (from list in countedPrimaryStatsPercent
+                                                                           select list.Key).ToList();
+
+                for (int index = 0; index < countedPrimaryStatsPercent.Count; index++)
+                {
+                    string result = primaryStatsList[index].Key > primaryStatsList[index].Value ? MainStatsPercentFormater.AddPlusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString())
+                                                                                                : MainStatsPercentFormater.AddMinusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString());
+
+                    finalResultList.Add(new KeyValuePair<CharacterMainStats, string>(countedPrimaryStatsPercentKeys[index], result));
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            CharacterStatisticsCompareResult characterStatistics = new CharacterStatisticsCompareResult()
+            {
+                CharacterCompareStrDifference = finalResultList[0].Value,
+                CharacterCompareIntDifference = finalResultList[1].Value,
+                CharacterCompareAgiDifference = finalResultList[2].Value,
+                CharacterCompareStaDifference = finalResultList[3].Value
+            };
+            return characterStatistics;
+        }
+
+        private static List<KeyValuePair<CharacterMainStats, decimal>> ComparePrimaryCharacterStats(List<CharacterModel> parsedResultList)
         {
             List<KeyValuePair<CharacterMainStats, decimal>> countedPrimaryStatsPercent = new List<KeyValuePair<CharacterMainStats, decimal>>();
 
@@ -36,13 +80,13 @@ namespace WowCharComparerWebApp.Logic.Character.Statistics
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);               
+                Console.WriteLine(ex);
             }
 
             return countedPrimaryStatsPercent;
         }
 
-        public static List<KeyValuePair<CharacterMainStats, decimal>> PrimaryStatsPercentCalculation(List<Tuple<CharacterMainStats, int, int>> primaryStats)
+        private static List<KeyValuePair<CharacterMainStats, decimal>> PrimaryStatsPercentCalculation(List<Tuple<CharacterMainStats, int, int>> primaryStats)
         {
             List<KeyValuePair<CharacterMainStats, decimal>> countedPrimaryStatsPercent = new List<KeyValuePair<CharacterMainStats, decimal>>();
 
@@ -53,7 +97,8 @@ namespace WowCharComparerWebApp.Logic.Character.Statistics
                 decimal countedPercent = decimal.Round(((value1 - value2) / value2) * 100, 2);
                 countedPrimaryStatsPercent.Add(new KeyValuePair<CharacterMainStats, decimal>(primaryStats[index].Item1, countedPercent));
             }
+
             return countedPrimaryStatsPercent;
-        }       
+        }
     }
 }

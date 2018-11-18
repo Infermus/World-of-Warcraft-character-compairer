@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using WowCharComparerWebApp.Data.ApiRequests;
-using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database.Repository;
+using WowCharComparerWebApp.Data.Helpers;
+using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Enums.Locale;
-using WowCharComparerWebApp.Models.Internal;
+using WowCharComparerWebApp.Logic.Character.Statistics;
+using WowCharComparerWebApp.Logic.HeartOfAzeroth;
+using WowCharComparerWebApp.Logic.ItemLevel;
+using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Controllers.CharacterControllers
@@ -18,7 +22,35 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         public IActionResult TestActionOne()
         {
-            return StatusCode(404);
+            List<CharacterModel> parsedResultList = new List<CharacterModel>();
+            RequestLocalization requestLocalization = new RequestLocalization()
+            {
+                CoreRegionUrlAddress = Configuration.APIConf.BlizzardAPIWowEUAddress,
+                Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB" }
+            };
+
+            List<string> characterNamesToCompare = new List<string>
+            {
+                    "Wykminiacz",
+                    "Selectus"
+            };
+
+            foreach (string name in characterNamesToCompare)
+            {
+                var result = CharacterRequests.GetCharacterDataAsJsonAsync(name,
+                                                                            requestLocalization,
+                                                                            new List<CharacterFields>()
+                                                                            {
+                                                                                CharacterFields.Items
+                                                                            }).Result;
+
+                CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
+                parsedResultList.Add(parsedResult);
+            }
+            //var characterComparerResult = StatisticsComparer.CompareCharacterStatistics(parsedResultList); // required CharacterFields.Stats
+            //var characterComparerResult = ItemLevelComparer.CompareCharactersItemLevel(parsedResultList); // required CharacterFields.Items
+            var characterComparerResult = HeartOfAzerothComparer.CompareHeartOfAzerothLevel(parsedResultList); // required CharacterFields.Items
+            return StatusCode(200);
         }
 
         public IActionResult TestActionTwo()

@@ -1,5 +1,4 @@
-﻿
-namespace WowCharComparerWebApp.Logic.Character.Statistics
+﻿namespace WowCharComparerWebApp.Logic.Character.Statistics
 {
     public static class MainStatsPercentFormater
     {
@@ -14,7 +13,7 @@ namespace WowCharComparerWebApp.Logic.Character.Statistics
 
             if (!TextToAdd.Equals("0"))
             {
-                localText = "-" + TextToAdd + "%";
+                localText = "-" + TextToAdd;
             }
 
             return localText + "%";

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using WowCharComparerWebApp.Logic.Character;
 using WowCharComparerWebApp.Models.Statistics;
 
 namespace WowCharComparerWebApp.Data.Helpers
@@ -40,7 +41,6 @@ namespace WowCharComparerWebApp.Data.Helpers
             {
                 Console.WriteLine(string.Format(" {0}. Message: {1}", "Invalid type of model to parse from file", ex.Message));
             }
-
             return parsedResult;
         }
     }
