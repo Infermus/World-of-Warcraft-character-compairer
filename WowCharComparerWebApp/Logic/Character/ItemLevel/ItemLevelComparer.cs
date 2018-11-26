@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Mappers;
 
@@ -8,13 +9,9 @@ namespace WowCharComparerWebApp.Logic.ItemLevel
     {
         public static CharacterItemLevelCompareResult CompareCharactersItemLevel(List<CharacterModel> parsedResultList)
         {
-            float equippedResult = parsedResultList[0].Items.AverageItemLevelEquipped > parsedResultList[1].Items.AverageItemLevelEquipped
-                                                     ? parsedResultList[0].Items.AverageItemLevelEquipped - parsedResultList[1].Items.AverageItemLevelEquipped
-                                                     : parsedResultList[1].Items.AverageItemLevelEquipped - parsedResultList[0].Items.AverageItemLevelEquipped;
+            float equippedResult = Math.Abs(parsedResultList[0].Items.AverageItemLevelEquipped - parsedResultList[1].Items.AverageItemLevelEquipped);
 
-            float notEquippedResult = parsedResultList[0].Items.AverageItemLevel > parsedResultList[1].Items.AverageItemLevelEquipped
-                                                      ? parsedResultList[0].Items.AverageItemLevel - parsedResultList[1].Items.AverageItemLevel
-                                                      : parsedResultList[1].Items.AverageItemLevel - parsedResultList[0].Items.AverageItemLevel;
+            float notEquippedResult = Math.Abs(parsedResultList[0].Items.AverageItemLevel - parsedResultList[1].Items.AverageItemLevelEquipped);
 
             return new CharacterItemLevelCompareResult()
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Mappers;
 
@@ -8,13 +9,9 @@ namespace WowCharComparerWebApp.Logic.Character
     {
         public static CharacterMiniPetsCompareResult CompareMiniPets(List<CharacterModel> parsedResultList)
         {
-            int numberOfCollected = parsedResultList[0].Pets.NumberOfCollectedPets > parsedResultList[1].Pets.NumberOfCollectedPets
-                                       ? parsedResultList[0].Pets.NumberOfCollectedPets - parsedResultList[1].Pets.NumberOfCollectedPets
-                                       : parsedResultList[1].Pets.NumberOfCollectedPets - parsedResultList[0].Pets.NumberOfCollectedPets;
+            int numberOfCollected = Math.Abs(parsedResultList[0].Pets.NumberOfCollectedPets - parsedResultList[1].Pets.NumberOfCollectedPets);
 
-            int numberOfNotCollected = parsedResultList[0].Pets.NumberOfNotCollectedPets > parsedResultList[1].Pets.NumberOfNotCollectedPets
-                                       ? parsedResultList[0].Pets.NumberOfNotCollectedPets - parsedResultList[1].Pets.NumberOfNotCollectedPets
-                                       : parsedResultList[1].Pets.NumberOfNotCollectedPets - parsedResultList[0].Pets.NumberOfNotCollectedPets;
+            int numberOfNotCollected = Math.Abs(parsedResultList[0].Pets.NumberOfNotCollectedPets - parsedResultList[1].Pets.NumberOfNotCollectedPets);
 
             return new CharacterMiniPetsCompareResult()
             {
@@ -22,6 +19,5 @@ namespace WowCharComparerWebApp.Logic.Character
                 NotCollectedMiniPestDifferance = numberOfNotCollected
             };
         }
-
     }
 }
