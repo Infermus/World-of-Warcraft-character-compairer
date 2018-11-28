@@ -10,6 +10,12 @@
 
         #endregion
 
+        #region Raider IO URLS
+
+        public const string RaiderIOAdress = "https://raider.io/api/v1/characters/profile";
+
+        #endregion
+
         #region API authorizationContentFields
 
         public const string BlizzardAPIWowClientIDParameter = "client_id";

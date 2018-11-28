@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
+using WowCharComparerWebApp.Enums.RaiderIO;
 
 namespace WowCharComparerWebApp.Enums
 {
@@ -48,6 +49,22 @@ namespace WowCharComparerWebApp.Enums
             { Region.America, "US" },
             { Region.Korea, "KR" },
             { Region.Taiwan, "TW" }
+        };
+
+        public static Dictionary<RaiderIOCharacterFields, string> rioCharacterFieldWrapper = new Dictionary<RaiderIOCharacterFields, string>()
+        {
+            { RaiderIOCharacterFields.Gear, "gear" },
+            { RaiderIOCharacterFields.Guild, "guild" },
+            { RaiderIOCharacterFields.RaidProgression, "raid_progression" },
+            { RaiderIOCharacterFields.MythicPlusScores, "mythic_plus_scores" },
+            { RaiderIOCharacterFields.MythicPlusRanks, "mythic_plus_ranks" },
+            { RaiderIOCharacterFields.MythicPlusBestRuns, "mythic_plus_best_runs" },
+            { RaiderIOCharacterFields.MythicPlusHighestLevelRuns, "mythic_plus_highest_level_runs"},
+            { RaiderIOCharacterFields.MythicPlusWeeklyHighestLevelRuns, "mythic_plus_weekly_highes_level_runs" },
+            { RaiderIOCharacterFields.PreviousMythicPlusScores, "previous_mythic_plus_scores" },
+            { RaiderIOCharacterFields.PreviousMythicPlusRanks, "previous_mythic_plus_ranks" },
+            { RaiderIOCharacterFields.RaidAchievementMeta, "raid_achievement_meta" },
+            { RaiderIOCharacterFields.RaidAchievementCurve, "raid_achievement_curve" }
         };
     }
 }

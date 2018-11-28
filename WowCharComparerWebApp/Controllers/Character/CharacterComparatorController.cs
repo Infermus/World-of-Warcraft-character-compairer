@@ -5,6 +5,7 @@ using WowCharComparerWebApp.Data.Database.Repository;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Enums.Locale;
+using WowCharComparerWebApp.Enums.RaiderIO;
 using WowCharComparerWebApp.Logic.Character.Statistics;
 using WowCharComparerWebApp.Logic.HeartOfAzeroth;
 using WowCharComparerWebApp.Logic.ItemLevel;
@@ -22,11 +23,11 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         public IActionResult TestActionOne()
         {
-            List<CharacterModel> parsedResultList = new List<CharacterModel>();
+
             RequestLocalization requestLocalization = new RequestLocalization()
             {
-                CoreRegionUrlAddress = Configuration.APIConf.BlizzardAPIWowEUAddress,
-                Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB" }
+                CoreRegionUrlAddress = Configuration.APIConf.RaiderIOAdress,
+                Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB", Timezone = "Europe/Paris" }
             };
 
             List<string> characterNamesToCompare = new List<string>
@@ -37,19 +38,31 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
             foreach (string name in characterNamesToCompare)
             {
-                var result = CharacterRequests.GetCharacterDataAsJsonAsync(name,
-                                                                            requestLocalization,
-                                                                            new List<CharacterFields>()
-                                                                            {
-                                                                                CharacterFields.Items
-                                                                            }).Result;
-
-                CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
-                parsedResultList.Add(parsedResult);
+                var result = RaiderIORequests.GetAscRaiderIOData(name, requestLocalization, new List<RaiderIOCharacterFields>
+                                                                    {
+                                                                        RaiderIOCharacterFields.Gear
+                                                                    }).Result;
+                                                                    
             }
-            //var characterComparerResult = StatisticsComparer.CompareCharacterStatistics(parsedResultList); // required CharacterFields.Stats
-            //var characterComparerResult = ItemLevelComparer.CompareCharactersItemLevel(parsedResultList); // required CharacterFields.Items
-            var characterComparerResult = HeartOfAzerothComparer.CompareHeartOfAzerothLevel(parsedResultList); // required CharacterFields.Items
+
+
+            //List<CharacterModel> parsedResultList = new List<CharacterModel>();
+
+            //foreach (string name in characterNamesToCompare)
+            //{
+            //    var result = CharacterRequests.GetCharacterDataAsJsonAsync(name,
+            //                                                                requestLocalization,
+            //                                                                new List<CharacterFields>()
+            //                                                                {
+            //                                                                    CharacterFields.Items
+            //                                                                }).Result;
+
+            //    CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
+            //    parsedResultList.Add(parsedResult);
+            //}
+            ////var characterComparerResult = StatisticsComparer.CompareCharacterStatistics(parsedResultList); // required CharacterFields.Stats
+            ////var characterComparerResult = ItemLevelComparer.CompareCharactersItemLevel(parsedResultList); // required CharacterFields.Items
+            //var characterComparerResult = HeartOfAzerothComparer.CompareHeartOfAzerothLevel(parsedResultList); // required CharacterFields.Items
             return StatusCode(200);
         }
 
