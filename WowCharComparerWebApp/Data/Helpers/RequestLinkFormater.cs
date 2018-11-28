@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using WowCharComparerWebApp.Enums;
-using WowCharComparerWebApp.Enums.RaiderIO;
 using WowCharComparerWebApp.Models.Servers;
 
 [assembly: InternalsVisibleTo("WowCharacterComparer.Tests")]
@@ -30,7 +29,7 @@ namespace WowCharComparerWebApp.Data.Helpers
             }
 
 
-            foreach (KeyValuePair<string, string> parameter in parameters)
+            foreach (KeyValuePair<string, string> parameter in parameters) // use this (look down)
             {
                 processingUriAddress = processingUriAddress.AddParameterToUrl(parameter.Key + "=" + parameter.Value);
             }
@@ -42,15 +41,13 @@ namespace WowCharComparerWebApp.Data.Helpers
 
         internal static Uri GenerateRaiderIOApiRequestLink(RequestLocalization requestLocalization, List<KeyValuePair<string, string>> parameters, string characterName)
         {
-            //https://raider.io/api/v1/characters/profile?region=eu&realm=burning-legion&
-
-            string region = requestLocalization.Realm.Timezone == "Europe/Paris" ? "eu" : throw new NotImplementedException("Choosed realm is not European"); 
+            string region = requestLocalization.Realm.Timezone == "Europe/Paris" ? "eu" : throw new Exception("Choosed realm is not European"); 
 
             string processingUriAddress = string.Empty;
 
             processingUriAddress = processingUriAddress.AddQuestionMarkToUrl(requestLocalization.CoreRegionUrlAddress);
 
-            processingUriAddress = processingUriAddress + "region=";
+            processingUriAddress = processingUriAddress + "region="; //TODO  to replace this :))! (look up)
             processingUriAddress = processingUriAddress.AddParameterToUrl(region);
 
             processingUriAddress = processingUriAddress + "realm=";

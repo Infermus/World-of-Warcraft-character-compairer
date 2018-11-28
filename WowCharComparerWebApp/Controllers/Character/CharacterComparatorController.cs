@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using WowCharComparerWebApp.Data.ApiRequests;
 using WowCharComparerWebApp.Data.Database.Repository;
-using WowCharComparerWebApp.Data.Helpers;
-using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Enums.Locale;
 using WowCharComparerWebApp.Enums.RaiderIO;
-using WowCharComparerWebApp.Logic.Character.Statistics;
-using WowCharComparerWebApp.Logic.HeartOfAzeroth;
-using WowCharComparerWebApp.Logic.ItemLevel;
-using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Controllers.CharacterControllers
@@ -38,14 +32,14 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
             foreach (string name in characterNamesToCompare)
             {
-                var result = RaiderIORequests.GetAscRaiderIOData(name, requestLocalization, new List<RaiderIOCharacterFields>
+                var result = RaiderIORequests.GetRaiderIODataAsync(name, requestLocalization, new List<RaiderIOCharacterFields>
                                                                     {
-                                                                        RaiderIOCharacterFields.Gear
+                                                                        RaiderIOCharacterFields.Gear,
+                                                                        RaiderIOCharacterFields.MythicPlusBestRuns
                                                                     }).Result;
-                                                                    
+
             }
-
-
+            #region Testing character compare result
             //List<CharacterModel> parsedResultList = new List<CharacterModel>();
 
             //foreach (string name in characterNamesToCompare)
@@ -60,9 +54,8 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             //    CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
             //    parsedResultList.Add(parsedResult);
             //}
-            ////var characterComparerResult = StatisticsComparer.CompareCharacterStatistics(parsedResultList); // required CharacterFields.Stats
-            ////var characterComparerResult = ItemLevelComparer.CompareCharactersItemLevel(parsedResultList); // required CharacterFields.Items
-            //var characterComparerResult = HeartOfAzerothComparer.CompareHeartOfAzerothLevel(parsedResultList); // required CharacterFields.Items
+            #endregion
+
             return StatusCode(200);
         }
 

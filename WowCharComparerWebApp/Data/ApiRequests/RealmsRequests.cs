@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
-using WowCharComparerWebApp.Models;
+using WowCharComparerWebApp.Models.APIResponse;
 using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Data.ApiRequests
@@ -18,7 +18,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
             Uri uriAddress = RequestLinkFormater.GenerateAPIRequestLink(BlizzardAPIProfiles.Realm, requestLocalization, parameters, "status"); //TODO replace string
             
 
-            return await BlizzardAPIManager.GetDataByHttpRequest(uriAddress);
+            return await APIDataRequestManager.GetDataByHttpRequest<BlizzardAPIResponse>(uriAddress);
         }
     }
 }

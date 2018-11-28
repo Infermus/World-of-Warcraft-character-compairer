@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.RaiderIO;
-using WowCharComparerWebApp.Models;
+using WowCharComparerWebApp.Models.APIResponse;
 using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Data.ApiRequests
 {
     public class RaiderIORequests
     {
-        public static async Task<BlizzardAPIResponse> GetAscRaiderIOData(string characterName, RequestLocalization requestLocalization, List<RaiderIOCharacterFields> characterFields)
+        public static async Task<RaiderIOAPIResponse> GetRaiderIODataAsync(string characterName, RequestLocalization requestLocalization, List<RaiderIOCharacterFields> characterFields)
         {
 
             List<KeyValuePair<string, string>> characterParams = new List<KeyValuePair<string, string>>();
@@ -36,9 +37,10 @@ namespace WowCharComparerWebApp.Data.ApiRequests
 
                 characterParams.Add(new KeyValuePair<string, string>("fields", localFields));
             }
-            Uri uriAdress = RequestLinkFormater.GenerateRaiderIOApiRequestLink(requestLocalization, characterParams, characterName);
 
-            return new BlizzardAPIResponse(); //TODO Return different type
+            Uri uriAddress = RequestLinkFormater.GenerateRaiderIOApiRequestLink(requestLocalization, characterParams, characterName);
+
+            return await APIDataRequestManager.GetDataByHttpRequest<RaiderIOAPIResponse>(uriAddress);
         }
     }
 }
