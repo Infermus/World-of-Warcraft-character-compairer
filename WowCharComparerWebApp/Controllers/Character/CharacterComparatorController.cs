@@ -35,7 +35,8 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                 var result = RaiderIORequests.GetRaiderIODataAsync(name, requestLocalization, new List<RaiderIOCharacterFields>
                                                                     {
                                                                         RaiderIOCharacterFields.Gear,
-                                                                        RaiderIOCharacterFields.MythicPlusBestRuns
+                                                                        RaiderIOCharacterFields.MythicPlusBestRuns,
+                                                                        RaiderIOCharacterFields.RaidAchievementMeta
                                                                     }).Result;
 
             }

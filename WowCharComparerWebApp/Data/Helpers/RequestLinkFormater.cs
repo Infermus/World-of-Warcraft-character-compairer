@@ -11,7 +11,7 @@ namespace WowCharComparerWebApp.Data.Helpers
     internal static class RequestLinkFormater
     {
 
-        internal static Uri GenerateAPIRequestLink(BlizzardAPIProfiles profile, RequestLocalization requestLocalization, List<KeyValuePair<string, string>> parameters, string endPointPart1 = null, string endPointPart2 = null)
+        internal static Uri GenerateAPIRequestLink(BlizzardAPIProfiles profile, RequestLocalization requestLocalization, List<KeyValuePair<string, string>> fields, string endPointPart1 = null, string endPointPart2 = null)
         {
             string processingUriAddress = string.Empty;
 
@@ -25,11 +25,11 @@ namespace WowCharComparerWebApp.Data.Helpers
 
             if (requestLocalization.Realm != null)
             {
-                parameters.Add(new KeyValuePair<string, string>("?locale", requestLocalization.Realm.Locale));
+                fields.Add(new KeyValuePair<string, string>("?locale", requestLocalization.Realm.Locale));
             }
 
 
-            foreach (KeyValuePair<string, string> parameter in parameters) // use this (look down)
+            foreach (KeyValuePair<string, string> parameter in fields) // use this (look down)
             {
                 processingUriAddress = processingUriAddress.AddParameterToUrl(parameter.Key + "=" + parameter.Value);
             }
@@ -39,26 +39,20 @@ namespace WowCharComparerWebApp.Data.Helpers
             return new Uri(processingUriAddress);
         }
 
-        internal static Uri GenerateRaiderIOApiRequestLink(RequestLocalization requestLocalization, List<KeyValuePair<string, string>> parameters, string characterName)
+        internal static Uri GenerateRaiderIOApiRequestLink(RequestLocalization requestLocalization, List<KeyValuePair<string, string>> fields, List<KeyValuePair<string,string>> parameters, string characterName)
         {
-            string region = requestLocalization.Realm.Timezone == "Europe/Paris" ? "eu" : throw new Exception("Choosed realm is not European"); 
-
             string processingUriAddress = string.Empty;
 
             processingUriAddress = processingUriAddress.AddQuestionMarkToUrl(requestLocalization.CoreRegionUrlAddress);
 
-            processingUriAddress = processingUriAddress + "region="; //TODO  to replace this :))! (look up)
-            processingUriAddress = processingUriAddress.AddParameterToUrl(region);
-
-            processingUriAddress = processingUriAddress + "realm=";
-            processingUriAddress = processingUriAddress.AddParameterToUrl(requestLocalization.Realm.Slug);
-
-            processingUriAddress = processingUriAddress + "name=";
-            processingUriAddress = processingUriAddress.AddParameterToUrl(characterName).ToLower();
-
             foreach (KeyValuePair<string, string> parameter in parameters)
             {
-                processingUriAddress = processingUriAddress.AddParameterToUrl(parameter.Key + "=" + parameter.Value);
+                processingUriAddress = processingUriAddress.AddParameterToUrl(parameter.Key + "=" + parameter.Value).ToLower();
+            }
+
+            foreach (KeyValuePair<string, string> field in fields)
+            {
+                processingUriAddress = processingUriAddress.AddParameterToUrl(field.Key + "=" + field.Value);
                 processingUriAddress = processingUriAddress.EndsWith("&") ? processingUriAddress.Remove(processingUriAddress.Length - 1, 1) // remove join parameters symbol at ending field
                                                            : processingUriAddress;
             }

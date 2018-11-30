@@ -15,8 +15,16 @@ namespace WowCharComparerWebApp.Data.ApiRequests
     {
         public static async Task<RaiderIOAPIResponse> GetRaiderIODataAsync(string characterName, RequestLocalization requestLocalization, List<RaiderIOCharacterFields> characterFields)
         {
+            string region = requestLocalization.Realm.Timezone == "Europe/Paris" ? "eu" : throw new Exception("Choosed realm is not European");
 
-            List<KeyValuePair<string, string>> characterParams = new List<KeyValuePair<string, string>>();
+            List<KeyValuePair<string, string>> fields = new List<KeyValuePair<string, string>>();
+
+            List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>(RaiderIOCharacterParams.Region.ToString(), region),
+                new KeyValuePair<string, string>(RaiderIOCharacterParams.Realm.ToString(), requestLocalization.Realm.Slug),
+                new KeyValuePair<string, string>(RaiderIOCharacterParams.Name.ToString(), characterName)
+            };
 
             // check if there is any additional parameters to get. If not - just return basic informations
             if (characterFields.Any())
@@ -35,10 +43,10 @@ namespace WowCharComparerWebApp.Data.ApiRequests
                 localFields = localFields.EndsWith("%2C") ? localFields.Remove(localFields.Length - 3, 3) // remove join parameters symbol at ending field
                                                            : localFields;
 
-                characterParams.Add(new KeyValuePair<string, string>("fields", localFields));
+                fields.Add(new KeyValuePair<string, string>("fields", localFields));
             }
 
-            Uri uriAddress = RequestLinkFormater.GenerateRaiderIOApiRequestLink(requestLocalization, characterParams, characterName);
+            Uri uriAddress = RequestLinkFormater.GenerateRaiderIOApiRequestLink(requestLocalization, fields, parameters, characterName);
 
             return await APIDataRequestManager.GetDataByHttpRequest<RaiderIOAPIResponse>(uriAddress);
         }
