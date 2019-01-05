@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using WowCharComparerWebApp.Data.ApiRequests;
 using WowCharComparerWebApp.Data.Database.Repository;
+using WowCharComparerWebApp.Data.Helpers;
+using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Enums.Locale;
 using WowCharComparerWebApp.Enums.RaiderIO;
+using WowCharComparerWebApp.Models.CharacterProfile;
+using WowCharComparerWebApp.Models.RaiderIO;
+using WowCharComparerWebApp.Models.RaiderIO.Character;
 using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Controllers.CharacterControllers
@@ -17,10 +22,11 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         public IActionResult TestActionOne()
         {
+            List<Character> parsedResultList = new List<Character>();
 
             RequestLocalization requestLocalization = new RequestLocalization()
             {
-                CoreRegionUrlAddress = Configuration.APIConf.RaiderIOAdress,
+                CoreRegionUrlAddress = Configuration.APIConf.RaiderIOAdress, // refactor this
                 Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB", Timezone = "Europe/Paris" }
             };
 
@@ -30,15 +36,18 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                     "Selectus"
             };
 
+
             foreach (string name in characterNamesToCompare)
             {
-                var result = RaiderIORequests.GetRaiderIODataAsync(name, requestLocalization, new List<RaiderIOCharacterFields>
+                var result = RaiderIORequests.GetRaiderIODataAsync(name, 
+                                                                    requestLocalization, new List<RaiderIOCharacterFields>
                                                                     {
-                                                                        RaiderIOCharacterFields.Gear,
                                                                         RaiderIOCharacterFields.MythicPlusBestRuns,
-                                                                        RaiderIOCharacterFields.RaidAchievementMeta
+                                                                        RaiderIOCharacterFields.MythicPlusRanks
                                                                     }).Result;
 
+                Character parsedResult = JsonProcessing.DeserializeJsonData<Character>(result.Data);
+                parsedResultList.Add(parsedResult);
             }
             #region Testing character compare result
             //List<CharacterModel> parsedResultList = new List<CharacterModel>();
@@ -52,7 +61,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             //                                                                    CharacterFields.Items
             //                                                                }).Result;
 
-            //    CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
+             //   CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
             //    parsedResultList.Add(parsedResult);
             //}
             #endregion
