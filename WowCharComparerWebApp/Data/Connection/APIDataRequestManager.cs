@@ -6,38 +6,43 @@ using System.Threading.Tasks;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database.Repository;
 using WowCharComparerWebApp.Data.Helpers;
-using WowCharComparerWebApp.Models;
+using WowCharComparerWebApp.Models.Abstract;
+using WowCharComparerWebApp.Models.APIResponse;
 using WowCharComparerWebApp.Models.Internal;
 
 namespace WowCharComparerWebApp.Data.Connection
 {
-    internal static class BlizzardAPIManager
+    internal static class APIDataRequestManager
     {
-        public static async Task<BlizzardAPIResponse> GetDataByHttpRequest(Uri uriAddress)
+        public static async Task<T> GetDataByHttpRequest<T>(Uri uriAddress) where T : CommonAPIResponse
         {
-            BlizzardAPIResponse blizzardAPIResponse = new BlizzardAPIResponse();
+            OAuth2Token token = null;
+            CommonAPIResponse apiResponse = Activator.CreateInstance<T>();
 
-            APIClient apiClient = APIAuthorizationDB.GetClientInformation(APIConf.BlizzardAPIWowMainClientID);
-            OAuth2Token token = GetBearerAuthenticationToken(apiClient);
+            if (apiResponse is BlizzardAPIResponse)
+            {
+                APIClient apiClient = APIAuthorizationDB.GetClientInformation(APIConf.BlizzardAPIWowMainClientID);
+                token = GetBearerAuthenticationToken(apiClient);
+            }
 
             try
             {
                 using (HttpClient httpClient = new HttpClient())
                 {
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.TokenType, token.TokenValue);
-                    blizzardAPIResponse.Data = await httpClient.GetStringAsync(uriAddress.AbsoluteUri);
+                    httpClient.DefaultRequestHeaders.Authorization = token == null ? default(AuthenticationHeaderValue)
+                                                                                   : new AuthenticationHeaderValue(token.TokenType, token.TokenValue);
+
+                    apiResponse.Data = await httpClient.GetStringAsync(uriAddress.AbsoluteUri);
                 }
             }
             catch (Exception ex)
             {
-                blizzardAPIResponse = new BlizzardAPIResponse()
-                {
-                    Data = string.Empty,
-                    Exception = ex
-                };
+                apiResponse = Activator.CreateInstance<T>();
+                apiResponse.Data = string.Empty;
+                apiResponse.Exception = ex;
             }
 
-            return blizzardAPIResponse;
+            return (T) apiResponse;
         }
 
         private static OAuth2Token GetBearerAuthenticationToken(APIClient apiClient)

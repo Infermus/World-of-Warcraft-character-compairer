@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using WowCharComparerWebApp.Logic.Character;
-using WowCharComparerWebApp.Models.Statistics;
 
 namespace WowCharComparerWebApp.Data.Helpers
 {
-   public class JsonProcessing
+    public class JsonProcessing
     {
         public static T DeserializeJsonData<T>(string jsonToParse) where T : class
         {

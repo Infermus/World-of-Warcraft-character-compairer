@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
-using WowCharComparerWebApp.Models;
+using WowCharComparerWebApp.Models.APIResponse;
 using WowCharComparerWebApp.Models.Servers;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
@@ -35,7 +35,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
             }
             Uri uriAddress = RequestLinkFormater.GenerateAPIRequestLink(BlizzardAPIProfiles.Character, requestLocalization, characterParams, requestLocalization.Realm.Slug, characterName); // generates link for request
 
-            return await BlizzardAPIManager.GetDataByHttpRequest(uriAddress);
+            return await APIDataRequestManager.GetDataByHttpRequest<BlizzardAPIResponse>(uriAddress);
         }
     }
 }
