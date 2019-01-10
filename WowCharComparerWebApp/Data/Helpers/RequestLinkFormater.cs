@@ -39,11 +39,11 @@ namespace WowCharComparerWebApp.Data.Helpers
             return new Uri(processingUriAddress);
         }
 
-        internal static Uri GenerateRaiderIOApiRequestLink(RequestLocalization requestLocalization, List<KeyValuePair<string, string>> fields, List<KeyValuePair<string,string>> parameters, string characterName)
+        internal static Uri GenerateRaiderIOApiRequestLink(List<KeyValuePair<string, string>> fields, List<KeyValuePair<string,string>> parameters)
         {
             string processingUriAddress = string.Empty;
 
-            processingUriAddress = processingUriAddress.AddQuestionMarkToUrl(requestLocalization.CoreRegionUrlAddress);
+            processingUriAddress = processingUriAddress.AddQuestionMarkToUrl(Configuration.APIConf.RaiderIOAdress);
 
             foreach (KeyValuePair<string, string> parameter in parameters)
             {

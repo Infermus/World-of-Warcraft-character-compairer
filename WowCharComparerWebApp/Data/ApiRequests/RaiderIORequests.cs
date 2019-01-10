@@ -46,7 +46,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
                 fields.Add(new KeyValuePair<string, string>("fields", localFields));
             }
 
-            Uri uriAddress = RequestLinkFormater.GenerateRaiderIOApiRequestLink(requestLocalization, fields, parameters, characterName);
+            Uri uriAddress = RequestLinkFormater.GenerateRaiderIOApiRequestLink(fields, parameters);
 
             return await APIDataRequestManager.GetDataByHttpRequest<RaiderIOAPIResponse>(uriAddress);
         }
