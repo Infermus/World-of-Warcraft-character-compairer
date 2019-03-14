@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.RaiderIO;
@@ -25,7 +26,7 @@ namespace WowCharacterComparer.Tests
             // Act
             RequestLocalization requestLocalization = new RequestLocalization()
             {
-                CoreRegionUrlAddress = WowCharComparerWebApp.Configuration.APIConf.BlizzardAPIWowEUAddress,
+                CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper[Region.Europe],
                 Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB" }
             };
 

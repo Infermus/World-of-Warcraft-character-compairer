@@ -14,10 +14,10 @@ namespace WowCharComparerWebApp.Data.Connection
 {
     internal static class APIDataRequestManager
     {
-        public static async Task<T> GetDataByHttpRequest<T>(Uri uriAddress) where T : CommonAPIResponse
+        public static async Task<T> GetDataByHttpRequest<T>(Uri uriAddress) where T : CommonAPIResponse, new()
         {
             OAuth2Token token = null;
-            CommonAPIResponse apiResponse = Activator.CreateInstance<T>();
+            CommonAPIResponse apiResponse = new T();
 
             if (apiResponse is BlizzardAPIResponse)
             {
