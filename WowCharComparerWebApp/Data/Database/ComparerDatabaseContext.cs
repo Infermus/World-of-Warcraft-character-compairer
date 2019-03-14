@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.Internal;
+using WowCharComparerWebApp.Models.Achievement;
 
 namespace WowCharComparerWebApp.Data.Database
 {
@@ -12,9 +13,11 @@ namespace WowCharComparerWebApp.Data.Database
         // Database table which holds user's information
         public DbSet<User> Users { get; set; }
 
-        //public DbSet<Models.Achievement.Achievements> Achievements { get; set; }
-
         public DbSet<BonusStats> BonusStats { get; set; }
+
+        public DbSet<AchievementCategory> AchievementCategory { get; set; }
+
+        public DbSet<AchievementsData> AchievementsData { get; set; }
 
         private static string ConnectionString { get; set; }
 
@@ -37,7 +40,7 @@ namespace WowCharComparerWebApp.Data.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<BonusStats>().HasIndex(x => x.StatisticId).IsUnique();
+            modelBuilder.Entity<BonusStats>().HasIndex(x => x.ID).IsUnique();
         }
 
     }
