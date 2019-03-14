@@ -40,6 +40,5 @@ namespace WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Gear
         public AzeriteItem AzeriteItem { get; set; }
 
         public AzeriteEmpoweredItem AzeriteEmpoweredItem { get; set; }
-
     }
 }

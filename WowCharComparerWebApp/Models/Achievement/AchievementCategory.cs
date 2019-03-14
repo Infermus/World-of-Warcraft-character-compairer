@@ -1,21 +1,22 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace WowCharComparerWebApp.Models.Achievement
 { 
-    public class Achievements 
+    public class AchievementCategory 
     {
         [Key]
         [JsonProperty(PropertyName = "Id")]
-        public int GlobalId { get; set; }
+        public int ID { get; set; }
 
         [JsonProperty(PropertyName = "Achievements")]
         public AchievementsData [] AchievementsData { get; set; }
 
         [JsonProperty(PropertyName = "Categories")]
-        public CategoriesData [] CategoriesData { get; set; }
+        public AchievementsSubCategoryData [] AchievementsSubCategoryData { get; set; }
 
         [JsonProperty(PropertyName = "Name")]
-        public string GlobalName { get; set; }
+        public string CategoryName { get; set; }
     }
 }
