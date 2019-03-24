@@ -5,14 +5,14 @@ namespace WowCharComparerWebApp.Models
     {
         public int [] AchievementsCompleted { get; set; }
 
-        public int [] AchievementsCompletedTimestamp { get; set; }
+        public long [] AchievementsCompletedTimestamp { get; set; }
 
         public int [] Criteria { get; set; }
 
-        public int [] CriteriaQuantity { get; set; }
+        public long [] CriteriaQuantity { get; set; }
 
-        public int [] CriteriaTimestamp { get; set; }
+        public long[] CriteriaTimestamp { get; set; }
 
-        public int [] CriteriaCreated { get; set; }
+        public long [] CriteriaCreated { get; set; }
     }
 }

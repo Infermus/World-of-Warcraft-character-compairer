@@ -8,7 +8,7 @@ namespace WowCharComparerWebApp.Models
     {
         [JsonIgnore]
         [Key]
-        public Guid ID { get; set; }
+        public Guid Guid { get; set; }
 
         [Required]
         [JsonProperty(PropertyName = "Id")]

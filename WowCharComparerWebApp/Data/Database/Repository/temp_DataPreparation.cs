@@ -15,13 +15,14 @@ namespace WowCharComparerWebApp.Data.Database.Repository
         {
             var parsedJsonData = JsonProcessing.GetDataFromJsonFile<Models.Statistics.Statistics>(@"\Statistics.json");
 
+
             using (var db = new ComparerDatabaseContext())
             {
                 for (int index = 0; index < parsedJsonData.BonusStats.Length; index++)
                 {
                     db.BonusStats.Add(new BonusStats()
                     {
-                        ID = Guid.NewGuid(),
+                        Guid = Guid.NewGuid(),
                         BonusStatsID = parsedJsonData.BonusStats[index].BonusStatsID,
                         Name = parsedJsonData.BonusStats[index].Name
                     });

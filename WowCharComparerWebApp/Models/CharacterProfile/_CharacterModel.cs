@@ -13,7 +13,7 @@ namespace WowCharComparerWebApp.Models.CharacterProfile
 {
     public class CharacterModel
     {
-        public long LastModified { get; set; }
+        public double LastModified { get; set; }
 
         public string Name { get; set; }
 

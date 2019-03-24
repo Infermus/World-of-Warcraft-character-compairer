@@ -6,6 +6,7 @@ using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Enums.Locale;
 using WowCharComparerWebApp.Enums.RaiderIO;
+using WowCharComparerWebApp.Logic.DataResources;
 using WowCharComparerWebApp.Models.Achievement;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.RaiderIO;
@@ -59,12 +60,14 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                                                                             requestLocalization,
                                                                             new List<CharacterFields>()
                                                                             {
-                                                                                CharacterFields.Items
+                                                                                CharacterFields.Achievements
                                                                             }).Result;
 
                 CharacterModel parsedResult = JsonProcessing.DeserializeJsonData<CharacterModel>(result.Data);
                 parsedResultList.Add(parsedResult);
             }
+
+            PlayersAchievements.CompareAchievements(parsedResultList);
             #endregion
 
             return StatusCode(200);
@@ -72,7 +75,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         public IActionResult TestActionTwo()
         {
-            temp_DataPreparation.InsertBonusStatsTableFromJsonFile();
+            temp_DataPreparation.InsertBonusStatsTableFromJsonFile(); // << adding data from BonusStats to Database
 
             return Content("Action two - executed");
         }

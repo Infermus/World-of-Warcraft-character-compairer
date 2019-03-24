@@ -40,7 +40,7 @@ namespace WowCharComparerWebApp.Data.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<BonusStats>().HasIndex(x => x.ID).IsUnique();
+            modelBuilder.Entity<BonusStats>().HasIndex(x => x.Guid).IsUnique();
         }
 
     }
