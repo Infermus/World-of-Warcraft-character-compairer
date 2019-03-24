@@ -19,14 +19,15 @@ namespace WowCharComparerWebApp.Data.Connection
             OAuth2Token token = null;
             CommonAPIResponse apiResponse = new T();
 
-            if (apiResponse is BlizzardAPIResponse)
-            {
-                APIClient apiClient = APIAuthorizationDB.GetClientInformation(APIConf.BlizzardAPIWowMainClientID);
-                token = GetBearerAuthenticationToken(apiClient);
-            }
-
             try
             {
+
+                if (apiResponse is BlizzardAPIResponse)
+                {
+                    APIClient apiClient = APIAuthorizationDB.GetClientInformation(APIConf.BlizzardAPIWowMainClientID);
+                    token = GetBearerAuthenticationToken(apiClient);
+                }
+
                 using (HttpClient httpClient = new HttpClient())
                 {
                     httpClient.DefaultRequestHeaders.Authorization = token == null ? default(AuthenticationHeaderValue)
@@ -42,7 +43,7 @@ namespace WowCharComparerWebApp.Data.Connection
                 apiResponse.Exception = ex;
             }
 
-            return (T) apiResponse;
+            return (T)apiResponse;
         }
 
         private static OAuth2Token GetBearerAuthenticationToken(APIClient apiClient)
@@ -56,20 +57,20 @@ namespace WowCharComparerWebApp.Data.Connection
                 new KeyValuePair<string, string>(APIConf.BlizzardAPIWowGrantTypeParameter, APIConf.BlizzardAPIWowClientCredentialsParameter)
             });
 
-            try
+            using (HttpClient httpClient = new HttpClient())
             {
-                using (HttpClient httpClient = new HttpClient())
+                var response = httpClient.PostAsync(APIConf.BlizzardAPIWowOAuthTokenAdress, requestContent);
+                response.Wait();
+
+                if (response.Result.IsSuccessStatusCode)
                 {
-                    var response = httpClient.PostAsync(APIConf.BlizzardAPIWowOAuthTokenAdress, requestContent);
-                    response.Wait();
                     var responseResult = response.Result.Content.ReadAsStringAsync().Result;
                     receivedOAuth2Token = JsonProcessing.DeserializeJsonData<OAuth2Token>(responseResult);
                 }
-            }
-            catch (Exception)
-            {
-                //todo hit with nlog
-                receivedOAuth2Token = new OAuth2Token();
+                else
+                {
+                    throw new Exception($"{InternalMessages.BearerAuthFailed }. {response.Result.ReasonPhrase}");
+                }
             }
 
             return receivedOAuth2Token;

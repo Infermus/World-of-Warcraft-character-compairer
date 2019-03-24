@@ -38,58 +38,61 @@ namespace WowCharComparerWebApp.Data.Database.Repository
                 {
                     try
                     {
-                        db.Database.ExecuteSqlCommand("DELETE FROM AchievementCategory");
+                        //TODO Remove delete from
                         db.Database.ExecuteSqlCommand("DELETE FROM AchievementsData");
+                        db.Database.ExecuteSqlCommand("DELETE FROM AchievementCategory");
 
-                        for (int categoryIndex = 0; categoryIndex < apiData.AchievementCategory.Length; categoryIndex++)
+                        for (int categoryIndex = 0; categoryIndex < apiData.AchievementCategory.Count(); categoryIndex++)
                         {
                             db.AchievementCategory.Add(new AchievementCategory()
                             {
-                                ID = apiData.AchievementCategory[categoryIndex].ID,
-                                CategoryName = apiData.AchievementCategory[categoryIndex].CategoryName,
+                                ID = apiData.AchievementCategory.ElementAt(categoryIndex).ID,
+                                CategoryName = apiData.AchievementCategory.ElementAt(categoryIndex).CategoryName,
                             });
 
                             IdentityInsertManager("AchievementCategory");
 
-                            if (apiData.AchievementCategory[categoryIndex].AchievementsData != null)
+                            if (apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData != null)
                             {
-                                for (int dataIndex = 0; dataIndex < apiData.AchievementCategory[categoryIndex].AchievementsData.Length; dataIndex++)
+                                for (int dataIndex = 0; dataIndex < apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.Count(); dataIndex++)
                                 {
                                     db.AchievementsData.Add(new AchievementsData()
                                     {
-                                        Title = apiData.AchievementCategory[categoryIndex].AchievementsData[dataIndex].Title,
-                                        ID = apiData.AchievementCategory[categoryIndex].AchievementsData[dataIndex].ID,
-                                        Points = apiData.AchievementCategory[categoryIndex].AchievementsData[dataIndex].Points,
-                                        Description = apiData.AchievementCategory[categoryIndex].AchievementsData[dataIndex].Description,
-                                        Icon = apiData.AchievementCategory[categoryIndex].AchievementsData[dataIndex].Icon,
-                                        FactionId = apiData.AchievementCategory[categoryIndex].AchievementsData[dataIndex].FactionId,
+                                        Title = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.ElementAt(dataIndex).Title,
+                                        ID = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.ElementAt(dataIndex).ID,
+                                        Points = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.ElementAt(dataIndex).Points,
+                                        Description = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.ElementAt(dataIndex).Description,
+                                        Icon = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.ElementAt(dataIndex).Icon,
+                                        FactionId = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.ElementAt(dataIndex).FactionId,
+                                        AchievementCategoryID = apiData.AchievementCategory.ElementAt(categoryIndex).ID
                                     });
                                 }
                                 IdentityInsertManager("AchievementsData");
                             }
 
-                            if (apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData != null)
+                            if (apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData != null)
                             {
-                                for (int dataIndex = 0; dataIndex < apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData.Length; dataIndex++)
+                                for (int dataIndex = 0; dataIndex < apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.Count(); dataIndex++)
                                 {
                                     db.AchievementCategory.Add(new AchievementCategory()
                                     {
-                                        CategoryName = apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData[dataIndex].CategoryName,
-                                        ID = apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData[dataIndex].ID,
+                                        CategoryName = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).CategoryName,
+                                        ID = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).ID,
                                     });
 
                                     IdentityInsertManager("AchievementCategory");
 
-                                    for (int index = 0; index < apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData[dataIndex].AchievementsData.Length; index++)
+                                    for (int index = 0; index < apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.Count(); index++)
                                     {
                                         db.AchievementsData.Add(new AchievementsData()
                                         {
-                                            Title = apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData[dataIndex].AchievementsData[index].Title,
-                                            ID = apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData[dataIndex].AchievementsData[index].ID,
-                                            Points = apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData[dataIndex].AchievementsData[index].Points,
-                                            Description = apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData[dataIndex].AchievementsData[index].Description,
-                                            Icon = apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData[dataIndex].AchievementsData[index].Icon,
-                                            FactionId = apiData.AchievementCategory[categoryIndex].AchievementsSubCategoryData[dataIndex].AchievementsData[index].FactionId,
+                                            Title = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.ElementAt(index).Title,
+                                            ID = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.ElementAt(index).ID,
+                                            Points = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.ElementAt(index).Points,
+                                            Description = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.ElementAt(index).Description,
+                                            Icon = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.ElementAt(index).Icon,
+                                            FactionId = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.ElementAt(index).FactionId,
+                                            AchievementCategoryID = apiData.AchievementCategory.ElementAt(categoryIndex).ID
                                         });
 
                                         IdentityInsertManager("AchievementsData");
@@ -105,8 +108,8 @@ namespace WowCharComparerWebApp.Data.Database.Repository
                     }
                 }
 
-               void IdentityInsertManager(string tableName)
-               {
+                void IdentityInsertManager(string tableName)
+                {
                     db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + tableName + " ON");
                     db.SaveChanges();
                     db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + tableName + " OFF");

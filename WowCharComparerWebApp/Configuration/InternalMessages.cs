@@ -9,5 +9,6 @@ namespace WowCharComparerWebApp.Configuration
     {
         public const string ConnectionStringIsEmpty = "Connection string is null or empty";
         public const string InvalidDbType = "Invalid type of database";
+        public const string BearerAuthFailed = "Bearer token authentication failed";
     }
 }

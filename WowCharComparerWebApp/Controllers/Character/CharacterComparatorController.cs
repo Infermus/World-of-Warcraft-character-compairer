@@ -8,6 +8,7 @@ using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.Locale;
 using WowCharComparerWebApp.Enums.RaiderIO;
+using WowCharComparerWebApp.Models.Achievement;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.RaiderIO.Character;
 using WowCharComparerWebApp.Models.Servers;
@@ -117,6 +118,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         public IActionResult TestActionThree()
         {
+            string returnContent = string.Empty;
 
             var data = DataResources.GetCharacterAchievements(new RequestLocalization()
             {
@@ -124,7 +126,19 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                 Realm = new Realm() { Locale = EULocale.en_GB.ToString() }
             });
 
-            return Content(data.Result.Data);
+            if (data.Result.Exception is null)
+            {
+                Achievement parsedResult = JsonProcessing.DeserializeJsonData<Achievement>(data.Result.Data);
+                temp_DataPreparation.InsertAllAchievementsDataFromApiRequest(parsedResult);
+
+                returnContent = "Test action three executed - achievements insertion to database";
+            }
+            else
+            {
+                returnContent = data.Result.Exception.Message;
+            }
+            
+            return Content(returnContent);
         }
 
         public IActionResult ComparePlayers(CharacterModel firstPlayer, CharacterModel secondPlayer)

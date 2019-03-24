@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WowCharComparerWebApp.Models.Achievement
 {
@@ -19,5 +20,7 @@ namespace WowCharComparerWebApp.Models.Achievement
         
         public int FactionId { get; set; }
 
+        [ForeignKey("AchievementCategory")]
+        public int AchievementCategoryID { get; set; }
     }
 }
