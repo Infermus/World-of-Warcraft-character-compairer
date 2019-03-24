@@ -1,146 +1,168 @@
 ﻿@{
     ViewData["Title"] = "CharacterComparatorView";
-    @model WowCharComparerWebApp.Models.Servers.Realm;
+    @model WowCharComparerWebApp.Models.CharacterProfile.CharacterModel;
 }
 
 <link rel="stylesheet" href="~/css/character-comparator.css" />
 
-<div class="single-character-column">
+@{
+    WowCharComparerWebApp.Models.CharacterProfile.CharacterModel firstPlayerData = new WowCharComparerWebApp.Models.CharacterProfile.CharacterModel();
+    WowCharComparerWebApp.Models.CharacterProfile.CharacterModel secondPlayerData = new WowCharComparerWebApp.Models.CharacterProfile.CharacterModel();
+    <div class="single-character-column">
 
-    <div class="row">
-        <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-6">
 
-            <h3 style="padding-bottom: 15px;">First Character</h3>
+                <h3 style="padding-bottom: 15px;">First Character</h3>
 
-            <h4>Region</h4>
-            <form action="LoadRealmData" method="post">
+                <h4>Region</h4>
                 <div class="btn-group" role="group">
-                    <button type="submit" class="btn btn-primary" id="europe-button">@WowCharComparerWebApp.Enums.Region.Europe</button>
-                    <button type="submit" class="btn btn-default" id="america-button">@WowCharComparerWebApp.Enums.Region.America</button>
-                    <button type="submit" class="btn btn-default" id="korea-button">@WowCharComparerWebApp.Enums.Region.Korea</button>
-                    <button type="submit" class="btn btn-default" id="taiwan-button">@WowCharComparerWebApp.Enums.Region.Taiwan</button>
+
+                    <form asp-controller="CharacterComparator" asp-action="SelectedRegionLeftPlayer" asp-route-region="@WowCharComparerWebApp.Enums.Region.Europe">
+                        <button type="submit" class="btn btn-primary" id="europa-button">@WowCharComparerWebApp.Enums.Region.Europe</button>
+                    </form>
+
+                    <form asp-controller="CharacterComparator" asp-action="SelectedRegionLeftPlayer" asp-route-region="@WowCharComparerWebApp.Enums.Region.America">
+                        <button type="submit" class="btn btn-default" id="america-button">@WowCharComparerWebApp.Enums.Region.America</button>
+                    </form>
+
+                    <form asp-controller="CharacterComparator" asp-action="SelectedRegionLeftPlayer" asp-route-region="@WowCharComparerWebApp.Enums.Region.Korea">
+                        <button type="submit" class="btn btn-default" id="korea-button">@WowCharComparerWebApp.Enums.Region.Korea</button>
+                    </form>
+
+                    <form asp-controller="CharacterComparator" asp-action="SelectedRegionLeftPlayer" asp-route-region="@WowCharComparerWebApp.Enums.Region.Taiwan">
+                        <button type="submit" class="btn btn-default" id="taiwan-button">@WowCharComparerWebApp.Enums.Region.Taiwan</button>
+                    </form>
                 </div>
-            </form>
 
-            <div id="realms-wrapper" style="padding: 20px">
+                <div id="realms-wrapper" style="padding: 20px">
 
-                <h4>Realms</h4>
+                    <h4>Realms</h4>
 
-                <div class="list-group" style="height: 170px; overflow-x: hidden; padding: 5px">
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
+                    <div class="list-group" style="height: 170px; overflow-x: hidden; padding: 5px">
+                        @foreach (var item in ViewData["realmsListLeftPlayer"] as IList<string>)
+                        {
+                            <a href="#" class="list-group-item list-group-item-action">@item</a>
+                        }
+                    </div>
+
                 </div>
+
+                <h4>Nickname</h4>
+                <input name="firstNickToCompare"
+                       type="text"
+                       aria-label="FirstCharacterName"
+                       class="form-control"
+                       style="margin: auto; width: 300px" />
+
+                <h4 style="padding-top: 15px">Fields</h4>
+                <label class="checkbox-inline" style="margin: 10px">
+                    <input type="checkbox" id="inlineCheckbox1" value="option1" checked="checked"> Standard
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox2" value="option2"> Items
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox3" value="option3"> Statistics
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox4" value="option4"> Achievements
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox5" value="option5"> Progression
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox6" value="option6"> PVP
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox7" value="option7"> Reputation
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox8" value="option8"> Talents
+                </label>
 
             </div>
 
-            <h4>Nickname</h4>
-            <input name="firstNickToCompare"
-                   type="text"
-                   aria-label="FirstCharacterName"
-                   class="form-control"
-                   style="margin: auto; width: 300px" />
+            <div class="col-md-6">
 
+                <h3 style="padding-bottom: 15px">Second Character</h3>
 
-            <h4 style="padding-top: 15px">Fields</h4>
-            <label class="checkbox-inline" style="margin: 10px">
-                <input type="checkbox" id="inlineCheckbox1" value="option1" checked="checked"> Standard
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox2" value="option2"> Items
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox3" value="option3"> Statistics
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox4" value="option4"> Achievements
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox5" value="option5"> Progression
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox6" value="option6"> PVP
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox7" value="option7"> Reputation
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox8" value="option8"> Talents
-            </label>
+                <h4>Region</h4>
+                <div class="btn-group" role="group">
 
+                    <form asp-controller="CharacterComparator" asp-action="SelectedRegionRightPlayer" asp-route-region="@WowCharComparerWebApp.Enums.Region.Europe">
+                        <button type="submit" class="btn btn-primary" id="europa-button">@WowCharComparerWebApp.Enums.Region.Europe</button>
+                    </form>
+
+                    <form asp-controller="CharacterComparator" asp-action="SelectedRegionRightPlayer" asp-route-region="@WowCharComparerWebApp.Enums.Region.America">
+                        <button type="submit" class="btn btn-default" id="america-button">@WowCharComparerWebApp.Enums.Region.America</button>
+                    </form>
+
+                    <form asp-controller="CharacterComparator" asp-action="SelectedRegionRightPlayer" asp-route-region="@WowCharComparerWebApp.Enums.Region.Korea">
+                        <button type="submit" class="btn btn-default" id="korea-button">@WowCharComparerWebApp.Enums.Region.Korea</button>
+                    </form>
+
+                    <form asp-controller="CharacterComparator" asp-action="SelectedRegionRightPlayer" asp-route-region="@WowCharComparerWebApp.Enums.Region.Taiwan">
+                        <button type="submit" class="btn btn-default" id="taiwan-button">@WowCharComparerWebApp.Enums.Region.Taiwan</button>
+                    </form>
+                </div>
+
+                <div id="realms-wrapper" style="padding: 20px">
+
+                    <h4>Realms</h4>
+
+                    <div class="list-group" style="height: 170px; overflow-x: hidden; padding: 5px">
+                        @foreach (var item in ViewData["realmsListRightPlayer"] as IList<string>)
+                        {
+                            <a href="#" class="list-group-item list-group-item-action">@item</a>
+                        }
+                    </div>
+
+                </div>
+
+                <h4>Nickname</h4>
+                <input name="secondNickToCompare"
+                       type="text"
+                       aria-label="FirstCharacterName"
+                       class="form-control"
+                       style="margin: auto; width: 300px" />
+
+                <h4 style="padding-top: 15px">Fields</h4>
+                <label class="checkbox-inline" style="margin: 10px">
+                    <input type="checkbox" id="inlineCheckbox1" value="option1" checked="checked"> Standard
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox2" value="option2"> Items
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox3" value="option3"> Statistics
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox4" value="option4"> Achievements
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox5" value="option5"> Progression
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox6" value="option6"> PVP
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox7" value="option7"> Reputation
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="inlineCheckbox8" value="option8"> Talents
+                </label>
+
+            </div>
         </div>
 
-        <div class="col-md-6">
-
-            <h3 style="padding-bottom: 15px">Second Character</h3>
-
-            <h4>Region</h4>
-            <div class="btn-group" role="group">
-                <button type="submit" class="btn btn-primary">@WowCharComparerWebApp.Enums.Region.Europe</button>
-                <button type="submit" class="btn btn-default">@WowCharComparerWebApp.Enums.Region.America</button>
-                <button type="submit" class="btn btn-default">@WowCharComparerWebApp.Enums.Region.Korea</button>
-                <button type="submit" class="btn btn-default">@WowCharComparerWebApp.Enums.Region.Taiwan</button>
-            </div>
-
-            <div id="realms-wrapper" style="padding: 20px">
-
-                <h4>Realms</h4>
-
-                <div class="list-group" style="height: 170px; overflow-x: hidden; padding: 5px">
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                    <a href="#" class="list-group-item list-group-item-action">Burning Legion</a>
-                </div>
-
-            </div>
-
-            <h4>Nickname</h4>
-            <input name="secondNickToCompare"
-                   type="text"
-                   aria-label="FirstCharacterName"
-                   class="form-control"
-                   style="margin: auto; width: 300px" />
-
-            <h4 style="padding-top: 15px">Fields</h4>
-            <label class="checkbox-inline" style="margin: 10px">
-                <input type="checkbox" id="inlineCheckbox1" value="option1" checked="checked"> Standard
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox2" value="option2"> Items
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox3" value="option3"> Statistics
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox4" value="option4"> Achievements
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox5" value="option5"> Progression
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox6" value="option6"> PVP
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox7" value="option7"> Reputation
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="inlineCheckbox8" value="option8"> Talents
-            </label>
-
-        </div>
+        <form asp-controller="CharacterComparator" asp-action="ComparePlayers" asp-route-firstPlayer="firstPlayerData" asp-route-secondPlayer="secondPlayerData" method="post">
+            <button type="submit" class="btn btn-primary btn-lg" style="margin: 25px">
+                Compare!
+            </button>
+        </form>
     </div>
-    <form action="CompareResult" method="post">
-        <button type="submit" class="btn btn-primary btn-lg" style="margin: 25px">
-            Compare!
-        </button>
-    </form>
-</div>
+}
 
 
 @*@model WowCharComparerWebApp.Models.Servers.Realm

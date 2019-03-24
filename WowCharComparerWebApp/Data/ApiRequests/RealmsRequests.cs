@@ -10,9 +10,9 @@ using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Data.ApiRequests
 {
-    public static class RealmsRequests
+    public class RealmsRequests
     {
-        public static async Task<BlizzardAPIResponse> GetRealmsDataAsJsonAsync(RequestLocalization requestLocalization)
+        public async Task<BlizzardAPIResponse> GetRealmsDataAsJsonAsync(RequestLocalization requestLocalization)
         {
             List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
             Uri uriAddress = RequestLinkFormater.GenerateAPIRequestLink(BlizzardAPIProfiles.Realm, requestLocalization, parameters, "status"); //TODO replace string

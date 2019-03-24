@@ -1,11 +1,25 @@
-﻿namespace WowCharComparerWebApp.Configuration
+﻿using System.Collections.Generic;
+using WowCharComparerWebApp.Enums;
+
+namespace WowCharComparerWebApp.Configuration
 {
     public static class APIConf //TODO part of this file should go to json configuration file
     {
         #region WOW API URLS
 
-        public const string BlizzardAPIWowEUAddress = "https://eu.api.blizzard.com/wow";
-        public const string BlizzardAPIWowUSAddress = "https://us.api.blizzard.com/wow";
+        public static readonly Dictionary<Region, string> BlizzadAPIAddressWrapper = new Dictionary<Region, string>()
+        {
+            [Region.Europe] = BlizzardAPIWowEUAddress,
+            [Region.America] = BlizzardAPIWowUSAddress,
+            [Region.Taiwan] = BlizzardAPIWowTWAddress,
+            [Region.Korea] = BlizzardAPIWowKRAddress
+        };
+
+        private const string BlizzardAPIWowEUAddress = "https://eu.api.blizzard.com/wow";
+        private const string BlizzardAPIWowUSAddress = "https://us.api.blizzard.com/wow";
+        private const string BlizzardAPIWowTWAddress = "https://tw.api.blizzard.com/wow";
+        private const string BlizzardAPIWowKRAddress = "https://kr.api.blizzard.com/wow";
+
         public const string BlizzardAPIWowOAuthTokenAdress = "https://us.battle.net/oauth/token";
 
         #endregion
