@@ -2,7 +2,7 @@
 
 namespace WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Others
 {
-    public class Items 
+    public class Items
     {
         public int AverageItemLevel { get; set; }
 

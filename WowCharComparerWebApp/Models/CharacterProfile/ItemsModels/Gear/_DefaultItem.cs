@@ -1,9 +1,10 @@
 ﻿using WowCharComparerWebApp.Models.CharacterProfile.Items.Others;
 using WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Others;
+using WowCharComparerWebApp.Models.Interfaces;
 
 namespace WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Gear
 {
-    public class DefaultItem
+    public class DefaultItem : IItem
     {
         public int Id { get; set; }
 
@@ -17,7 +18,7 @@ namespace WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Gear
 
         public ToolTipParams ToolTipParams { get; set; }
 
-        public Stats [] Stats { get; set; }
+        public Others.Stats [] Stats { get; set; }
 
         public int Armor { get; set; }
 

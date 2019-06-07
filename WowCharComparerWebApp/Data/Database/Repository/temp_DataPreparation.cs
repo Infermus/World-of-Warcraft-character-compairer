@@ -22,7 +22,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository
                 {
                     db.BonusStats.Add(new BonusStats()
                     {
-                        Guid = Guid.NewGuid(),
+                        ID = Guid.NewGuid(),
                         BonusStatsID = parsedJsonData.BonusStats[index].BonusStatsID,
                         Name = parsedJsonData.BonusStats[index].Name
                     });

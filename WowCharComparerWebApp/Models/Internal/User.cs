@@ -29,6 +29,19 @@ namespace WowCharComparerWebApp.Models.Internal
         [Required]
         public string Password { get; set; }
 
+
+        /// <summary>
+        /// User's Email
+        /// </summary>
+        [Required]
+        public string Email { get; set; }
+
+        /// <summary>
+        /// Variable for checking if user verified his email
+        /// </summary>
+        [Required]
+        public bool Verified { get; set; }
+
         /// <summary>
         /// Date of user registration
         /// </summary>

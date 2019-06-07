@@ -29,4 +29,8 @@
     <PackageReference Update="Microsoft.NETCore.App" Version="2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logic\DataResources\" />
+  </ItemGroup>
+
 </Project>

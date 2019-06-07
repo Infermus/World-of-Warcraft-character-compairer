@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WowCharComparerWebApp.Data.Database;
 
 namespace WowCharComparerWebApp.Migrations
 {
     [DbContext(typeof(ComparerDatabaseContext))]
-    partial class ComparerDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20190602140439_migration_v2")]
+    partial class migration_v2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

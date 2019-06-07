@@ -23,6 +23,7 @@ namespace WowCharComparerWebApp.Data.Database
 
         public ComparerDatabaseContext() : base()
         {
+
         }
 
         public ComparerDatabaseContext(string connectionString)
@@ -39,7 +40,7 @@ namespace WowCharComparerWebApp.Data.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<BonusStats>().HasIndex(x => x.ID).IsUnique();
+            modelBuilder.Entity<BonusStats>().HasIndex(x => x.BonusStatsID).IsUnique();
             modelBuilder.Entity<AchievementCategory>().HasIndex(x => x.ID).IsUnique();
             modelBuilder.Entity<AchievementsData>().HasIndex(x => x.ID).IsUnique();
         }
