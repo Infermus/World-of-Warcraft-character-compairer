@@ -26,6 +26,8 @@ namespace WowCharComparerWebApp
         {
             services.AddMvc();
             defaultConnectionString = Configuration["ConnectionStrings:DefaultConnection"];
+            APIConf.WoWCharacterComparerEmailPassword = Configuration["WowCharacterComparerEmailPassword"];
+            APIConf.WowCharacterComparerEmail = Configuration["WowCharacterComparerEmail"];
             CheckDatabaseValidation(defaultConnectionString);
         }
 

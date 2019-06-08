@@ -6,6 +6,9 @@ using System.Linq;
 using System.Reflection;
 using WowCharComparerWebApp.Data.Database;
 using System.Timers;
+using System.Net.Mail;
+using System.Net;
+using WowCharComparerWebApp.Configuration;
 
 namespace WowCharComparerWebApp.Controllers.User
 {
@@ -25,14 +28,13 @@ namespace WowCharComparerWebApp.Controllers.User
                 {
                     List<bool> CheckedValidators = new List<bool>()
                     {
-                        CheckUsername(accountName,db),
+                        CheckUsername(accountName, db),
                         CheckPassword(userPassword),
-                        CheckEmail(userEmail,db)
-
+                        CheckEmail(userEmail, db)
                     };
 
-                    if (CheckedValidators.All(x => x))
-                    {
+                        if (CheckedValidators.All(x => x))
+                        {
                             db.Users.Add(new Models.Internal.User()
                             {
                                 Email = userEmail,
@@ -44,10 +46,11 @@ namespace WowCharComparerWebApp.Controllers.User
                                 RegistrationDate = DateTime.Now,
                                 Verified = false
                             });
+                        SendVerificationMail(userEmail);
 
-                        db.SaveChanges();
-                        transaction.Commit();
-                    }
+                            db.SaveChanges();
+                            transaction.Commit();
+                        }
                 }
             }
 
@@ -56,27 +59,34 @@ namespace WowCharComparerWebApp.Controllers.User
 
         public bool CheckPassword(string password)
         {
-            bool checkedPassword = password.Any(char.IsDigit) & password.Any(char.IsUpper) & password.Length >= 8
-                                                              ? true
-                                                              : false;
-
-            return checkedPassword;
+            return password.Any(char.IsDigit) & password.Any(char.IsUpper) & password.Length >= 8;
         }
 
         public bool CheckUsername(string accountName, ComparerDatabaseContext db)
         {
-            bool checkedAccountName = accountName.Length >= 6 && db.Users.All(x => x.Nickname != accountName) 
-                                                               ? true
-                                                               : false;
-
-
-            return checkedAccountName;
+            return accountName.Length >= 6 && db.Users.All(x => x.Nickname != accountName);
         }
 
         public bool CheckEmail(string email, ComparerDatabaseContext db)
         {
-            bool checkedEmail = email.Contains("@") && email.Contains(".");
-            return checkedEmail;
+            return email.Contains("@") && email.Contains(".");
+        }
+
+        public void SendVerificationMail(string userEmail)
+        {
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(APIConf.WowCharacterComparerEmail, APIConf.WoWCharacterComparerEmailPassword)
+            };
+
+            MailMessage msg = new MailMessage();    
+            msg.To.Add(userEmail);
+            msg.From = new MailAddress(APIConf.WowCharacterComparerEmail);
+            msg.Subject = "Verification";
+            msg.Body = "This is a email to verification your World of Warcraft Character Comparer account";
+            client.Send(msg);
         }
     }
 }
