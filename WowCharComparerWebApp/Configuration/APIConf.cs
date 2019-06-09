@@ -5,6 +5,9 @@ namespace WowCharComparerWebApp.Configuration
 {
     public static class APIConf //TODO part of this file should go to json configuration file
     {
+        public static string WoWCharacterComparerEmailPassword;
+        public static string WowCharacterComparerEmail;
+
         #region WOW API URLS
 
         public static readonly Dictionary<Region, string> BlizzadAPIAddressWrapper = new Dictionary<Region, string>()

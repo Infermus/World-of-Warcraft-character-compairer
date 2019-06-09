@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database;
 
@@ -51,6 +53,8 @@ namespace WowCharComparerWebApp.Controllers.User
                             RegistrationDate = DateTime.Now,
                             Verified = false
                         };
+
+                        SendVerificationMail(userEmail);
 
                         db.Users.Add(user);
                         db.SaveChanges();
@@ -185,6 +189,23 @@ namespace WowCharComparerWebApp.Controllers.User
         {
             return email.Contains("@") && email.Contains(".") ? (true, string.Empty) 
                                                               : (false, UserMessages.UserEmailInvalidFormat);
+        }
+
+        public void SendVerificationMail(string userEmail)
+        {
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(APIConf.WowCharacterComparerEmail, APIConf.WoWCharacterComparerEmailPassword)
+            };
+
+            MailMessage msg = new MailMessage();
+            msg.To.Add(userEmail);
+            msg.From = new MailAddress(APIConf.WowCharacterComparerEmail);
+            msg.Subject = "Verification";
+            msg.Body = "This is a email to verification your World of Warcraft Character Comparer account";
+            client.Send(msg);
         }
     }
 }
