@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="Logic\Character\NewFolder2\**" />
+    <Compile Remove="Logic\DataResources\**" />
     <Content Remove="Logic\Character\NewFolder2\**" />
+    <Content Remove="Logic\DataResources\**" />
     <EmbeddedResource Remove="Logic\Character\NewFolder2\**" />
+    <EmbeddedResource Remove="Logic\DataResources\**" />
     <None Remove="Logic\Character\NewFolder2\**" />
+    <None Remove="Logic\DataResources\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,11 +30,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.NETCore.App" Version="2.1" />
+    <Content Update="Views\Register\Error.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Logic\DataResources\" />
+    <PackageReference Update="Microsoft.NETCore.App" Version="2.1" />
   </ItemGroup>
 
 </Project>

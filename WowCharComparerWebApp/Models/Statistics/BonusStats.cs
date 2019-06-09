@@ -10,7 +10,7 @@ namespace WowCharComparerWebApp.Models
         [Key]
         public Guid ID { get; set; }
 
-       // [Required]
+        [Required]
         [JsonProperty(PropertyName = "id")]
         public int BonusStatsID { get; set; }
         
