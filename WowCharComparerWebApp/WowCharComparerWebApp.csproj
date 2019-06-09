@@ -30,6 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Register\PerformUserRegister.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Register\Error.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
