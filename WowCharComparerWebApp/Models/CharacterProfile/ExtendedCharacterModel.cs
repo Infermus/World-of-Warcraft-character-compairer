@@ -12,7 +12,7 @@ using WowCharComparerWebApp.Models.CharacterProfile.TalentsModels;
 
 namespace WowCharComparerWebApp.Models
 {
-    public class ExtendedCharacterModel
+    public class ExtendedCharacterModel : BasicCharacterModel
     {
         public Appearance Appearance { get; set; }
 

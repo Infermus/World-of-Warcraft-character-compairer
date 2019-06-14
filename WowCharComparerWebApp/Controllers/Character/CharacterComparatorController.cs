@@ -13,10 +13,6 @@ using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.Achievement;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
-using WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Others;
-using System.Linq;
-using WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Gear;
-using System.Reflection;
 
 namespace WowCharComparerWebApp.Controllers.CharacterControllers
 {
@@ -66,10 +62,12 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IActionResult TestActionOne()
         {
-            //List<Character> parsedResultList = new List<Character>();
-
             RequestLocalization requestLocalization = new RequestLocalization()
             {
                 CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper[Region.Europe], // refactor this
@@ -82,61 +80,48 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                     "Selectus"
             };
 
-            //foreach (string name in characterNamesToCompare)
-            //{
-            //    var result = RaiderIORequests.GetRaiderIODataAsync(name, 
-            //                                                        requestLocalization, new List<RaiderIOCharacterFields>
-            //                                                        {
-            //                                                            RaiderIOCharacterFields.MythicPlusBestRuns,
-            //                                                            RaiderIOCharacterFields.MythicPlusRanks
-            //                                                        }).Result;
-
-            //    Character parsedResult = JsonProcessing.DeserializeJsonData<Character>(result.Data);
-            //    parsedResultList.Add(parsedResult);
-            //}
             #region Testing character compare result
-            List<BasicCharacterModel> parsedResultList = new List<BasicCharacterModel>();
+
+            List<ExtendedCharacterModel> charactersToCompare = new List<ExtendedCharacterModel>();
             List<AchievementsData> matchedAchievementData = new List<AchievementsData>();
 
             List<ProcessedCharacterModel> processedCharacterData = new List<ProcessedCharacterModel>();
 
             foreach (string name in characterNamesToCompare)
             {
-                var result = CharacterRequests.GetCharacterDataAsJsonAsync(name,
-                                                                            requestLocalization,
+                var result = CharacterRequests.GetCharacterDataAsJsonAsync(name, requestLocalization,
                                                                             new List<CharacterFields>()
                                                                             {
                                                                                 CharacterFields.Items,
                                                                                 CharacterFields.Achievements
                                                                             }).Result;
 
-                BasicCharacterModel parsedResult = JsonProcessing.DeserializeJsonData<BasicCharacterModel>(result.Data);
-                parsedResultList.Add(parsedResult);
-                IEnumerable<AchievementsData> completedAchievementsByPlayer = ProccesingData.ComparePlayerAchievements(parsedResultList);
+                ExtendedCharacterModel currentCharacter = JsonProcessing.DeserializeJsonData<ExtendedCharacterModel>(result.Data);
+                charactersToCompare.Add(currentCharacter);
 
-                ProccesingData.ExtendItemsStatistic(parsedResultList);
+                CharacterExtendedDataManager.MatchItemsBonusStatistics(charactersToCompare.Find(x => x.Name.Equals(name)));
 
-                if (parsedResult.Achievements != null)
+                if (currentCharacter.Achievements != null)
                 {
                     processedCharacterData.Add(new ProcessedCharacterModel()
                     {
                         RawCharacterData = new BasicCharacterModel
                         {
-                            LastModified = parsedResult.LastModified,
-                            Name = parsedResult.Name,
-                            Realm = parsedResult.Realm,
-                            BattleGroup = parsedResult.BattleGroup,
-                            CharacterClass = parsedResult.CharacterClass,
-                            Race = parsedResult.Race,
-                            Level = parsedResult.Level,
-                            AchievementPoints = parsedResult.AchievementPoints,
-                            Thumbnail = parsedResult.Thumbnail,
-                            CalcClass = parsedResult.CalcClass,
-                            Faction = parsedResult.Faction,
-                            TotalHonorableKills = parsedResult.TotalHonorableKills
+                            LastModified = currentCharacter.LastModified,
+                            Name = currentCharacter.Name,
+                            Realm = currentCharacter.Realm,
+                            BattleGroup = currentCharacter.BattleGroup,
+                            CharacterClass = currentCharacter.CharacterClass,
+                            Race = currentCharacter.Race,
+                            Level = currentCharacter.Level,
+                            AchievementPoints = currentCharacter.AchievementPoints,
+                            Thumbnail = currentCharacter.Thumbnail,
+                            CalcClass = currentCharacter.CalcClass,
+                            Faction = currentCharacter.Faction,
+                            TotalHonorableKills = currentCharacter.TotalHonorableKills
                         },
 
-                        AchievementsData = completedAchievementsByPlayer
+                        AchievementsData = CharacterExtendedDataManager.MatchCompletedPlayerAchievement(charactersToCompare.Find(x => x.Name.Equals(name)))
                     });
                 }
             }
