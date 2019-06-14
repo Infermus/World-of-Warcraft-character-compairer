@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace WowCharComparerWebApp.Models.CharacterProfile
 {
-    public class BasicCharacterModel : ExtendedCharacterModel
+    public class BasicCharacterModel
     {
         public double LastModified { get; set; }
 
