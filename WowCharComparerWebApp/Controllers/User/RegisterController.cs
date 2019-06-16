@@ -118,7 +118,7 @@ namespace WowCharComparerWebApp.Controllers.User
             msg.To.Add(userEmail);
             msg.From = new MailAddress(APIConf.WowCharacterComparerEmail);
             msg.IsBodyHtml = true;
-            msg.Subject = "Welcome! Remember to verify your account.";
+            msg.Subject = "World of Warcraft Character Comparer: Verify account!";
             msg.Body = "<p> This is a email to verification your World of Warcraft Character Comparer account.</p>" +
                        $"<p> Activation code: <b> {activationGuid.ToString()} </b> </p>" +
                        "Please active your account " + $"<a href=\"{activationLink}\">here </a>";
@@ -134,10 +134,10 @@ namespace WowCharComparerWebApp.Controllers.User
                 using (ComparerDatabaseContext db = new ComparerDatabaseContext())
                 using (IDbContextTransaction transaction = db.Database.BeginTransaction())
                 {
-                    var testUser = db.Users.Where(user => user.VerificationToken.ToString().ToUpper().Equals(userAccountActivationToken))
+                    var userAccount = db.Users.Where(user => user.VerificationToken.ToString().ToUpper().Equals(userAccountActivationToken))
                                            .SingleOrDefault();
-                    if(testUser != null)
-                        testUser.Verified = true;
+                    if(userAccount != null)
+                        userAccount.Verified = true;
 
                     transaction.Commit();
                     db.SaveChanges();
