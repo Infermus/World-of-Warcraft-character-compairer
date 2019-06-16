@@ -59,5 +59,11 @@ namespace WowCharComparerWebApp.Models.Internal
         /// </summary>
         [Required]
         public bool IsOnline { get; set; }
+
+        /// <summary>
+        /// User online status
+        /// </summary>
+        [Required]
+        public Guid VerificationToken { get; set; }
     }
 }

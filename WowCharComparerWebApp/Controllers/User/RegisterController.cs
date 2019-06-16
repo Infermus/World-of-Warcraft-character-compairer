@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -17,6 +20,13 @@ namespace WowCharComparerWebApp.Controllers.User
             return View();
         }
 
+        [Route("Register/AccountConfirmation")]
+        [HttpGet]
+        public IActionResult Confirmation()
+        {
+            return View("AccountConfirmation");
+        }
+
         [HttpPost]
         public IActionResult PerformUserRegister(string accountName, string userPassword, string userEmail)
         {
@@ -29,6 +39,7 @@ namespace WowCharComparerWebApp.Controllers.User
                 {
                     List<bool> CheckedValidators = new List<bool>()
                     {
+                        //TODO improve validators
                         CheckUsername(accountName, db),
                         CheckPassword(userPassword),
                         CheckEmail(userEmail, db)
@@ -45,14 +56,15 @@ namespace WowCharComparerWebApp.Controllers.User
                             IsOnline = false,
                             LastLoginDate = DateTime.MinValue,
                             RegistrationDate = DateTime.Now,
-                            Verified = false
+                            Verified = false,
+                            VerificationToken = Guid.NewGuid()
                         };
-
-                        SendVerificationMail(userEmail);
 
                         db.Users.Add(user);
                         db.SaveChanges();
                         transaction.Commit();
+
+                        SendVerificationMail(userEmail, user.VerificationToken);
                     }
                 }
             }
@@ -76,24 +88,71 @@ namespace WowCharComparerWebApp.Controllers.User
 
         public bool CheckEmail(string email, ComparerDatabaseContext db)
         {
-            return email.Contains("@") && email.Contains(".");
+            try
+            {
+                MailAddress mail = new MailAddress(email);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                //TODO write to user that mail format is incorrect or already is in database
+                return false;
+            }
         }
 
-        public void SendVerificationMail(string userEmail)
+        public void SendVerificationMail(string userEmail, Guid activationGuid)
         {
+            var test = HttpContext.Request.Path;
+
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
             {
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(APIConf.WowCharacterComparerEmail, APIConf.WoWCharacterComparerEmailPassword)
+                Credentials = new NetworkCredential(APIConf.WowCharacterComparerEmail, APIConf.WoWCharacterComparerEmailPassword),
+                Timeout = 100000,
+                EnableSsl = true             
             };
 
-            MailMessage msg = new MailMessage();
+            string protocol = HttpContext.Request.IsHttps ? "https" : "http";
+
+            string activationLink = $"{protocol}://www.{ HttpContext.Request.Host}/Register/AccountConfirmation";
+
+            MailMessage msg = new MailMessage();    
             msg.To.Add(userEmail);
             msg.From = new MailAddress(APIConf.WowCharacterComparerEmail);
-            msg.Subject = "Verification";
-            msg.Body = "This is a email to verification your World of Warcraft Character Comparer account";
+            msg.IsBodyHtml = true;
+            msg.Subject = "Verification";          
+            msg.Body = "<p> This is a email to verification your World of Warcraft Character Comparer account.</p>" +
+                       $"<p> Activation code: <b> {activationGuid.ToString()} </b> </p>" + 
+                       "Please active your account " + $"<a href=\"{activationLink}\">here </a>";
             client.Send(msg);
+        }
+
+        [Route("Register/ConfirmUserAccount")]
+        [HttpPost]
+        public IActionResult ConfirmUserAccount(string userAccountActivationToken)
+        {
+            try
+            {
+                using (ComparerDatabaseContext db = new ComparerDatabaseContext())
+                using (IDbContextTransaction transaction = db.Database.BeginTransaction())
+                {
+                    if (db.Users.Select(x => x.VerificationToken.ToString().ToUpper()).ToList().Contains(userAccountActivationToken.ToUpper()))
+                    {
+                        var verificationToken = new SqlParameter("@token", userAccountActivationToken);
+                        db.Database.ExecuteSqlCommand("UPDATE dbo.Users SET Verified = 1 WHERE VerificationToken =@token", verificationToken);
+                        transaction.Commit();
+                        db.SaveChanges();
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
+
+            return View("AccountApproval");
         }
     }
 }
