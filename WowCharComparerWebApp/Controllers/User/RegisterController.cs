@@ -62,11 +62,10 @@ namespace WowCharComparerWebApp.Controllers.User
 
                         db.Users.Add(user);
                         db.SaveChanges();
-                        transaction.Commit();
-
-                        SendVerificationMail(userEmail, user.VerificationToken);
+                        transaction.Commit();                 
                     }
                 }
+                SendVerificationMail(userEmail, user.VerificationToken);
             }
             catch (Exception ex)
             {
@@ -102,28 +101,26 @@ namespace WowCharComparerWebApp.Controllers.User
 
         public void SendVerificationMail(string userEmail, Guid activationGuid)
         {
-            var test = HttpContext.Request.Path;
-
             SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
             {
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(APIConf.WowCharacterComparerEmail, APIConf.WoWCharacterComparerEmailPassword),
                 Timeout = 100000,
-                EnableSsl = true             
+                EnableSsl = true
             };
 
             string protocol = HttpContext.Request.IsHttps ? "https" : "http";
 
             string activationLink = $"{protocol}://www.{ HttpContext.Request.Host}/Register/AccountConfirmation";
 
-            MailMessage msg = new MailMessage();    
+            MailMessage msg = new MailMessage();
             msg.To.Add(userEmail);
             msg.From = new MailAddress(APIConf.WowCharacterComparerEmail);
             msg.IsBodyHtml = true;
-            msg.Subject = "Verification";          
+            msg.Subject = "Welcome! Remember to verify your account.";
             msg.Body = "<p> This is a email to verification your World of Warcraft Character Comparer account.</p>" +
-                       $"<p> Activation code: <b> {activationGuid.ToString()} </b> </p>" + 
+                       $"<p> Activation code: <b> {activationGuid.ToString()} </b> </p>" +
                        "Please active your account " + $"<a href=\"{activationLink}\">here </a>";
             client.Send(msg);
         }
@@ -137,13 +134,13 @@ namespace WowCharComparerWebApp.Controllers.User
                 using (ComparerDatabaseContext db = new ComparerDatabaseContext())
                 using (IDbContextTransaction transaction = db.Database.BeginTransaction())
                 {
-                    if (db.Users.Select(x => x.VerificationToken.ToString().ToUpper()).ToList().Contains(userAccountActivationToken.ToUpper()))
-                    {
-                        var verificationToken = new SqlParameter("@token", userAccountActivationToken);
-                        db.Database.ExecuteSqlCommand("UPDATE dbo.Users SET Verified = 1 WHERE VerificationToken =@token", verificationToken);
-                        transaction.Commit();
-                        db.SaveChanges();
-                    }
+                    var testUser = db.Users.Where(user => user.VerificationToken.ToString().ToUpper().Equals(userAccountActivationToken))
+                                           .SingleOrDefault();
+                    if(testUser != null)
+                        testUser.Verified = true;
+
+                    transaction.Commit();
+                    db.SaveChanges();
                 }
             }
 
