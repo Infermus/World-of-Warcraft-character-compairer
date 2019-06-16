@@ -10,7 +10,7 @@ using WowCharComparerWebApp.Models.CharacterProfile.ProgressionModels;
 using WowCharComparerWebApp.Models.CharacterProfile.PvpModels;
 using WowCharComparerWebApp.Models.CharacterProfile.TalentsModels;
 
-namespace WowCharComparerWebApp.Models
+namespace WowCharComparerWebApp.Models.CharacterProfile
 {
     public class ExtendedCharacterModel : BasicCharacterModel
     {
