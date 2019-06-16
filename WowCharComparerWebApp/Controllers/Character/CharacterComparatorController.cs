@@ -13,10 +13,6 @@ using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.Achievement;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
-using WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Others;
-using System.Linq;
-using WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Gear;
-using System.Reflection;
 
 namespace WowCharComparerWebApp.Controllers.CharacterControllers
 {
@@ -24,7 +20,6 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
     {
         private static List<string> currentRealmListPlayerLeft;
         private static List<string> currentRealmListPlayerRight;
-
 
         public IActionResult Index()
         {
@@ -40,7 +35,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             return View();
         }
 
-        #region Selecting region actions
+        #region Selecting region actions (Experimental)
 
         [Route("selected-region-left")]
         public IActionResult SelectedRegionLeftPlayer(Region region)
@@ -68,81 +63,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         public IActionResult TestActionOne()
         {
-            //List<Character> parsedResultList = new List<Character>();
-
-            RequestLocalization requestLocalization = new RequestLocalization()
-            {
-                CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper[Region.Europe], // refactor this
-                Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB", Timezone = "Europe/Paris" }
-            };
-
-            List<string> characterNamesToCompare = new List<string>
-            {
-                    "Wykminiacz",
-                    "Selectus"
-            };
-
-            //foreach (string name in characterNamesToCompare)
-            //{
-            //    var result = RaiderIORequests.GetRaiderIODataAsync(name, 
-            //                                                        requestLocalization, new List<RaiderIOCharacterFields>
-            //                                                        {
-            //                                                            RaiderIOCharacterFields.MythicPlusBestRuns,
-            //                                                            RaiderIOCharacterFields.MythicPlusRanks
-            //                                                        }).Result;
-
-            //    Character parsedResult = JsonProcessing.DeserializeJsonData<Character>(result.Data);
-            //    parsedResultList.Add(parsedResult);
-            //}
-            #region Testing character compare result
-            List<BasicCharacterModel> parsedResultList = new List<BasicCharacterModel>();
-            List<AchievementsData> matchedAchievementData = new List<AchievementsData>();
-
-            List<ProcessedCharacterModel> processedCharacterData = new List<ProcessedCharacterModel>();
-
-            foreach (string name in characterNamesToCompare)
-            {
-                var result = CharacterRequests.GetCharacterDataAsJsonAsync(name,
-                                                                            requestLocalization,
-                                                                            new List<CharacterFields>()
-                                                                            {
-                                                                                CharacterFields.Items,
-                                                                                CharacterFields.Achievements
-                                                                            }).Result;
-
-                BasicCharacterModel parsedResult = JsonProcessing.DeserializeJsonData<BasicCharacterModel>(result.Data);
-                parsedResultList.Add(parsedResult);
-                IEnumerable<AchievementsData> completedAchievementsByPlayer = ProccesingData.ComparePlayerAchievements(parsedResultList);
-
-                ProccesingData.ExtendItemsStatistic(parsedResultList);
-
-                if (parsedResult.Achievements != null)
-                {
-                    processedCharacterData.Add(new ProcessedCharacterModel()
-                    {
-                        RawCharacterData = new BasicCharacterModel
-                        {
-                            LastModified = parsedResult.LastModified,
-                            Name = parsedResult.Name,
-                            Realm = parsedResult.Realm,
-                            BattleGroup = parsedResult.BattleGroup,
-                            CharacterClass = parsedResult.CharacterClass,
-                            Race = parsedResult.Race,
-                            Level = parsedResult.Level,
-                            AchievementPoints = parsedResult.AchievementPoints,
-                            Thumbnail = parsedResult.Thumbnail,
-                            CalcClass = parsedResult.CalcClass,
-                            Faction = parsedResult.Faction,
-                            TotalHonorableKills = parsedResult.TotalHonorableKills
-                        },
-
-                        AchievementsData = completedAchievementsByPlayer
-                    });
-                }
-            }
-            #endregion
-
-            return StatusCode(200);
+            return StatusCode(404);
         }
 
         public IActionResult TestActionTwo()
@@ -177,23 +98,54 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             return Content(returnContent);
         }
 
-        public IActionResult ComparePlayers(CharacterModel firstPlayer, CharacterModel secondPlayer)
+        public IActionResult ComparePlayers(ExtendedCharacterModel firstPlayer, ExtendedCharacterModel secondPlayer)
         {
-            //string realm = Request.Form["Realm"].ToString();
+            List<ProcessedCharacterModel> processedCharacterData = new List<ProcessedCharacterModel>();
 
-            //RequestLocalization requestLocalization = new RequestLocalization()
-            //{
-            //    CoreRegionUrlAddress = APIConf.BlizzardAPIWowEUAddress,
-            //    Realm = new Realm()
-            //    {
-            //        Slug = realm,
-            //        Locale = "en_GB"
-            //    }
-            //};
+            //TODO Get input from view to fill up request localization
+            RequestLocalization requestLocalization = new RequestLocalization()
+            {
+                CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper[Region.Europe], // refactor this
+                Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB", Timezone = "Europe/Paris" }
+            };
 
-            //BlizzardAPIResponse characterResponse = RequestsRepository.GetCharacterDataAsJsonAsync(firstNickToCompare, requestLocalization, new System.Collections.Generic.List<WowCharComparerLib.Enums.BlizzardAPIFields.CharacterFields>()).Result;
+            foreach (string characterName in new List<string>() { firstPlayer.Name, secondPlayer.Name })
+            {
+                //TODO Get input from view to fill up character fields (check boxes which determines what to compare)
+                var result = CharacterRequests.GetCharacterDataAsJsonAsync(characterName, requestLocalization,
+                                                                            new List<CharacterFields>()
+                                                                            {
+                                                                                CharacterFields.Items,
+                                                                                CharacterFields.Achievements
+                                                                            }).Result;
 
-            return View();
+                ExtendedCharacterModel currentCharacter = JsonProcessing.DeserializeJsonData<ExtendedCharacterModel>(result.Data);
+                CharacterExtendedDataManager characterDataManager = new CharacterExtendedDataManager();
+
+                processedCharacterData.Add(new ProcessedCharacterModel()
+                {
+                    RawCharacterData = new BasicCharacterModel
+                    {
+                        LastModified = currentCharacter.LastModified,
+                        Name = currentCharacter.Name,
+                        Realm = currentCharacter.Realm,
+                        BattleGroup = currentCharacter.BattleGroup,
+                        CharacterClass = currentCharacter.CharacterClass,
+                        Race = currentCharacter.Race,
+                        Level = currentCharacter.Level,
+                        AchievementPoints = currentCharacter.AchievementPoints,
+                        Thumbnail = currentCharacter.Thumbnail,
+                        CalcClass = currentCharacter.CalcClass,
+                        Faction = currentCharacter.Faction,
+                        TotalHonorableKills = currentCharacter.TotalHonorableKills
+                    },
+
+                    AchievementsData = characterDataManager.MatchCompletedPlayerAchievement(currentCharacter),
+                    Items = characterDataManager.MatchItemsBonusStatistics(currentCharacter)
+                });
+            }
+
+            return View("CompareResult");
         }
 
 

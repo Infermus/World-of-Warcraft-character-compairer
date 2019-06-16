@@ -1,7 +1,7 @@
 ﻿
 namespace WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Others
 {
-    public class Stats
+    public class Stats : BonusStats
     {
         public int Stat { get; set; }
 

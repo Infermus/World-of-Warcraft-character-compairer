@@ -28,24 +28,29 @@ namespace WowCharComparerWebApp.Controllers.User
         }
 
         [HttpPost]
-        public IActionResult PerformUserRegister(string accountName, string userPassword, string userEmail)
+        public IActionResult PerformUserRegister(string accountName, string userPassword, string confirmUserPassword, string userEmail)
         {
             Models.Internal.User user = new Models.Internal.User();
 
             try
             {
+                // First of all - validate if there is any missing input fields skipped by user
+                if (ValidateEmptyUserInput(accountName, userPassword, confirmUserPassword, userEmail).Any(x => x.Item1 == false))
+                {
+                    return View("Index"); // TODO rework it to show user error
+                }
+
                 using (ComparerDatabaseContext db = new ComparerDatabaseContext())
                 using (IDbContextTransaction transaction = db.Database.BeginTransaction())
                 {
-                    List<bool> CheckedValidators = new List<bool>()
-                    {
-                        //TODO improve validators
-                        CheckUsername(accountName, db),
-                        CheckPassword(userPassword),
-                        CheckEmail(userEmail, db)
-                    };
+                    List<(bool, string)> checkedValidators = new List<(bool, string)>();
+      
+                    checkedValidators.AddRange(CheckUsername(accountName, db));
+                    checkedValidators.AddRange(CheckPassword(userPassword));
+                    checkedValidators.Add(CheckPasswordMatch(userPassword, confirmUserPassword));
+                    checkedValidators.Add(CheckEmail(userEmail, db));
 
-                    if (CheckedValidators.All(x => x))
+                    if (checkedValidators.All(x => x.Item1))
                     {
                         user = new Models.Internal.User()
                         {
@@ -64,6 +69,10 @@ namespace WowCharComparerWebApp.Controllers.User
                         db.SaveChanges();
                         transaction.Commit();                 
                     }
+                    else
+                    {
+                        string[] userInvalidMessages = checkedValidators.Where(v => v.Item1 == false).Select(s => s.Item2).ToArray();
+                    }
                 }
                 SendVerificationMail(userEmail, user.VerificationToken);
             }
@@ -75,27 +84,128 @@ namespace WowCharComparerWebApp.Controllers.User
             return View(user);
         }
 
-        public bool CheckPassword(string password)
+        /// <summary>
+        /// Determines if any of user input is null or empty 
+        /// </summary>
+        /// <param name="username">Username typed by user</param>
+        /// <param name="userPassword">Password typed by user</param>
+        /// <param name="confirmUserPassword">Password confirmation typed by user</param>
+        /// <param name="userEmail">Email address typed by user</param>
+        /// <returns>Validation list where first param (bool) is validation correct, second param (string) is message </returns>
+        private List<(bool, string)> ValidateEmptyUserInput(string username, string userPassword, string confirmUserPassword, string userEmail)
         {
-            return password.Any(char.IsDigit) & password.Any(char.IsUpper) & password.Length >= 8;
+            List<(bool, string)> emptyFieldsValidator = new List<(bool, string)>()
+            {
+                (true, string.Empty)
+            };
+
+            if (string.IsNullOrEmpty(username))
+            {
+                emptyFieldsValidator.Add((false, UserMessages.UsernameIsRequired));
+            }
+
+            if (string.IsNullOrEmpty(userPassword))
+            {
+                emptyFieldsValidator.Add((false, UserMessages.PasswordIsRequired));
+            }
+
+            if (string.IsNullOrEmpty(confirmUserPassword))
+            {
+                emptyFieldsValidator.Add((false, UserMessages.PasswordConfirmationIsRequired));
+            }
+
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                emptyFieldsValidator.Add((false, UserMessages.EmailIsRequired));
+            }
+
+            return emptyFieldsValidator;
         }
 
-        public bool CheckUsername(string accountName, ComparerDatabaseContext db)
+        /// <summary>
+        /// Determines if user password field match the confirm password field 
+        /// </summary>
+        /// <param name="password">Primary password passed by user</param>
+        /// <param name="confirmPasword">Secondary (confirmation) password passed by user</param>
+        /// <returns>First param (bool) - is validation correct, Second param (string) - message</returns>
+        public (bool, string) CheckPasswordMatch(string password, string confirmPasword)
         {
-            return accountName.Length >= 6 && db.Users.All(x => x.Nickname != accountName);
+            return password.Equals(confirmPasword) ? (true, string.Empty) : (false, UserMessages.UserConfirmPasswordNoMatch);
         }
 
-        public bool CheckEmail(string email, ComparerDatabaseContext db)
+        /// <summary>
+        /// Checks password validation from user input
+        /// </summary>
+        /// <param name="password">Password assigned by user</param>
+        /// <returns>Validation list where first param (bool) is validation correct, second param (string) is message </returns>
+        public List<(bool, string)> CheckPassword(string password)
+        {
+            List<(bool, string)> passValidator = new List<(bool, string)>()
+            {
+                (true, string.Empty)
+            };
+
+            if (!password.Any(char.IsDigit))
+            {
+                passValidator.Add((false, UserMessages.UserConfirmPasswordNoMatch));
+            }
+
+            if (!password.Any(char.IsUpper))
+            {
+                passValidator.Add((false, UserMessages.UserPasswordHasNoCapitalLetter));
+            }
+
+            if (!(password.Length >= 8))
+            {
+                passValidator.Add((false, UserMessages.UserPasswordLenghtTooShort));
+            }
+
+            return passValidator;
+        }
+
+        /// <summary>
+        /// Checks username validation for user input
+        /// </summary>
+        /// <param name="username">Username typed by user</param>
+        /// <param name="db">Database context</param>
+        /// <returns>Validation list where first param (bool) is validation correct, second param (string) is message </returns>
+        public List<(bool, string)> CheckUsername(string username, ComparerDatabaseContext db)
+        {
+            List<(bool, string)> usernameValidator = new List<(bool, string)>()
+            {
+                (true, string.Empty)
+            };
+
+            if (!(username.Length >= 6))
+            {
+                usernameValidator.Add((false, UserMessages.UserNameLengthTooShort));
+            }
+
+            if (!db.Users.All(x => x.Nickname != username))
+            {
+                usernameValidator.Add((false, UserMessages.UserAlreadyExists));
+            }
+
+            return usernameValidator;
+        }
+
+        /// <summary>
+        /// Checks email validation format for user input
+        /// </summary>
+        /// <param name="email">User input email</param>
+        /// <param name="db">Database context</param>
+        /// <returns>First param (bool) - is validation correct, Second param (string) - message</returns>
+        public (bool, string) CheckEmail(string email, ComparerDatabaseContext db)
         {
             try
             {
                 MailAddress mail = new MailAddress(email);
-                return true;
+                return (true, string.Empty);
             }
             catch (Exception ex)
             {
                 //TODO write to user that mail format is incorrect or already is in database
-                return false;
+                return (false, UserMessages.UserEmailInvalidFormat);
             }
         }
 

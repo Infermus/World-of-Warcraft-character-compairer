@@ -18,7 +18,7 @@ namespace WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Gear
 
         public ToolTipParams ToolTipParams { get; set; }
 
-        public Others.Stats [] Stats { get; set; }
+        public Others.Stats[] Stats { get; set; }
 
         public int Armor { get; set; }
 

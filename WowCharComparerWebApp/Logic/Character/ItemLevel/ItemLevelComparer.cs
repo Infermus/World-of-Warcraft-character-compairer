@@ -7,7 +7,7 @@ namespace WowCharComparerWebApp.Logic.ItemLevel
 {
     public class ItemLevelComparer
     {
-        public static CharacterItemLevelCompareResult CompareCharactersItemLevel(List<CharacterModel> parsedResultList)
+        public static CharacterItemLevelCompareResult CompareCharactersItemLevel(List<ExtendedCharacterModel> parsedResultList)
         {
             float equippedResult = Math.Abs(parsedResultList[0].Items.AverageItemLevelEquipped - parsedResultList[1].Items.AverageItemLevelEquipped);
 

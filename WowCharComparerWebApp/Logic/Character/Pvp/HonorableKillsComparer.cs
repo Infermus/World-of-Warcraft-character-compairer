@@ -7,7 +7,7 @@ namespace WowCharComparerWebApp.Logic.Character.Pvp
 {
     public class HonorableKillsComparer
     {
-        public static CharacterHonorableKillsCompareResult CompareHonorableKills(List<CharacterModel> parsedResultList)
+        public static CharacterHonorableKillsCompareResult CompareHonorableKills(List<ExtendedCharacterModel> parsedResultList)
         {
             int killsResult = Math.Abs(parsedResultList[0].TotalHonorableKills - parsedResultList[0].TotalHonorableKills);
 
