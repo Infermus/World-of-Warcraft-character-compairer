@@ -1,0 +1,20 @@
+﻿
+
+@using (Html.BeginForm("ConfirmUserAccount", "Register", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div id="login-form-holder">
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="userTokenInput">Activation Token</label>
+            <div class="col-md-4">
+                <input id="userTokenInput" name="userAccountActivationToken" type="text" placeholder="Activation Token" class="form-control input-md">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="singlebutton"></label>
+            <div class="col-md-4">
+                <button id="singlebutton" name="singlebutton" class="btn btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+}

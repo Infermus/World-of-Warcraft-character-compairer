@@ -28,6 +28,10 @@ namespace WowCharComparerWebApp.Migrations
             migrationBuilder.DropColumn(
                 name: "Verified",
                 table: "Users");
+
+            migrationBuilder.DropColumn(
+                name: "VerificationToken",
+                table: "Users");
         }
     }
 }
