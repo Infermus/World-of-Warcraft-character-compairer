@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WowCharComparerWebApp.Builders;
 using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.Achievement;
-using WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Gear;
-using WowCharComparerWebApp.Models.CharacterProfile.ItemsModels.Others;
-using WowCharComparerWebApp.Models.Interfaces;
+
 namespace WowCharComparerWebApp.Logic.DataResources
 {
     public class CharacterExtendedDataManager
@@ -16,7 +13,7 @@ namespace WowCharComparerWebApp.Logic.DataResources
         /// </summary>
         /// <param name="extendedCharacterModel"></param>
         /// <returns></returns>
-        public static IEnumerable<AchievementsData> MatchCompletedPlayerAchievement(ExtendedCharacterModel extendedCharacterModel)
+        public IEnumerable<AchievementsData> MatchCompletedPlayerAchievement(Models.CharacterProfile.ExtendedCharacterModel extendedCharacterModel)
         {
             using (ComparerDatabaseContext db = new ComparerDatabaseContext())
             {
@@ -33,54 +30,86 @@ namespace WowCharComparerWebApp.Logic.DataResources
         /// Gets items id bonus stats parameters and try to match them to pre-prepared list of bonus stats name
         /// </summary>
         /// <param name="parsedJson"></param>
-        public static void MatchItemsBonusStatistics(ExtendedCharacterModel extendedCharacterModel)
+        public Models.CharacterProfile.ItemsModels.Others.Items MatchItemsBonusStatistics(Models.CharacterProfile.ExtendedCharacterModel extendedCharacterModel)
         {
+            List<BonusStats> dbBonusStats = new List<BonusStats>();
+
             using (ComparerDatabaseContext db = new ComparerDatabaseContext())
             {
-                List<IItem> itemsToMatchBonusStats = PrepereCharacterItemsStatisticsList(extendedCharacterModel.Items);
-                List<BonusStats> dbBonusStats = (from data in db.BonusStats select data).ToList();
-
-                foreach (IItem item in itemsToMatchBonusStats)
-                {
-                    var matchedPlayerItemStatistics = dbBonusStats.Join(item.Stats,
-                                                                            dbStats => dbStats.BonusStatsID,
-                                                                            x => x.Stat,
-                                                                            (dbStat, stat) => new
-                                                                            {
-                                                                                dbStat.BonusStatsID,
-                                                                                dbStat.Name,
-                                                                                stat.Amount,
-                                                                            }).ToList();
-                }
-
+                dbBonusStats = (from data in db.BonusStats select data).ToList();
             }
+
+            if (extendedCharacterModel.Items.Head != null)
+                extendedCharacterModel.Items.Head.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Head.Stats);
+
+            if (extendedCharacterModel.Items.Neck != null)
+                extendedCharacterModel.Items.Neck.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Neck.Stats);
+
+            if (extendedCharacterModel.Items.Shoulder != null)
+                extendedCharacterModel.Items.Shoulder.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Shoulder.Stats);
+
+            if (extendedCharacterModel.Items.Back != null)
+                extendedCharacterModel.Items.Back.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Back.Stats);
+
+            if (extendedCharacterModel.Items.Chest != null)
+                extendedCharacterModel.Items.Chest.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Chest.Stats);
+
+            if (extendedCharacterModel.Items.Shirt != null)
+                extendedCharacterModel.Items.Shirt.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Shirt.Stats);
+
+            if (extendedCharacterModel.Items.Wrist != null)
+                extendedCharacterModel.Items.Wrist.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Wrist.Stats);
+
+            if (extendedCharacterModel.Items.Hands != null)
+                extendedCharacterModel.Items.Hands.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Hands.Stats);
+
+            if (extendedCharacterModel.Items.Waist != null)
+                extendedCharacterModel.Items.Waist.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Waist.Stats);
+
+            if (extendedCharacterModel.Items.Legs != null)
+                extendedCharacterModel.Items.Legs.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Legs.Stats);
+
+            if (extendedCharacterModel.Items.Feet != null)
+                extendedCharacterModel.Items.Feet.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Feet.Stats);
+
+            if (extendedCharacterModel.Items.Finger1 != null)
+                extendedCharacterModel.Items.Finger1.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Finger1.Stats);
+
+            if (extendedCharacterModel.Items.Finger2 != null)
+                extendedCharacterModel.Items.Finger2.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Finger2.Stats);
+
+            if (extendedCharacterModel.Items.Trinket1 != null)
+                extendedCharacterModel.Items.Trinket1.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Trinket1.Stats);
+
+            if (extendedCharacterModel.Items.Trinket2 != null)
+                extendedCharacterModel.Items.Trinket2.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Trinket2.Stats);
+
+            if (extendedCharacterModel.Items.MainHand != null)
+                extendedCharacterModel.Items.MainHand.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.MainHand.Stats);
+
+            if (extendedCharacterModel.Items.OffHand != null)
+                extendedCharacterModel.Items.OffHand.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.OffHand.Stats);
+
+            if (extendedCharacterModel.Items.Tabard != null)
+                extendedCharacterModel.Items.Tabard.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Tabard.Stats);
+
+            return extendedCharacterModel.Items;
         }
 
-        //TODO refactor this to builder pattern
-        private static List<IItem> PrepereCharacterItemsStatisticsList(Items currentCharacterItems)
+        private Models.CharacterProfile.ItemsModels.Others.Stats[] PerformItemBonusStatsMatch(List<BonusStats> dbBonusStats,
+                                                                                              Models.CharacterProfile.ItemsModels.Others.Stats[] itemStatistics)
         {
-            List<IItem> localItemsList = new List<IItem>();
-
-            localItemsList.Add(new Head() { Stats = currentCharacterItems.Head != null ? currentCharacterItems.Head.Stats : new Stats[0] });
-            localItemsList.Add(new Neck() { Stats = currentCharacterItems.Neck != null ? currentCharacterItems.Neck.Stats : new Stats[0] });
-            localItemsList.Add(new Shoulder() { Stats = currentCharacterItems.Shoulder != null ? currentCharacterItems.Shoulder.Stats : new Stats[0] });
-            localItemsList.Add(new Back() { Stats = currentCharacterItems.Back != null ? currentCharacterItems.Back.Stats : new Stats[0] });
-            localItemsList.Add(new Chest() { Stats = currentCharacterItems.Chest != null ? currentCharacterItems.Chest.Stats : new Stats[0] });
-            localItemsList.Add(new Shirt() { Stats = currentCharacterItems.Shirt != null ? currentCharacterItems.Shirt.Stats : new Stats[0] });
-            localItemsList.Add(new Wrist() { Stats = currentCharacterItems.Wrist != null ? currentCharacterItems.Wrist.Stats : new Stats[0] });
-            localItemsList.Add(new Hands() { Stats = currentCharacterItems.Hands != null ? currentCharacterItems.Hands.Stats : new Stats[0] });
-            localItemsList.Add(new Waist() { Stats = currentCharacterItems.Waist != null ? currentCharacterItems.Waist.Stats : new Stats[0] });
-            localItemsList.Add(new Legs() { Stats = currentCharacterItems.Legs != null ? currentCharacterItems.Legs.Stats : new Stats[0] });
-            localItemsList.Add(new Feet() { Stats = currentCharacterItems.Feet != null ? currentCharacterItems.Feet.Stats : new Stats[0] });
-            localItemsList.Add(new Finger1() { Stats = currentCharacterItems.Finger1 != null ? currentCharacterItems.Finger1.Stats : new Stats[0] });
-            localItemsList.Add(new Finger2() { Stats = currentCharacterItems.Finger2 != null ? currentCharacterItems.Finger2.Stats : new Stats[0] });
-            localItemsList.Add(new Trinket1() { Stats = currentCharacterItems.Trinket1 != null ? currentCharacterItems.Trinket1.Stats : new Stats[0] });
-            localItemsList.Add(new Trinket2() { Stats = currentCharacterItems.Trinket2 != null ? currentCharacterItems.Trinket2.Stats : new Stats[0] });
-            localItemsList.Add(new MainHand() { Stats = currentCharacterItems.MainHand != null ? currentCharacterItems.MainHand.Stats : new Stats[0] });
-            localItemsList.Add(new OffHand() { Stats = currentCharacterItems.OffHand != null ? currentCharacterItems.OffHand.Stats : new Stats[0] });
-            localItemsList.Add(new Tabard() { Stats = currentCharacterItems.Tabard != null ? currentCharacterItems.Tabard.Stats : new Stats[0] });
-
-            return localItemsList;
+            return dbBonusStats.Join(itemStatistics,
+                                     dbStat => dbStat.BonusStatsID,
+                                     apiStat => apiStat.Stat,
+                                     (dbStat, apiStat) => new Models.CharacterProfile.ItemsModels.Others.Stats()
+                                     {
+                                         Amount = apiStat.Amount,
+                                         BonusStatsID = dbStat.BonusStatsID,
+                                         Stat = apiStat.Stat,
+                                         Name = dbStat.Name,
+                                         ID = dbStat.ID
+                                     }).ToArray();
         }
     }
 }

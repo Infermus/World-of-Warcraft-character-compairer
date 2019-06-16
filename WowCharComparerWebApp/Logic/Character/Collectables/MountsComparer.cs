@@ -7,7 +7,7 @@ namespace WowCharComparerWebApp.Logic.Character.Collectables
 {
     public class MountsComparer
     {
-        public static CharacterMountsCompareResult CompareMounts(List<CharacterModel> parsedResultList)
+        public static CharacterMountsCompareResult CompareMounts(List<ExtendedCharacterModel> parsedResultList)
         {
             int mountCollectedResult = Math.Abs(parsedResultList[0].Mounts.NumberOfCollectedMounts - parsedResultList[1].Mounts.NumberOfCollectedMounts);
             int mountNotCollectedResult = Math.Abs(parsedResultList[0].Mounts.NumberOfNotCollectedMounts - parsedResultList[1].Mounts.NumberOfNotCollectedMounts);

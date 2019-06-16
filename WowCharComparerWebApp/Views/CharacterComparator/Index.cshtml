@@ -1,13 +1,13 @@
 ﻿@{
     ViewData["Title"] = "CharacterComparatorView";
-    @model WowCharComparerWebApp.Models.CharacterProfile.CharacterModel;
+    @model WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel;
 }
 
 <link rel="stylesheet" href="~/css/character-comparator.css" />
 
 @{
-    WowCharComparerWebApp.Models.CharacterProfile.CharacterModel firstPlayerData = new WowCharComparerWebApp.Models.CharacterProfile.CharacterModel();
-    WowCharComparerWebApp.Models.CharacterProfile.CharacterModel secondPlayerData = new WowCharComparerWebApp.Models.CharacterProfile.CharacterModel();
+    WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel firstPlayerData = new WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel();
+    WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel secondPlayerData = new WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel();
     <div class="single-character-column">
 
         <div class="row">

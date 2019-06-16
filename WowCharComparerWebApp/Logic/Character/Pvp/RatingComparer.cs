@@ -7,7 +7,7 @@ namespace WowCharComparerWebApp.Logic.Character.Pvp
 {
     public class RatingComparer
     {
-        public static CharacterArenaRatingsCompareResult CompareRating(List<CharacterModel> parsedResultList)
+        public static CharacterArenaRatingsCompareResult CompareRating(List<ExtendedCharacterModel> parsedResultList)
         {
             int bracket2s = Math.Abs(parsedResultList[0].Pvp.Brackets.Arena_Bracket_2v2.Rating - parsedResultList[1].Pvp.Brackets.Arena_Bracket_2v2.Rating);
 

@@ -7,7 +7,7 @@ namespace WowCharComparerWebApp.Logic.HeartOfAzeroth
 {
     public class HeartOfAzerothComparer
     {
-        public static CharacterHeartOfAzerothCompareResult CompareHeartOfAzerothLevel(List<CharacterModel> parsedResultList)
+        public static CharacterHeartOfAzerothCompareResult CompareHeartOfAzerothLevel(List<ExtendedCharacterModel> parsedResultList)
         {
             float hoALevelCountResult = Math.Abs(parsedResultList[0].Items.Neck.AzeriteItem.AzeriteLevel - parsedResultList[1].Items.Neck.AzeriteItem.AzeriteLevel);
 
