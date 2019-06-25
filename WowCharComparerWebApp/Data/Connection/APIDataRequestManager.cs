@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WowCharComparerWebApp.Configuration;
+using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Database.Repository;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Models.Abstract;
@@ -12,19 +13,25 @@ using WowCharComparerWebApp.Models.Internal;
 
 namespace WowCharComparerWebApp.Data.Connection
 {
-    internal static class APIDataRequestManager
+    internal class APIDataRequestManager : IAPIDataRequestManager
     {
-        public static async Task<T> GetDataByHttpRequest<T>(Uri uriAddress) where T : CommonAPIResponse, new()
+        private ComparerDatabaseContext _comparerDatabaseContext;
+
+        public APIDataRequestManager(ComparerDatabaseContext comparerDatabaseContext)
+        {
+            _comparerDatabaseContext = comparerDatabaseContext;
+        }
+
+        public async Task<T> GetDataByHttpRequest<T>(Uri uriAddress) where T : CommonAPIResponse, new()
         {
             OAuth2Token token = null;
             CommonAPIResponse apiResponse = new T();
 
             try
             {
-
                 if (apiResponse is BlizzardAPIResponse)
                 {
-                    APIClient apiClient = APIAuthorizationDB.GetClientInformation(APIConf.BlizzardAPIWowMainClientID);
+                    APIClient apiClient = new DbAccessApiAuthorization(_comparerDatabaseContext).GetClientInformation(APIConf.BlizzardAPIWowMainClientID);
                     token = GetBearerAuthenticationToken(apiClient);
                 }
 
@@ -46,7 +53,7 @@ namespace WowCharComparerWebApp.Data.Connection
             return (T)apiResponse;
         }
 
-        private static OAuth2Token GetBearerAuthenticationToken(APIClient apiClient)
+        private OAuth2Token GetBearerAuthenticationToken(APIClient apiClient)
         {
             OAuth2Token receivedOAuth2Token = new OAuth2Token();
 

@@ -15,6 +15,13 @@ namespace WowCharComparerWebApp.Controllers.User
 {
     public class RegisterController : Controller
     {
+        ComparerDatabaseContext _comparerDatabaseContext;
+
+        public RegisterController(ComparerDatabaseContext comparerDatabaseContext)
+        {
+            _comparerDatabaseContext = comparerDatabaseContext;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -35,20 +42,21 @@ namespace WowCharComparerWebApp.Controllers.User
             try
             {
                 // First of all - validate if there is any missing input fields skipped by user
-                if (ValidateEmptyUserInput(accountName, userPassword, confirmUserPassword, userEmail).Any(x => x.Item1 == false))
+                var validationResult = ValidateEmptyUserInput(accountName, userPassword, confirmUserPassword, userEmail);
+
+                if (validationResult.Any(x => x.Item1 == false))
                 {
-                    return View("Index"); // TODO rework it to show user error
+                    return Content(string.Concat(validationResult.Select(x => x.Item2 + Environment.NewLine))); // TODO rework it to show user error
                 }
 
-                using (ComparerDatabaseContext db = new ComparerDatabaseContext())
-                using (IDbContextTransaction transaction = db.Database.BeginTransaction())
+                using (_comparerDatabaseContext)
                 {
                     List<(bool, string)> checkedValidators = new List<(bool, string)>();
-      
-                    checkedValidators.AddRange(CheckUsername(accountName, db));
+
+                    checkedValidators.AddRange(CheckUsername(accountName, _comparerDatabaseContext));
                     checkedValidators.AddRange(CheckPassword(userPassword));
                     checkedValidators.Add(CheckPasswordMatch(userPassword, confirmUserPassword));
-                    checkedValidators.Add(CheckEmail(userEmail, db));
+                    checkedValidators.Add(CheckEmail(userEmail));
 
                     if (checkedValidators.All(x => x.Item1))
                     {
@@ -65,9 +73,8 @@ namespace WowCharComparerWebApp.Controllers.User
                             VerificationToken = Guid.NewGuid()
                         };
 
-                        db.Users.Add(user);
-                        db.SaveChanges();
-                        transaction.Commit();                 
+                        _comparerDatabaseContext.Users.Add(user);
+                        _comparerDatabaseContext.SaveChanges();
                     }
                     else
                     {
@@ -78,7 +85,7 @@ namespace WowCharComparerWebApp.Controllers.User
             }
             catch (Exception ex)
             {
-                // return HTML view which shows the user that he cannot register because of technial problem
+                return View("Error", ex);
             }
 
             return View(user);
@@ -195,14 +202,14 @@ namespace WowCharComparerWebApp.Controllers.User
         /// <param name="email">User input email</param>
         /// <param name="db">Database context</param>
         /// <returns>First param (bool) - is validation correct, Second param (string) - message</returns>
-        public (bool, string) CheckEmail(string email, ComparerDatabaseContext db)
+        public (bool, string) CheckEmail(string email)
         {
             try
             {
                 MailAddress mail = new MailAddress(email);
                 return (true, string.Empty);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //TODO write to user that mail format is incorrect or already is in database
                 return (false, UserMessages.UserEmailInvalidFormat);
@@ -241,22 +248,22 @@ namespace WowCharComparerWebApp.Controllers.User
         {
             try
             {
-                using (ComparerDatabaseContext db = new ComparerDatabaseContext())
-                using (IDbContextTransaction transaction = db.Database.BeginTransaction())
+                using (_comparerDatabaseContext)
+                using (IDbContextTransaction transaction = _comparerDatabaseContext.Database.BeginTransaction())
                 {
-                    var userAccount = db.Users.Where(user => user.VerificationToken.ToString().ToUpper().Equals(userAccountActivationToken))
+                    var userAccount = _comparerDatabaseContext.Users.Where(user => user.VerificationToken.ToString().ToUpper().Equals(userAccountActivationToken))
                                            .SingleOrDefault();
-                    if(userAccount != null)
+                    if (userAccount != null)
                         userAccount.Verified = true;
 
                     transaction.Commit();
-                    db.SaveChanges();
+                    _comparerDatabaseContext.SaveChanges();
                 }
             }
 
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Error", ex);
             }
 
             return View("AccountApproval");

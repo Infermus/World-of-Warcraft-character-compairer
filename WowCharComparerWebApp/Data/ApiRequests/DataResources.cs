@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WowCharComparerWebApp.Data.Connection;
+using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
@@ -10,16 +11,23 @@ using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Data.ApiRequests
 {
-    public static class DataResources
+    internal class DataResources
     {
-        public static async Task<BlizzardAPIResponse> GetCharacterAchievements(RequestLocalization requestLocalization)
+        private ComparerDatabaseContext _comparerDatabaseContext;
+
+        public DataResources(ComparerDatabaseContext comparerDatabaseContext)
+        {
+            _comparerDatabaseContext = comparerDatabaseContext;
+        }
+
+        internal async Task<BlizzardAPIResponse> GetCharacterAchievements(RequestLocalization requestLocalization)
         {
             Uri generatedLink = RequestLinkFormater.GenerateAPIRequestLink(BlizzardAPIProfiles.Data, requestLocalization, 
                                                                                                      new List<KeyValuePair<string, string>>(), 
                                                                                                      BlizzardAPIProfiles.Character.ToString(), 
                                                                                                      EnumDictonaryWrapper.dataResourcesFieldsWrapper[DataResourcesFields.CharacterAchievements]);
 
-            return await APIDataRequestManager.GetDataByHttpRequest<BlizzardAPIResponse>(generatedLink);
+            return await new APIDataRequestManager(_comparerDatabaseContext).GetDataByHttpRequest<BlizzardAPIResponse>(generatedLink);
         }
     }
 }

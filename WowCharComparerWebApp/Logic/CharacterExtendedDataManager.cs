@@ -1,43 +1,43 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WowCharComparerWebApp.Data.Database;
+using WowCharComparerWebApp.Data.Database.Repository.Others;
 using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.Achievement;
 
 namespace WowCharComparerWebApp.Logic.DataResources
 {
-    public class CharacterExtendedDataManager
+    internal class CharacterExtendedDataManager
     {
+        private ComparerDatabaseContext _comparerDatabaseContext;
+
+        public CharacterExtendedDataManager(ComparerDatabaseContext comparerDatabaseContext)
+        {
+            _comparerDatabaseContext = comparerDatabaseContext;
+        }
+
         /// <summary>
         /// Gets completed achievement by player and match them by ID with database ones to create full information about earned achievement
         /// </summary>
         /// <param name="extendedCharacterModel"></param>
         /// <returns></returns>
-        public IEnumerable<AchievementsData> MatchCompletedPlayerAchievement(Models.CharacterProfile.ExtendedCharacterModel extendedCharacterModel)
+        internal IEnumerable<AchievementsData> MatchCompletedPlayerAchievement(Models.CharacterProfile.ExtendedCharacterModel extendedCharacterModel)
         {
-            using (ComparerDatabaseContext db = new ComparerDatabaseContext())
-            {
-                List<AchievementsData> achievementsDatasDB = (from id in db.AchievementsData select id).ToList();
+            List<AchievementsData> achievementsDatasDB = new DbAccessAchievements(_comparerDatabaseContext).GetAllAchievementsData().ToList();
 
-                return achievementsDatasDB.Join(extendedCharacterModel.Achievements.AchievementsCompleted.ToList(),
-                                                dbAchievement => dbAchievement.ID,
-                                                playerAchievement => playerAchievement,
-                                                (dbAchievement, playerAchievement) => dbAchievement);
-            }
+            return achievementsDatasDB.Join(extendedCharacterModel.Achievements.AchievementsCompleted.ToList(),
+                                            dbAchievement => dbAchievement.ID,
+                                            playerAchievement => playerAchievement,
+                                            (dbAchievement, playerAchievement) => dbAchievement);
         }
 
         /// <summary>
         /// Gets items id bonus stats parameters and try to match them to pre-prepared list of bonus stats name
         /// </summary>
         /// <param name="parsedJson"></param>
-        public Models.CharacterProfile.ItemsModels.Others.Items MatchItemsBonusStatistics(Models.CharacterProfile.ExtendedCharacterModel extendedCharacterModel)
+        internal Models.CharacterProfile.ItemsModels.Others.Items MatchItemsBonusStatistics(Models.CharacterProfile.ExtendedCharacterModel extendedCharacterModel)
         {
-            List<BonusStats> dbBonusStats = new List<BonusStats>();
-
-            using (ComparerDatabaseContext db = new ComparerDatabaseContext())
-            {
-                dbBonusStats = (from data in db.BonusStats select data).ToList();
-            }
+            var dbBonusStats = new DbAccessBonusStats(_comparerDatabaseContext).GetAllBonusStats().ToList();
 
             if (extendedCharacterModel.Items.Head != null)
                 extendedCharacterModel.Items.Head.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Head.Stats);
