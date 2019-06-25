@@ -1,20 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Net;
 using System.Net.Mail;
-using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database;
+using WowCharComparerWebApp.Models.DataTransferObject;
+using WowCharComparerWebApp.Notifications;
 
 namespace WowCharComparerWebApp.Controllers.User
 {
     public class RegisterController : Controller
     {
+        private ILogger _logger;
+
+        public RegisterController(ILogger<RegisterController> logger)
+        {
+            _logger = logger;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -31,7 +37,6 @@ namespace WowCharComparerWebApp.Controllers.User
         public IActionResult PerformUserRegister(string accountName, string userPassword, string userEmail)
         {
             Models.Internal.User user = new Models.Internal.User();
-
             try
             {
                 using (ComparerDatabaseContext db = new ComparerDatabaseContext())
@@ -39,7 +44,6 @@ namespace WowCharComparerWebApp.Controllers.User
                 {
                     List<bool> CheckedValidators = new List<bool>()
                     {
-                        //TODO improve validators
                         CheckUsername(accountName, db),
                         CheckPassword(userPassword),
                         CheckEmail(userEmail, db)
@@ -62,67 +66,63 @@ namespace WowCharComparerWebApp.Controllers.User
 
                         db.Users.Add(user);
                         db.SaveChanges();
-                        transaction.Commit();                 
+                        transaction.Commit();     
                     }
                 }
-                SendVerificationMail(userEmail, user.VerificationToken);
+
+                string protocol = HttpContext.Request.IsHttps ? "https" : "http";
+                string activationLink = $"{protocol}://www.{ HttpContext.Request.Host}/Register/AccountConfirmation";
+                string messageBody = "<p>This is a email to verification your World of Warcraft Character Comparer account.</p>" +
+                                    $"<p> Activation code: <b> {user.VerificationToken.ToString()} </b> </p>" +
+                                     "Please active your account " + 
+                                    $"<a href=\"{activationLink}\">here </a>";
+                string messageSubject = "World of Warcraft Character Comparer: Verify account!";
+
+                EmailManager emailMannager = new EmailManager();
+                EmailSendStatus emailSendStatus = emailMannager.SendMail(user.Email, messageSubject, messageBody);
+
+                if (emailSendStatus.SendSuccessfully == false)
+                {
+                    // TODO return message for failed email send
+                }
             }
+
             catch (Exception ex)
             {
                 // return HTML view which shows the user that he cannot register because of technial problem
+                return StatusCode(501);
             }
-
             return View(user);
         }
 
-        public bool CheckPassword(string password)
+        public static bool CheckPassword(string password)
         {
             return password.Any(char.IsDigit) & password.Any(char.IsUpper) & password.Length >= 8;
         }
 
         public bool CheckUsername(string accountName, ComparerDatabaseContext db)
         {
-            return accountName.Length >= 6 && db.Users.All(x => x.Nickname != accountName);
+            return accountName.Length >= 6 & db.Users.All(x => x.Nickname != accountName);
         }
 
         public bool CheckEmail(string email, ComparerDatabaseContext db)
         {
-            try
+            if (db.Users.All(x => x.Email != email))
             {
-                MailAddress mail = new MailAddress(email);
-                return true;
+                try
+                {
+                    MailAddress mail = new MailAddress(email);
+                    return true;
+                }
+
+                catch (Exception ex)
+                {
+                    //TODO write to user that mail format is incorrect or already is in database
+                    return false;
+                }
             }
-            catch (Exception ex)
-            {
-                //TODO write to user that mail format is incorrect or already is in database
+            else
                 return false;
-            }
-        }
-
-        public void SendVerificationMail(string userEmail, Guid activationGuid)
-        {
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587)
-            {
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(APIConf.WowCharacterComparerEmail, APIConf.WoWCharacterComparerEmailPassword),
-                Timeout = 100000,
-                EnableSsl = true
-            };
-
-            string protocol = HttpContext.Request.IsHttps ? "https" : "http";
-
-            string activationLink = $"{protocol}://www.{ HttpContext.Request.Host}/Register/AccountConfirmation";
-
-            MailMessage msg = new MailMessage();
-            msg.To.Add(userEmail);
-            msg.From = new MailAddress(APIConf.WowCharacterComparerEmail);
-            msg.IsBodyHtml = true;
-            msg.Subject = "World of Warcraft Character Comparer: Verify account!";
-            msg.Body = "<p> This is a email to verification your World of Warcraft Character Comparer account.</p>" +
-                       $"<p> Activation code: <b> {activationGuid.ToString()} </b> </p>" +
-                       "Please active your account " + $"<a href=\"{activationLink}\">here </a>";
-            client.Send(msg);
         }
 
         [Route("Register/ConfirmUserAccount")]
