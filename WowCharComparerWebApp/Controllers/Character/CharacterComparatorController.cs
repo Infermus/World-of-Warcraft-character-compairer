@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.ApiRequests;
-using WowCharComparerWebApp.Data.Database.Repository;
+using WowCharComparerWebApp.Data.Connection;
+using WowCharComparerWebApp.Data.Database;
+using WowCharComparerWebApp.Data.Database.Repository.Others;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
@@ -18,8 +20,17 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 {
     public class CharacterComparatorController : Controller
     {
+        private readonly ComparerDatabaseContext _comparerDatabaseContext;
+        private readonly IAPIDataRequestManager _iAPIDataRequestManager;
+
         private static List<string> currentRealmListPlayerLeft;
         private static List<string> currentRealmListPlayerRight;
+
+        public CharacterComparatorController(ComparerDatabaseContext comparerDatabaseContext, IAPIDataRequestManager iAPIDataRequestManager)
+        {
+            _comparerDatabaseContext = comparerDatabaseContext;
+            _iAPIDataRequestManager = iAPIDataRequestManager;
+        }
 
         public IActionResult Index()
         {
@@ -68,8 +79,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         public IActionResult TestActionTwo()
         {
-            temp_DataPreparation.InsertBonusStatsTableFromJsonFile();
-
+            new DbAccessBonusStats(_comparerDatabaseContext).InsertBonusStatsTableFromJsonFile();
             return Content("Action two - executed");
         }
 
@@ -77,7 +87,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
         {
             string returnContent = string.Empty;
 
-            var data = DataResources.GetCharacterAchievements(new RequestLocalization()
+            var data = new DataResources(_comparerDatabaseContext).GetCharacterAchievements(new RequestLocalization()
             {
                 CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper[Region.Europe],
                 Realm = new Realm() { Locale = EULocale.en_GB.ToString() }
@@ -86,7 +96,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             if (data.Result.Exception is null)
             {
                 Achievement parsedResult = JsonProcessing.DeserializeJsonData<Achievement>(data.Result.Data);
-                temp_DataPreparation.InsertAllAchievementsDataFromApiRequest(parsedResult);
+                new DbAccessAchievements(_comparerDatabaseContext).InsertAllAchievementsDataFromApiRequest(parsedResult);
 
                 returnContent = "Test action three executed - achievements insertion to database";
             }
@@ -112,7 +122,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             foreach (string characterName in new List<string>() { firstPlayer.Name, secondPlayer.Name })
             {
                 //TODO Get input from view to fill up character fields (check boxes which determines what to compare)
-                var result = CharacterRequests.GetCharacterDataAsJsonAsync(characterName, requestLocalization,
+                var result = new CharacterRequests(_iAPIDataRequestManager).GetCharacterDataAsJsonAsync(characterName, requestLocalization,
                                                                             new List<CharacterFields>()
                                                                             {
                                                                                 CharacterFields.Items,
@@ -120,7 +130,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                                                                             }).Result;
 
                 ExtendedCharacterModel currentCharacter = JsonProcessing.DeserializeJsonData<ExtendedCharacterModel>(result.Data);
-                CharacterExtendedDataManager characterDataManager = new CharacterExtendedDataManager();
+                CharacterExtendedDataManager characterDataManager = new CharacterExtendedDataManager(_comparerDatabaseContext);
 
                 processedCharacterData.Add(new ProcessedCharacterModel()
                 {
@@ -166,7 +176,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                     CoreRegionUrlAddress = regionCoreAdress,
                 };
 
-                RealmsRequests realmsRequests = new RealmsRequests();
+                RealmsRequests realmsRequests = new RealmsRequests(_comparerDatabaseContext);
                 var realmResponse = realmsRequests.GetRealmsDataAsJsonAsync(requestLocalization);
                 RealmStatus realmStatus = JsonProcessing.DeserializeJsonData<RealmStatus>(realmResponse.Result.Data);
 

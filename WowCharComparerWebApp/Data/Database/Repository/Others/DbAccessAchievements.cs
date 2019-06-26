@@ -3,49 +3,41 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WowCharComparerWebApp.Data.Helpers;
-using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.Achievement;
 
-namespace WowCharComparerWebApp.Data.Database.Repository
+namespace WowCharComparerWebApp.Data.Database.Repository.Others
 {
-    public static class temp_DataPreparation
+    public class DbAccessAchievements
     {
-        public static void InsertBonusStatsTableFromJsonFile()
+        private ComparerDatabaseContext _comparerDatabaseContext;
+
+        public DbAccessAchievements(ComparerDatabaseContext comparerDatabaseContext)
         {
-            var parsedJsonData = JsonProcessing.GetDataFromJsonFile<Models.Statistics.Statistics>(@"\Statistics.json");
-
-
-            using (var db = new ComparerDatabaseContext())
-            {
-                for (int index = 0; index < parsedJsonData.BonusStats.Length; index++)
-                {
-                    db.BonusStats.Add(new BonusStats()
-                    {
-                        ID = Guid.NewGuid(),
-                        BonusStatsID = parsedJsonData.BonusStats[index].BonusStatsID,
-                        Name = parsedJsonData.BonusStats[index].Name
-                    });
-                }
-                db.SaveChanges();
-            }
+            _comparerDatabaseContext = comparerDatabaseContext;
         }
 
-        public static void InsertAllAchievementsDataFromApiRequest(Achievement apiData)
+        public IEnumerable<AchievementsData> GetAllAchievementsData()
         {
-            using (ComparerDatabaseContext db = new ComparerDatabaseContext())
+            return _comparerDatabaseContext.AchievementsData.Select(x => x);
+        }
+
+        #region refactioring
+
+        public void InsertAllAchievementsDataFromApiRequest(Achievement apiData)
+        {
+            using (_comparerDatabaseContext)
             {
-                using (IDbContextTransaction transaction = db.Database.BeginTransaction())
+                using (IDbContextTransaction transaction = _comparerDatabaseContext.Database.BeginTransaction())
                 {
                     try
                     {
                         //TODO Remove delete from
-                        db.Database.ExecuteSqlCommand("DELETE FROM AchievementsData");
-                        db.Database.ExecuteSqlCommand("DELETE FROM AchievementCategory");
+                        _comparerDatabaseContext.Database.ExecuteSqlCommand("DELETE FROM AchievementsData");
+                        _comparerDatabaseContext.Database.ExecuteSqlCommand("DELETE FROM AchievementCategory");
 
                         for (int categoryIndex = 0; categoryIndex < apiData.AchievementCategory.Count(); categoryIndex++)
                         {
-                            db.AchievementCategory.Add(new AchievementCategory()
+                            _comparerDatabaseContext.AchievementCategory.Add(new AchievementCategory()
                             {
                                 ID = apiData.AchievementCategory.ElementAt(categoryIndex).ID,
                                 CategoryName = apiData.AchievementCategory.ElementAt(categoryIndex).CategoryName,
@@ -57,7 +49,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository
                             {
                                 for (int dataIndex = 0; dataIndex < apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.Count(); dataIndex++)
                                 {
-                                    db.AchievementsData.Add(new AchievementsData()
+                                    _comparerDatabaseContext.AchievementsData.Add(new AchievementsData()
                                     {
                                         Title = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.ElementAt(dataIndex).Title,
                                         ID = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsData.ElementAt(dataIndex).ID,
@@ -75,7 +67,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository
                             {
                                 for (int dataIndex = 0; dataIndex < apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.Count(); dataIndex++)
                                 {
-                                    db.AchievementCategory.Add(new AchievementCategory()
+                                    _comparerDatabaseContext.AchievementCategory.Add(new AchievementCategory()
                                     {
                                         CategoryName = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).CategoryName,
                                         ID = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).ID,
@@ -85,7 +77,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository
 
                                     for (int index = 0; index < apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.Count(); index++)
                                     {
-                                        db.AchievementsData.Add(new AchievementsData()
+                                        _comparerDatabaseContext.AchievementsData.Add(new AchievementsData()
                                         {
                                             Title = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.ElementAt(index).Title,
                                             ID = apiData.AchievementCategory.ElementAt(categoryIndex).AchievementsSubCategoryData.ElementAt(dataIndex).AchievementsData.ElementAt(index).ID,
@@ -111,10 +103,12 @@ namespace WowCharComparerWebApp.Data.Database.Repository
 
                 void IdentityInsertManager(string tableName)
                 {
-                    db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + tableName + " ON");
-                    db.SaveChanges();
-                    db.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + tableName + " OFF");
+                    _comparerDatabaseContext.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + tableName + " ON");
+                    _comparerDatabaseContext.SaveChanges();
+                    _comparerDatabaseContext.Database.ExecuteSqlCommand("SET IDENTITY_INSERT " + tableName + " OFF");
                 }
+
+                #endregion
             }
         }
     }

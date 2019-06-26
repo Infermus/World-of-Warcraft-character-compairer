@@ -19,22 +19,13 @@ namespace WowCharComparerWebApp.Data.Database
 
         public DbSet<AchievementsData> AchievementsData { get; set; }
 
-        private static string ConnectionString { get; set; }
-
-        public ComparerDatabaseContext() : base()
+        public ComparerDatabaseContext(DbContextOptions options) : base(options)
         {
-
-        }
-
-        public ComparerDatabaseContext(string connectionString)
-        {
-            ConnectionString = connectionString;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(ConnectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

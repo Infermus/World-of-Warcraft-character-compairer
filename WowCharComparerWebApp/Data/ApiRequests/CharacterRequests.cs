@@ -13,7 +13,14 @@ namespace WowCharComparerWebApp.Data.ApiRequests
 {
     public class CharacterRequests
     {
-        public static async Task<BlizzardAPIResponse> GetCharacterDataAsJsonAsync(string characterName, RequestLocalization requestLocalization, List<CharacterFields> characterFields)
+        private IAPIDataRequestManager _aPIDataRequestManager;
+
+        public CharacterRequests(IAPIDataRequestManager aPIDataRequestManager)
+        {
+            _aPIDataRequestManager = aPIDataRequestManager;
+        }
+
+        internal async Task<BlizzardAPIResponse> GetCharacterDataAsJsonAsync(string characterName, RequestLocalization requestLocalization, List<CharacterFields> characterFields)
         {
             List<KeyValuePair<string, string>> characterParams = new List<KeyValuePair<string, string>>();
 
@@ -35,7 +42,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
             }
             Uri uriAddress = RequestLinkFormater.GenerateAPIRequestLink(BlizzardAPIProfiles.Character, requestLocalization, characterParams, requestLocalization.Realm.Slug, characterName); // generates link for request
 
-            return await APIDataRequestManager.GetDataByHttpRequest<BlizzardAPIResponse>(uriAddress);
+            return await _aPIDataRequestManager.GetDataByHttpRequest<BlizzardAPIResponse>(uriAddress);
         }
     }
 }

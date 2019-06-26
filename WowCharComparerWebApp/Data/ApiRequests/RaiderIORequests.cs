@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WowCharComparerWebApp.Data.Connection;
+using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.RaiderIO;
@@ -11,9 +12,16 @@ using WowCharComparerWebApp.Models.Servers;
 
 namespace WowCharComparerWebApp.Data.ApiRequests
 {
-    public class RaiderIORequests
+    internal class RaiderIORequests
     {
-        public static async Task<RaiderIOAPIResponse> GetRaiderIODataAsync(string characterName, RequestLocalization requestLocalization, List<RaiderIOCharacterFields> characterFields)
+        private readonly ComparerDatabaseContext _comparerDatabaseContext;
+
+        public RaiderIORequests(ComparerDatabaseContext comparerDatabaseContext)
+        {
+            _comparerDatabaseContext = comparerDatabaseContext;
+        }
+
+        internal async Task<RaiderIOAPIResponse> GetRaiderIODataAsync(string characterName, RequestLocalization requestLocalization, List<RaiderIOCharacterFields> characterFields)
         {
             string region = requestLocalization.Realm.Timezone == "Europe/Paris" ? "eu" : throw new Exception("Choosed realm is not European");
 
@@ -48,7 +56,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
 
             Uri uriAddress = RequestLinkFormater.GenerateRaiderIOApiRequestLink(fields, parameters);
 
-            return await APIDataRequestManager.GetDataByHttpRequest<RaiderIOAPIResponse>(uriAddress);
+            return await new APIDataRequestManager(_comparerDatabaseContext).GetDataByHttpRequest<RaiderIOAPIResponse>(uriAddress);
         }
     }
 }
