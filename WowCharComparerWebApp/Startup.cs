@@ -25,6 +25,9 @@ namespace WowCharComparerWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            //services.AddLogging((logger) => { logger.AddConsole(); });
+
+
             defaultConnectionString = Configuration["ConnectionStrings:DefaultConnection"];
             APIConf.WoWCharacterComparerEmailPassword = Configuration["WowCharacterComparerEmailPassword"];
             APIConf.WowCharacterComparerEmail = Configuration["WowCharacterComparerEmail"];
@@ -46,6 +49,7 @@ namespace WowCharComparerWebApp
 
             // Adding css, js files
             app.UseStaticFiles();
+
 
             // set configuration to logger 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));

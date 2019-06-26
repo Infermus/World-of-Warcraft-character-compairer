@@ -121,6 +121,8 @@ namespace WowCharComparerWebApp.Migrations
 
                     b.Property<DateTime>("RegistrationDate");
 
+                    b.Property<Guid>("VerificationToken");
+
                     b.Property<bool>("Verified");
 
                     b.HasKey("ID");
