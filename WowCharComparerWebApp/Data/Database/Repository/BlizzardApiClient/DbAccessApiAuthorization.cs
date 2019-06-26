@@ -2,7 +2,7 @@
 using System.Linq;
 using WowCharComparerWebApp.Models.Internal;
 
-namespace WowCharComparerWebApp.Data.Database.Repository
+namespace WowCharComparerWebApp.Data.Database.Repository.BlizzardApiClient
 {
     //TODO add some middle layer to handle exception
     public class DbAccessApiAuthorization

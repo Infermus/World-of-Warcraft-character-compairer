@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using WowCharComparerWebApp.Models.Abstract;
 
 namespace WowCharComparerWebApp.Models.Internal
 {
     /// <summary>
     /// Information about API Client (they can be obtained from https://develop.battle.net)
     /// </summary>
-    public class APIClient
+    public class APIClient : DatabaseTableModel
     {
         [Key]
         [Required]

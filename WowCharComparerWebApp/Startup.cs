@@ -8,6 +8,8 @@ using System;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database;
+using WowCharComparerWebApp.Data.Database.Repository.User;
+using WowCharComparerWebApp.Logic.User;
 
 namespace WowCharComparerWebApp
 {
@@ -37,6 +39,8 @@ namespace WowCharComparerWebApp
 
             services.AddMvc();
             services.AddTransient<IAPIDataRequestManager, APIDataRequestManager>();
+            services.AddScoped<PasswordValidationManager>();
+            services.AddScoped<DbAccessUser>();
 
             APIConf.WoWCharacterComparerEmailPassword = Configuration["WowCharacterComparerEmailPassword"];
             APIConf.WowCharacterComparerEmail = Configuration["WowCharacterComparerEmail"];

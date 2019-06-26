@@ -1,15 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database;
+using WowCharComparerWebApp.Data.Database.Repository.User;
+using WowCharComparerWebApp.Logic.User;
+using WowCharComparerWebApp.Models.DataTransferObject;
 using WowCharComparerWebApp.Notifications;
 
 namespace WowCharComparerWebApp.Controllers.User
 {
     public class LoginController : Controller
     {
+        private readonly ComparerDatabaseContext _comparerDatabaseContext;
+        private readonly PasswordValidationManager _passwordValidationManager;
+        private readonly DbAccessUser _dbAccessUser;
+
+        public LoginController(ComparerDatabaseContext comparerDatabaseContext, PasswordValidationManager passwordValidationManager, DbAccessUser dbAccessUser)
+        {
+            _comparerDatabaseContext = comparerDatabaseContext;
+            _passwordValidationManager = passwordValidationManager;
+            _dbAccessUser = dbAccessUser;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -32,21 +46,15 @@ namespace WowCharComparerWebApp.Controllers.User
         [HttpPost]
         public IActionResult PasswordChanged(string newPassword, string newPasswordConfirmation, Guid userID)
         {
-            List<string> passwordsToCheck = new List<string>();
-            {
-                passwordsToCheck.Add(newPassword);
-                passwordsToCheck.Add(newPasswordConfirmation);
-            }
+            List<(bool, string)> checkedPasswords = new List<(bool, string)>();
 
-            List<(bool,string)> checkedPasswords = new List<(bool,string)>();
-            RegisterController registerController = new RegisterController();
-
-            for (int index = 0; index < passwordsToCheck.Count(); index++)
-                checkedPasswords.AddRange(registerController.CheckPassword(passwordsToCheck[index]));
+            checkedPasswords.AddRange(_passwordValidationManager.CheckPassword(newPassword));
+            checkedPasswords.AddRange(_passwordValidationManager.CheckPassword(newPasswordConfirmation));
+            checkedPasswords.Add((newPassword.Equals(newPasswordConfirmation), UserMessages.UserConfirmPasswordNoMatch));
 
             if (checkedPasswords.All(x => x.Item1.Equals(true)))
             {
-                UpdateUserPassword(newPassword,userID);
+                _dbAccessUser.UpdatePassword(userID, newPassword);
                 return Content("Password has been changed");
                 //TODO  *Add generic view to display various messages with same layout* - TASK
             }
@@ -57,40 +65,27 @@ namespace WowCharComparerWebApp.Controllers.User
             }
         }
 
-        private void UpdateUserPassword(string newPassword, Guid userID)
-        {
-            using (ComparerDatabaseContext db = new ComparerDatabaseContext())
-            using (IDbContextTransaction transaction = db.Database.BeginTransaction())
-            {
-                var userAccount = db.Users.Where(user => user.ID.Equals(userID))
-                                       .SingleOrDefault();
-
-                userAccount.Password = newPassword;
-                transaction.Commit();
-                db.SaveChanges();
-            }
-        }
-
         [HttpPost]
         public IActionResult PasswordRecovery(string userEmail, string userName)
         {
-            using (ComparerDatabaseContext db = new ComparerDatabaseContext())
+            using (_comparerDatabaseContext)
             {
-                var userID = db.Users.Where(user => user.Nickname.Equals(userName) && user.Email.Equals(userEmail)).Select(user => user.ID).ToList();
-                string protocol = HttpContext.Request.IsHttps ? "https" : "http";
-                string resetPasswordLink = $"{protocol}://www.{ HttpContext.Request.Host}/Login/PasswordRecovery/Confirmation/?userID={userID[0]}";
+                Guid userID = _comparerDatabaseContext.Users.Where(user => user.Nickname.Equals(userName) && user.Email.Equals(userEmail))
+                                                            .Select(user => user.ID)
+                                                            .SingleOrDefault();
+
+                string resetPasswordLink = $"{ HttpContext.Request.Protocol }://www.{ HttpContext.Request.Host}/Login/PasswordRecovery/Confirmation/?userID={userID.ToString()}";
                 string recoveryPasswordSubject = "World of Warcraft Character Comparer: Password recovery!";
                 string recoveryPasswordBody = $"<p> Hello {userName} </p>" +
                                               $"<p> You've asked to reset password for this World of Warcraft Character Comparer account: {userEmail} </p>" +
                                               "<p> Please follow link bellow to reset your password: </p>" +
                                               $"<a href=\"{resetPasswordLink}\">Confirmation </a>";
 
-                bool userExists = db.Users.Any(user => user.Nickname.Equals(userName) && user.Email.Equals(userEmail));
-                EmailManager emailMannager = new EmailManager();
-               
+                bool userExists = _comparerDatabaseContext.Users.Any(user => user.Nickname.Equals(userName) && user.Email.Equals(userEmail));
+
                 if (userExists == true)
                 {
-                    emailMannager.SendMail(userEmail, recoveryPasswordSubject, recoveryPasswordBody);
+                    EmailSendStatus emailSendStatus = new EmailManager().SendMail(userEmail, recoveryPasswordSubject, recoveryPasswordBody);
                 }
             }
             return View("PasswordRecoveryMailSended");

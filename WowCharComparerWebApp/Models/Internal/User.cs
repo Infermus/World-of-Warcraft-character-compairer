@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using WowCharComparerWebApp.Models.Abstract;
 
 namespace WowCharComparerWebApp.Models.Internal
 {
-    public class User
+    public class User : DatabaseTableModel
     {
         /// <summary>
         /// Unique ID for User 

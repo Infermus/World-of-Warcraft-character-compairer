@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database;
-using WowCharComparerWebApp.Data.Database.Repository;
+using WowCharComparerWebApp.Data.Database.Repository.BlizzardApiClient;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Models.Abstract;
 using WowCharComparerWebApp.Models.APIResponse;
