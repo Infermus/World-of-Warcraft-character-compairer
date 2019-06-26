@@ -36,10 +36,8 @@ namespace WowCharComparerWebApp
             });
 
             services.AddMvc();
-
             services.AddTransient<IAPIDataRequestManager, APIDataRequestManager>();
 
-            // TODO need to to something with that:
             APIConf.WoWCharacterComparerEmailPassword = Configuration["WowCharacterComparerEmailPassword"];
             APIConf.WowCharacterComparerEmail = Configuration["WowCharacterComparerEmail"];
         }

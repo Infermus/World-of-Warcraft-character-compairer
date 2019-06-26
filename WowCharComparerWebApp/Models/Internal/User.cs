@@ -9,7 +9,7 @@ namespace WowCharComparerWebApp.Models.Internal
     public class User
     {
         /// <summary>
-        /// Uniquie ID for User 
+        /// Unique ID for User 
         /// </summary>
         [Key]
         [Required]
