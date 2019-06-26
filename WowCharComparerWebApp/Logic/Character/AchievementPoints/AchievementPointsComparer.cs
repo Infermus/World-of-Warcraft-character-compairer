@@ -7,7 +7,7 @@ namespace WowCharComparerWebApp.Logic.Character.AchievementPoints
 {
     public class AchievementPointsComparer
     {
-        public static CharacterAchievementPointsCompareResult CompareAchievementPoints(List<CharacterModel> parsedResultList)
+        public static CharacterAchievementPointsCompareResult CompareAchievementPoints(List<BasicCharacterModel> parsedResultList)
         {
             int achievementPointResult = Math.Abs(parsedResultList[0].AchievementPoints - parsedResultList[1].AchievementPoints);
 

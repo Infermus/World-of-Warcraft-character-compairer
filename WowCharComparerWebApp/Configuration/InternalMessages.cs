@@ -1,4 +1,5 @@
-﻿namespace WowCharComparerWebApp.Configuration
+﻿
+namespace WowCharComparerWebApp.Configuration
 {
     public static class InternalMessages
     {

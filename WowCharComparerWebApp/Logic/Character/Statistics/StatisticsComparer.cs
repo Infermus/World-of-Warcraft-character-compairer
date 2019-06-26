@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using WowCharComparerWebApp.Enums.Character;
+using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Mappers;
 
@@ -9,7 +10,7 @@ namespace WowCharComparerWebApp.Logic.Character.Statistics
 {
     internal class StatisticsComparer
     {
-        public static CharacterStatisticsCompareResult CompareCharacterStatistics(List<CharacterModel> parsedResultList)
+        public static CharacterStatisticsCompareResult CompareCharacterStatistics(List<ExtendedCharacterModel> parsedResultList)
         {
             List<KeyValuePair<CharacterMainStats, string>> finalResultList = new List<KeyValuePair<CharacterMainStats, string>>();
             try
@@ -51,7 +52,7 @@ namespace WowCharComparerWebApp.Logic.Character.Statistics
             return characterStatistics;
         }
 
-        private static List<KeyValuePair<CharacterMainStats, decimal>> ComparePrimaryCharacterStats(List<CharacterModel> parsedResultList)
+        private static List<KeyValuePair<CharacterMainStats, decimal>> ComparePrimaryCharacterStats(List<ExtendedCharacterModel> parsedResultList)
         {
             List<KeyValuePair<CharacterMainStats, decimal>> countedPrimaryStatsPercent = new List<KeyValuePair<CharacterMainStats, decimal>>();
 
