@@ -38,12 +38,13 @@ namespace WowCharComparerWebApp.Controllers.User
                 passwordsToCheck.Add(newPasswordConfirmation);
             }
 
-            List<bool> checkedPasswords = new List<bool>();
+            List<(bool,string)> checkedPasswords = new List<(bool,string)>();
+            RegisterController registerController = new RegisterController();
 
-            for (int index = 0; index < passwordsToCheck.Count(); index ++)
-                    checkedPasswords.Add(RegisterController.CheckPassword(passwordsToCheck[index]));
+            for (int index = 0; index < passwordsToCheck.Count(); index++)
+                checkedPasswords.AddRange(registerController.CheckPassword(passwordsToCheck[index]));
 
-            if (checkedPasswords.All(x => x.Equals(true)))
+            if (checkedPasswords.All(x => x.Item1.Equals(true)))
             {
                 UpdateUserPassword(newPassword,userID);
                 return Content("Password has been changed");
