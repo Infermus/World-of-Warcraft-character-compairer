@@ -9,7 +9,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Others
 {
     public class DbAccessAchievements
     {
-        private ComparerDatabaseContext _comparerDatabaseContext;
+        private readonly ComparerDatabaseContext _comparerDatabaseContext;
 
         public DbAccessAchievements(ComparerDatabaseContext comparerDatabaseContext)
         {

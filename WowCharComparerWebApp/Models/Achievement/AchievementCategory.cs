@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WowCharComparerWebApp.Models.Abstract;
 
 namespace WowCharComparerWebApp.Models.Achievement
 { 
-    public class AchievementCategory 
+    public class AchievementCategory : DatabaseTableModel
     {
         [Key]
         [JsonProperty(PropertyName = "Id")]

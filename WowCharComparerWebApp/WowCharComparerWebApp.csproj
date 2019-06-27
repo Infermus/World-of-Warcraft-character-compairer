@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Register\PerformUserRegister.cshtml">
+    <Content Update="Views\Register\UserRegistrationCompleted.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Register\Error.cshtml">

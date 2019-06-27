@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
+using WowCharComparerWebApp.Models.Abstract;
 
 namespace WowCharComparerWebApp.Models
 {
-    public class BonusStats
+    public class BonusStats : DatabaseTableModel
     {
         [JsonIgnore]
         [Key]
