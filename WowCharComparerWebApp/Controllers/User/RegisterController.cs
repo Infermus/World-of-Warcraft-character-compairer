@@ -69,7 +69,8 @@ namespace WowCharComparerWebApp.Controllers.User
                     return Content(passwordPolicyValidation.Where(v => v.Item1 == false).Select(s => s.Item2).ToArray().First());
                 }
 
-                string activationLink = $"{HttpContext.Request.Protocol}://www.{HttpContext.Request.Host}/Register/AccountConfirmation";
+                string protocol = HttpContext.Request.IsHttps ? "https" : "http";
+                string activationLink = $"{protocol}://www.{HttpContext.Request.Host}/Register/AccountConfirmation";
 
                 EmailSendStatus emailSendStatus = new EmailManager().SendMail(user.Email, "World of Warcraft Character Comparer: Verify account!",
                                                       "<p> This is a email to verification your World of Warcraft Character Comparer account.</p>" +

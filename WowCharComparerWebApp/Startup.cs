@@ -28,6 +28,7 @@ namespace WowCharComparerWebApp
             services.AddLogging((logger) =>
             {
                 logger.AddConfiguration(Configuration.GetSection("Logging"));
+                logger.AddConsole();
             });
 
             services.AddDbContext<ComparerDatabaseContext>((builder) =>

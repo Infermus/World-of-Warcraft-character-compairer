@@ -8,9 +8,9 @@ namespace WowCharComparerWebApp.Data.Database.Repository.User
     public class DbAccessUser
     {
         private readonly ComparerDatabaseContext _comparerDatabaseContext;
-        private readonly ILogger _logger;
+        private readonly ILogger<DbAccessUser> _logger;
 
-        public DbAccessUser(ComparerDatabaseContext comparerDatabaseContext, ILogger logger)
+        public DbAccessUser(ComparerDatabaseContext comparerDatabaseContext, ILogger<DbAccessUser> logger)
         {
             _comparerDatabaseContext = comparerDatabaseContext;
             _logger = logger;
@@ -46,6 +46,30 @@ namespace WowCharComparerWebApp.Data.Database.Repository.User
 
             return newUser;
         }
+
+        /// <summary>
+        /// Select user from database by username (nickname)
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        internal Models.Internal.User GetUserByName(string userName)
+        {
+            Models.Internal.User user = new Models.Internal.User();
+
+            using (_comparerDatabaseContext)
+            {
+                user = _comparerDatabaseContext.Users.Where(u => user.Nickname.Equals(userName)).SingleOrDefault();
+
+                if (user == null)
+                {
+                    _logger.LogWarning($"Canno't find user \"{userName}\" in database");
+                    return null;
+                }
+            }
+
+            return user;
+        }
+
 
         /// <summary>
         /// Activate user's account by set verified property to true
