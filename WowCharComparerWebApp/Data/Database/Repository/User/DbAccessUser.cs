@@ -58,7 +58,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.User
 
             using (_comparerDatabaseContext)
             {
-                user = _comparerDatabaseContext.Users.Where(u => user.Nickname.Equals(userName)).SingleOrDefault();
+                user = _comparerDatabaseContext.Users.Where(u => u.Nickname.Equals(userName)).SingleOrDefault();
 
                 if (user == null)
                 {

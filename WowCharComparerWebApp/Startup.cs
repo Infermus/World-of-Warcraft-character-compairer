@@ -33,7 +33,7 @@ namespace WowCharComparerWebApp
 
             services.AddDbContext<ComparerDatabaseContext>((builder) =>
             {
-                if (Configuration.GetValue<string>("DatabaseType").Equals("PostgreSQL"))
+                if (Configuration.GetValue<string>("DatabaseType").Equals("MYSQL"))
                     builder.UseNpgsql(Configuration["ConnectionStrings:PostgreSqlConnection"]);
                 else builder.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
             });
