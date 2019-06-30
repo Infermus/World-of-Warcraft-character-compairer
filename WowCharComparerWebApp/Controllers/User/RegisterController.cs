@@ -30,11 +30,21 @@ namespace WowCharComparerWebApp.Controllers.User
             return View();
         }
 
-        [Route("Register/AccountConfirmation")]
         [HttpGet]
-        public IActionResult Confirmation()
+        public IActionResult Confirmation(string userID)
         {
-            return View("AccountConfirmation");
+            {
+                try
+                {
+                    DbOperationStatus operationStatus = _dbAccessUser.ActivateAccount(userID);
+                }
+
+                catch (Exception ex)
+                {
+                    return View("Error", ex);
+                }
+                return View("AccountApproval");
+            }
         }
 
         [HttpPost]
@@ -69,12 +79,14 @@ namespace WowCharComparerWebApp.Controllers.User
                     return Content(passwordPolicyValidation.Where(v => v.Item1 == false).Select(s => s.Item2).ToArray().First());
                 }
 
-                string protocol = HttpContext.Request.IsHttps ? "https" : "http";
-                string activationLink = $"{protocol}://www.{HttpContext.Request.Host}/Register/AccountConfirmation";
+                string activationLink = Url.Action("Confirmation", "Register", new
+                {
+                    userID = user.VerificationToken.ToString()
 
+                },protocol: HttpContext.Request.Scheme);
+      
                 EmailSendStatus emailSendStatus = new EmailManager().SendMail(user.Email, "World of Warcraft Character Comparer: Verify account!",
                                                       "<p> This is a email to verification your World of Warcraft Character Comparer account.</p>" +
-                                                     $"<p> Activation code: <b> {user.VerificationToken.ToString()} </b> </p>" +
                                                       "Please active your account " + $"<a href=\"{activationLink}\">here </a>");
             }
             catch (Exception ex)
@@ -83,23 +95,6 @@ namespace WowCharComparerWebApp.Controllers.User
             }
 
             return View("UserRegistrationCompleted", user);
-        }
-
-        [Route("Register/ConfirmUserAccount")]
-        [HttpPost]
-        public IActionResult ConfirmUserAccount(string userAccountActivationToken)
-        {
-            try
-            {
-                DbOperationStatus operationStatus = _dbAccessUser.ActivateAccount(userAccountActivationToken);
-            }
-
-            catch (Exception ex)
-            {
-                return View("Error", ex);
-            }
-
-            return View("AccountApproval");
         }
     }
 }

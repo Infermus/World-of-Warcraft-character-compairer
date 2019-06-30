@@ -30,21 +30,22 @@ namespace WowCharComparerWebApp.Controllers.User
 
         [Route("Login/PasswordRecovery")]
         [HttpGet]
-        public IActionResult PasswordRecoveryView()
+        public IActionResult PasswordRecovery()
         {
             return View("PasswordRecovery");
         }
 
-        [Route("Login/PasswordRecovery/Confirmation")]
-        public IActionResult PasswordResetConfirmationView(string userID)
+        public IActionResult PasswordResetConfirmation(Guid userID)
         {
-            ViewBag.Message = userID;
+            TempData["userID"] = userID;
             return View("ChangeUserPassword");
         }
 
         [HttpPost]
-        public IActionResult ChangeUserPassword(string newPassword, string newPasswordConfirmation, Guid userID)
+        public IActionResult ChangeUserPassword(string newPassword, string newPasswordConfirmation)
         {
+
+            Guid userID = ViewBag.Message = TempData["userID"];
             if (!newPassword.Equals(newPasswordConfirmation))
                 return Content(UserMessages.UserConfirmPasswordNoMatch);
 
@@ -69,8 +70,12 @@ namespace WowCharComparerWebApp.Controllers.User
                 return Content($"Cannot find user {userName}. Password recovery failed");
             }
 
-            string protocol = HttpContext.Request.IsHttps ? "https" : "http";
-            string resetPasswordLink = $"{ protocol }://www.{ HttpContext.Request.Host}/Login/PasswordRecovery/Confirmation/?userID={user.ID.ToString()}";
+            string resetPasswordLink = Url.Action("PasswordResetConfirmation", "Login", new
+            {
+                userID = user.ID
+
+            }, protocol: HttpContext.Request.Scheme);
+
             string recoveryPasswordSubject = "World of Warcraft Character Comparer: Password recovery!";
             string recoveryPasswordBody = $"<p> Hello {userName} </p>" +
                                           $"<p> You've asked to reset password for this World of Warcraft Character Comparer account: {userEmail} </p>" +
