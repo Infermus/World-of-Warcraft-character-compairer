@@ -18,18 +18,15 @@ namespace WowCharComparerWebApp.Data.Database.Repository.BlizzardApiClient
 
         public void AddNewApplicationClient(string clientID, string clientSecret, string clientName, DateTime validationUntil)
         {
-            using (_comparerDatabaseContext)
+            _comparerDatabaseContext.APIClient.Add(new APIClient
             {
-                _comparerDatabaseContext.APIClient.Add(new APIClient
-                {
-                    ClientID = clientID,
-                    ClientName = clientName,
-                    ClientSecret = clientSecret,
-                    ValidationUntil = validationUntil
-                });
+                ClientID = clientID,
+                ClientName = clientName,
+                ClientSecret = clientSecret,
+                ValidationUntil = validationUntil
+            });
 
-                _comparerDatabaseContext.SaveChanges();
-            }
+            _comparerDatabaseContext.SaveChanges();
         }
 
         #endregion
@@ -38,31 +35,25 @@ namespace WowCharComparerWebApp.Data.Database.Repository.BlizzardApiClient
 
         public void UpdateClientSecretByClientID(string clientID, string clientSecret, DateTime validationUntil)
         {
-            using (_comparerDatabaseContext)
-            {
-                APIClient updatingRow = _comparerDatabaseContext.APIClient.SingleOrDefault(client => client.ClientID == clientID);
+            APIClient updatingRow = _comparerDatabaseContext.APIClient.SingleOrDefault(client => client.ClientID == clientID);
 
-                if (updatingRow != null)
-                {
-                    updatingRow.ClientSecret = clientSecret;
-                    updatingRow.ValidationUntil = validationUntil;
-                    _comparerDatabaseContext.SaveChanges();
-                }
+            if (updatingRow != null)
+            {
+                updatingRow.ClientSecret = clientSecret;
+                updatingRow.ValidationUntil = validationUntil;
+                _comparerDatabaseContext.SaveChanges();
             }
         }
 
         public void UpdateClientSecretByClientName(string clientName, string clientSecret, DateTime validationUntil)
         {
-            using (_comparerDatabaseContext)
-            {
-                APIClient updatingRow = _comparerDatabaseContext.APIClient.SingleOrDefault(client => client.ClientName == clientName);
+            APIClient updatingRow = _comparerDatabaseContext.APIClient.SingleOrDefault(client => client.ClientName == clientName);
 
-                if (updatingRow != null)
-                {
-                    updatingRow.ClientSecret = clientSecret;
-                    updatingRow.ValidationUntil = validationUntil;
-                    _comparerDatabaseContext.SaveChanges();
-                }
+            if (updatingRow != null)
+            {
+                updatingRow.ClientSecret = clientSecret;
+                updatingRow.ValidationUntil = validationUntil;
+                _comparerDatabaseContext.SaveChanges();
             }
         }
 
@@ -72,10 +63,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.BlizzardApiClient
 
         public APIClient GetClientInformation(string clientID)
         {
-            using (_comparerDatabaseContext)
-            {
-                return _comparerDatabaseContext.APIClient.SingleOrDefault(x => x.ClientID == clientID);
-            }
+            return _comparerDatabaseContext.APIClient.SingleOrDefault(x => x.ClientID == clientID);
         }
 
         #endregion 

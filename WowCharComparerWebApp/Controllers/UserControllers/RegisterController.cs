@@ -1,18 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using WowCharComparerWebApp.Data.Database;
-using WowCharComparerWebApp.Data.Database.Repository.User;
+using WowCharComparerWebApp.Data.Database.Repository.Users;
 using WowCharComparerWebApp.Logic.User;
 using WowCharComparerWebApp.Models.DataTransferObject;
+using WowCharComparerWebApp.Models.Internal;
 using WowCharComparerWebApp.Notifications;
 
-namespace WowCharComparerWebApp.Controllers.User
+namespace WowCharComparerWebApp.Controllers.UserControllers
 {
     public class RegisterController : Controller
     {
@@ -36,7 +33,7 @@ namespace WowCharComparerWebApp.Controllers.User
             {
                 try
                 {
-                    DbOperationStatus operationStatus = _dbAccessUser.ActivateAccount(userID);
+                    DbOperationStatus<User> operationStatus = _dbAccessUser.ActivateAccount(userID);
                 }
 
                 catch (Exception ex)
@@ -50,7 +47,7 @@ namespace WowCharComparerWebApp.Controllers.User
         [HttpPost]
         public IActionResult PerformUserRegister(string accountName, string userPassword, string confirmUserPassword, string userEmail)
         {
-            Models.Internal.User user = new Models.Internal.User();
+            User user = new User();
 
             try
             {
@@ -71,7 +68,7 @@ namespace WowCharComparerWebApp.Controllers.User
 
                 if (passwordPolicyValidation.All(x => x.Item1))
                 {
-                    user = _dbAccessUser.CreateNew(accountName, userPassword, userEmail);
+                    user = _dbAccessUser.CreateNew(accountName, userPassword, userEmail).QueryResult as User;
                 }
                 else
                 {

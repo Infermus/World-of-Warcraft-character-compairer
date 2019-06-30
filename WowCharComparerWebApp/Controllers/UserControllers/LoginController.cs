@@ -3,12 +3,13 @@ using System;
 using System.Linq;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database;
-using WowCharComparerWebApp.Data.Database.Repository.User;
+using WowCharComparerWebApp.Data.Database.Repository.Users;
+using WowCharComparerWebApp.Models.Internal;
 using WowCharComparerWebApp.Logic.User;
 using WowCharComparerWebApp.Models.DataTransferObject;
 using WowCharComparerWebApp.Notifications;
 
-namespace WowCharComparerWebApp.Controllers.User
+namespace WowCharComparerWebApp.Controllers.UserControllers
 {
     public class LoginController : Controller
     {
@@ -63,7 +64,7 @@ namespace WowCharComparerWebApp.Controllers.User
         [HttpPost]
         public IActionResult PasswordRecovery(string userEmail, string userName)
         {
-            var user = _dbAccessUser.GetUserByName(userName);
+            var user = (User) _dbAccessUser.GetUserByName(userName).QueryResult;
 
             if (user == null)
             {
