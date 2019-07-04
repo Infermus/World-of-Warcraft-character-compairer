@@ -34,6 +34,9 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                 try
                 {
                     DbOperationStatus<User> operationStatus = _dbAccessUser.ActivateAccount(userID);
+
+                    if (!operationStatus.OperationSuccess)
+                        throw new Exception("Error while activating account");
                 }
 
                 catch (Exception ex)
@@ -68,7 +71,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
 
                 if (passwordPolicyValidation.All(x => x.Item1))
                 {
-                    user = _dbAccessUser.CreateNew(accountName, userPassword, userEmail).QueryResult as User;
+                    user = _dbAccessUser.CreateNew(accountName, userPassword, userEmail).ReturnedObject as User;
                 }
                 else
                 {
@@ -80,8 +83,8 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                 {
                     userID = user.VerificationToken.ToString()
 
-                },protocol: HttpContext.Request.Scheme);
-      
+                }, protocol: HttpContext.Request.Scheme);
+
                 EmailSendStatus emailSendStatus = new EmailManager().SendMail(user.Email, "World of Warcraft Character Comparer: Verify account!",
                                                       "<p> This is a email to verification your World of Warcraft Character Comparer account.</p>" +
                                                       "Please active your account " + $"<a href=\"{activationLink}\">here </a>");

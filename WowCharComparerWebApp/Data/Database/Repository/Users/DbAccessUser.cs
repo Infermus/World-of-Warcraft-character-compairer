@@ -32,7 +32,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             User newUser = new User()
             {
                 Nickname = nickName,
-                Password = new UserPasswordCryptography().EncryptUserPassword(password),
+                Password = password,//new UserPasswordCryptography().EncryptUserPassword(password),
                 Email = email,
                 ID = new Guid(),
                 IsOnline = false,
@@ -46,6 +46,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
 
             status.RowsAffected = _comparerDatabaseContext.SaveChanges();
             status.OperationSuccess = true;
+            status.ReturnedObject = newUser;
 
             return status;
         }
@@ -59,13 +60,17 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
         {
             DbOperationStatus<User> status = new DbOperationStatus<User>
             {
-                QueryResult = _comparerDatabaseContext.Users.Where(u => u.Nickname.Equals(userName)).Single()
+                QueryResult = _comparerDatabaseContext.Users.Where(u => u.Nickname.Equals(userName)).SingleOrDefault()
             };
 
             if (status.QueryResult == null)
             {
                 status.OperationSuccess = false;
                 _logger.LogWarning($"Can't find user \"{userName}\" in database");
+            }
+            else
+            {
+                status.ReturnedObject = status.QueryResult as User;
             }
 
             return status;
@@ -82,8 +87,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
         {
             DbOperationStatus<User> status = new DbOperationStatus<User>()
             {
-                QueryResult = _comparerDatabaseContext.Users.Where(user => user.VerificationToken.ToString().ToUpper().Equals(accountActivationGuid))
-                                                            .Single(),
+                QueryResult = _comparerDatabaseContext.Users.Where(x => x.VerificationToken.ToString() == accountActivationGuid).SingleOrDefault(),
             };
 
             if (status.QueryResult != null)

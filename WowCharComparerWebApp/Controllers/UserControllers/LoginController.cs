@@ -64,7 +64,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
         [HttpPost]
         public IActionResult PasswordRecovery(string userEmail, string userName)
         {
-            var user = (User) _dbAccessUser.GetUserByName(userName).QueryResult;
+            var user =  _dbAccessUser.GetUserByName(userName).ReturnedObject;
 
             if (user == null)
             {

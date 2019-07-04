@@ -20,5 +20,6 @@ namespace WowCharComparerWebApp.Models.DataTransferObject
 
         public Exception DbOperationException { get;  set; }
 
+        public T ReturnedObject { get; set; }
     }
 }
