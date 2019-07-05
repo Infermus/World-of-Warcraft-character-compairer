@@ -76,6 +76,31 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             return status;
         }
 
+        /// <summary>
+        /// Select user from database by Guid (ID)
+        /// </summary>
+        /// <param name="userGuid"></param>
+        /// <returns></returns>
+        internal DbOperationStatus<User> GetUserByGuid(Guid userGuid)
+        {
+            DbOperationStatus<User> status = new DbOperationStatus<User>
+            {
+                QueryResult = _comparerDatabaseContext.Users.Where(u => u.ID.Equals(userGuid)).SingleOrDefault()
+            };
+
+            if (status.QueryResult == null)
+            {
+                status.OperationSuccess = false;
+                _logger.LogWarning($"Can't find user with id: \"{userGuid}\" in database");
+            }
+            else
+            {
+                status.ReturnedObject = status.QueryResult as User;
+            }
+
+            return status;
+        }
+
 
         /// <summary>
         /// Activate user's account by set verified property to true
@@ -151,6 +176,18 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             }
 
             return status;
+        }
+
+        /// <summary>
+        /// Set expiration time in database
+        /// </summary>
+        /// <param name="expirationTime"> Time for expiring, get this value from ExpirationTimers.</param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        internal void SetExpirationTime(int expirationTime, User user)
+        {
+            user.PasswordRecoveryExpirationTime = DateTime.Now.AddHours(expirationTime);
+            _comparerDatabaseContext.SaveChanges();
         }
     }
 }

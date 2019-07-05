@@ -4,7 +4,6 @@ using System.Linq;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Database.Repository.Users;
-using WowCharComparerWebApp.Models.Internal;
 using WowCharComparerWebApp.Logic.User;
 using WowCharComparerWebApp.Models.DataTransferObject;
 using WowCharComparerWebApp.Notifications;
@@ -45,26 +44,32 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
         [HttpPost]
         public IActionResult ChangeUserPassword(string newPassword, string newPasswordConfirmation)
         {
-
             Guid userID = ViewBag.Message = TempData["userID"];
-            if (!newPassword.Equals(newPasswordConfirmation))
-                return Content(UserMessages.UserConfirmPasswordNoMatch);
+            var user = _dbAccessUser.GetUserByGuid(userID).ReturnedObject;
 
-            if ((_passwordValidationManager.CheckPassword(newPassword).Any(x => !x.Item1)))
-                return Content(_passwordValidationManager.CheckPassword(newPassword).FirstOrDefault().Item2);
+            if (DateTime.Now < user.PasswordRecoveryExpirationTime)
+            {
+                if (!newPassword.Equals(newPasswordConfirmation))
+                    return Content(UserMessages.UserConfirmPasswordNoMatch);
 
-            if ((_passwordValidationManager.CheckPassword(newPasswordConfirmation).Any(x => !x.Item1)))
-                return Content(_passwordValidationManager.CheckPassword(newPasswordConfirmation).FirstOrDefault().Item2);
+                if ((_passwordValidationManager.CheckPassword(newPassword).Any(x => !x.Item1)))
+                    return Content(_passwordValidationManager.CheckPassword(newPassword).FirstOrDefault().Item2);
 
-            _dbAccessUser.UpdatePassword(userID, newPassword);
+                if ((_passwordValidationManager.CheckPassword(newPasswordConfirmation).Any(x => !x.Item1)))
+                    return Content(_passwordValidationManager.CheckPassword(newPasswordConfirmation).FirstOrDefault().Item2);
 
-            return Content("Password has been changed");
+                _dbAccessUser.UpdatePassword(userID, newPassword);
+
+                return Content("Password has been changed");
+            }
+
+            return Content("Time for changing password runed out.");
         }
 
         [HttpPost]
         public IActionResult PasswordRecovery(string userEmail, string userName)
         {
-            var user =  _dbAccessUser.GetUserByName(userName).ReturnedObject;
+            var user = _dbAccessUser.GetUserByName(userName).ReturnedObject;
 
             if (user == null)
             {
@@ -80,10 +85,12 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
             string recoveryPasswordSubject = "World of Warcraft Character Comparer: Password recovery!";
             string recoveryPasswordBody = $"<p> Hello {userName} </p>" +
                                           $"<p> You've asked to reset password for this World of Warcraft Character Comparer account: {userEmail} </p>" +
+                                          $"<p> Link gonna be validate for {ExpirationTimers.PasswordRecovery} hours</p>" + 
                                           "<p> Please follow link bellow to reset your password: </p>" +
                                           $"<a href=\"{resetPasswordLink}\">Confirmation </a>";
 
             EmailSendStatus emailSendStatus = new EmailManager().SendMail(userEmail, recoveryPasswordSubject, recoveryPasswordBody);
+            _dbAccessUser.SetExpirationTime(ExpirationTimers.PasswordRecovery, user);
 
             return View("PasswordRecoveryMailSended");
         }
