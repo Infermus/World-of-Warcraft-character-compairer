@@ -63,7 +63,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                 return Content("Password has been changed");
             }
 
-            return Content("Time for changing password runed out.");
+            return Content("Time for changing password runned out.");
         }
 
         [HttpPost]
@@ -85,12 +85,22 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
             string recoveryPasswordSubject = "World of Warcraft Character Comparer: Password recovery!";
             string recoveryPasswordBody = $"<p> Hello {userName} </p>" +
                                           $"<p> You've asked to reset password for this World of Warcraft Character Comparer account: {userEmail} </p>" +
-                                          $"<p> Link gonna be validate for {ExpirationTimers.PasswordRecovery} hours</p>" + 
+                                          $"<p> Link gonna be validate for {ExpirationTimers.PasswordRecovery} hours</p>" +
                                           "<p> Please follow link bellow to reset your password: </p>" +
                                           $"<a href=\"{resetPasswordLink}\">Confirmation </a>";
 
             EmailSendStatus emailSendStatus = new EmailManager().SendMail(userEmail, recoveryPasswordSubject, recoveryPasswordBody);
             _dbAccessUser.SetExpirationTime(ExpirationTimers.PasswordRecovery, user);
+
+            if (emailSendStatus.SendSuccessfully == true)
+            {
+                _dbAccessUser.SetExpirationTime(ExpirationTimers.PasswordRecovery, user);
+            }
+            
+            else
+            {
+                return View("Error");
+            }
 
             return View("PasswordRecoveryMailSended");
         }
