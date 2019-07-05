@@ -25,19 +25,16 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Others
         {
             var parsedJsonData = JsonProcessing.GetDataFromJsonFile<Models.Statistics.Statistics>(@"\Statistics.json");
 
-            using (_comparerDatabaseContext)
+            for (int index = 0; index < parsedJsonData.BonusStats.Length; index++)
             {
-                for (int index = 0; index < parsedJsonData.BonusStats.Length; index++)
+                _comparerDatabaseContext.BonusStats.Add(new BonusStats()
                 {
-                    _comparerDatabaseContext.BonusStats.Add(new BonusStats()
-                    {
-                        ID = Guid.NewGuid(),
-                        BonusStatsID = parsedJsonData.BonusStats[index].BonusStatsID,
-                        Name = parsedJsonData.BonusStats[index].Name
-                    });
-                }
-                _comparerDatabaseContext.SaveChanges();
+                    ID = Guid.NewGuid(),
+                    BonusStatsID = parsedJsonData.BonusStats[index].BonusStatsID,
+                    Name = parsedJsonData.BonusStats[index].Name
+                });
             }
+            _comparerDatabaseContext.SaveChanges();
         }
     }
 }

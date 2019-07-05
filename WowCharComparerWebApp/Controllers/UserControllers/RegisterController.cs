@@ -1,18 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using WowCharComparerWebApp.Data.Database;
-using WowCharComparerWebApp.Data.Database.Repository.User;
+using WowCharComparerWebApp.Data.Database.Repository.Users;
 using WowCharComparerWebApp.Logic.User;
 using WowCharComparerWebApp.Models.DataTransferObject;
+using WowCharComparerWebApp.Models.Internal;
 using WowCharComparerWebApp.Notifications;
 
-namespace WowCharComparerWebApp.Controllers.User
+namespace WowCharComparerWebApp.Controllers.UserControllers
 {
     public class RegisterController : Controller
     {
@@ -36,7 +33,10 @@ namespace WowCharComparerWebApp.Controllers.User
             {
                 try
                 {
-                    DbOperationStatus operationStatus = _dbAccessUser.ActivateAccount(userID);
+                    DbOperationStatus<User> operationStatus = _dbAccessUser.ActivateAccount(userID);
+
+                    if (!operationStatus.OperationSuccess)
+                        throw new Exception("Error while activating account");
                 }
 
                 catch (Exception ex)
@@ -50,7 +50,7 @@ namespace WowCharComparerWebApp.Controllers.User
         [HttpPost]
         public IActionResult PerformUserRegister(string accountName, string userPassword, string confirmUserPassword, string userEmail)
         {
-            Models.Internal.User user = new Models.Internal.User();
+            User user = new User();
 
             try
             {
@@ -71,7 +71,7 @@ namespace WowCharComparerWebApp.Controllers.User
 
                 if (passwordPolicyValidation.All(x => x.Item1))
                 {
-                    user = _dbAccessUser.CreateNew(accountName, userPassword, userEmail);
+                    user = _dbAccessUser.CreateNew(accountName, userPassword, userEmail).ReturnedObject as User;
                 }
                 else
                 {
@@ -83,8 +83,8 @@ namespace WowCharComparerWebApp.Controllers.User
                 {
                     userID = user.VerificationToken.ToString()
 
-                },protocol: HttpContext.Request.Scheme);
-      
+                }, protocol: HttpContext.Request.Scheme);
+
                 EmailSendStatus emailSendStatus = new EmailManager().SendMail(user.Email, "World of Warcraft Character Comparer: Verify account!",
                                                       "<p> This is a email to verification your World of Warcraft Character Comparer account.</p>" +
                                                       "Please active your account " + $"<a href=\"{activationLink}\">here </a>");

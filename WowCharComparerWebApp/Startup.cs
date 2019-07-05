@@ -4,11 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database;
-using WowCharComparerWebApp.Data.Database.Repository.User;
+using WowCharComparerWebApp.Data.Database.Repository.Users;
 using WowCharComparerWebApp.Logic.User;
 
 namespace WowCharComparerWebApp
@@ -33,7 +32,7 @@ namespace WowCharComparerWebApp
 
             services.AddDbContext<ComparerDatabaseContext>((builder) =>
             {
-                if (Configuration.GetValue<string>("DatabaseType").Equals("MYSQL"))
+                if (Configuration.GetValue<string>("DatabaseType").Equals("PostgreSQL"))
                     builder.UseNpgsql(Configuration["ConnectionStrings:PostgreSqlConnection"]);
                 else builder.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
             });

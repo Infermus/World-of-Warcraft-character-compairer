@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using WowCharComparerWebApp.Models.Abstract;
 
 namespace WowCharComparerWebApp.Models.Internal
@@ -62,9 +59,15 @@ namespace WowCharComparerWebApp.Models.Internal
         public bool IsOnline { get; set; }
 
         /// <summary>
-        /// User online status
+        /// Verification Token for activate user account
         /// </summary>
         [Required]
         public Guid VerificationToken { get; set; }
+
+        /// <summary>
+        /// Password recovery expiration time
+        /// </summary>
+        [Required]
+        public DateTime PasswordRecoveryExpirationTime { get; set; }
     }
 }

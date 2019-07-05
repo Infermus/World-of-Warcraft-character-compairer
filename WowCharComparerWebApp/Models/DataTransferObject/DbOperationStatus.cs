@@ -1,13 +1,16 @@
 ﻿using System;
+using WowCharComparerWebApp.Models.Abstract;
 
 namespace WowCharComparerWebApp.Models.DataTransferObject
 {
-    public class DbOperationStatus
+    public class DbOperationStatus<T> where T: DatabaseTableModel
     {
-        public DbOperationStatus(Type databaseTableModel)
+        public DbOperationStatus()
         {
-            TableModelType = databaseTableModel;
+            TableModelType = typeof(T);
         }
+
+        public object QueryResult { get; set; }
 
         public bool OperationSuccess { get; set; }
 
@@ -16,5 +19,7 @@ namespace WowCharComparerWebApp.Models.DataTransferObject
         public Type TableModelType { get; private set; }
 
         public Exception DbOperationException { get;  set; }
+
+        public T ReturnedObject { get; set; }
     }
 }
