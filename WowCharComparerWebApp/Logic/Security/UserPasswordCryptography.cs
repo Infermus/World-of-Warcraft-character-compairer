@@ -1,24 +1,45 @@
 ﻿using System;
 using System.Security.Cryptography;
-using WowCharComparerWebApp.Data.Database;
-using WowCharComparerWebApp.Models.Internal;
+using WowCharComparerWebApp.Data.Database.Repository.Users;
+using WowCharComparerWebApp.Models.PasswordEncryption;
 
 namespace WowCharComparerWebApp.Logic.Security
 {
-    public class UserPasswordCryptography
+    public class UserPasswordCryptography : IDisposable
     {
-        internal string EncryptUserPassword(string password)
-        {
-            string hashedPassword = HashPassword(password);
+        private string _password = string.Empty;
 
-            throw new NotImplementedException();
+        /// <summary>
+        /// Constructor. Initialize new UserPasswordCryptography class
+        /// </summary>
+        /// <param name="password">Plain user's password</param>
+        public UserPasswordCryptography(string password)
+        {
+            _password = password;
         }
 
-        internal string DecryptUserPassword(Models.Internal.User user)
+        /// <summary>
+        /// Encrypt user password using salt and hashing algorythm
+        /// </summary>
+        /// <returns>Password encryption result</returns>
+        internal PasswordEncryptionResult EncryptUserPassword()
         {
-            string hashedPassword = HashPassword(user.Password);
+            byte[] generatedSalt = GenerateRandomSalt();
+            string hashedPassword = HashPassword(_password, generatedSalt);
 
-            throw new NotImplementedException();
+            return new PasswordEncryptionResult(generatedSalt, hashedPassword);
+        }
+
+        /// <summary>
+        /// Decrypt and authenticate existing user's password
+        /// </summary>
+        /// <param name="user">Existing user</param>
+        /// <returns>Authenticate state</returns>
+        internal bool AuthenticateUserPassword(Models.Internal.User user)
+        {
+            string hashedPassword = HashPassword(_password, System.Text.Encoding.UTF8.GetBytes(user.Salt));
+
+            return hashedPassword.Equals(user.HashedPassword);
         }
 
         /// <summary>
@@ -29,15 +50,38 @@ namespace WowCharComparerWebApp.Logic.Security
         /// <param name="keySize"></param>
         /// <param name="iterations"></param>
         /// <returns></returns>
-        private string HashPassword(string plainPassword, int saltSize = 16, int keySize = 32, int iterations = 1000)
+        private string HashPassword(string plainPassword, byte[] salt, int keySize = 32, int iterations = 1000)
         {
-            using (var algorithm = new Rfc2898DeriveBytes(plainPassword, saltSize, iterations, HashAlgorithmName.SHA256))
-            {
-                var key = Convert.ToBase64String(algorithm.GetBytes(keySize));
-                var salt = Convert.ToBase64String(algorithm.Salt);
+            string hashedPassword = string.Empty;
 
-                return $"{salt}{key}";
+            using (var algorithm = new Rfc2898DeriveBytes(plainPassword, salt, iterations, HashAlgorithmName.SHA256))
+            {
+                hashedPassword = Convert.ToBase64String(algorithm.GetBytes(keySize));
             }
+
+            return hashedPassword;
+        }
+
+        /// <summary>
+        /// Generates random sequence of bytes to salt password
+        /// </summary>
+        /// <returns></returns>
+        private byte[] GenerateRandomSalt()
+        {
+            byte[] saltArray = new byte[32];
+
+            using (var rNGCryptoProvider = new RNGCryptoServiceProvider())
+            {
+                rNGCryptoProvider.GetBytes(saltArray);
+            }
+
+            return saltArray;
+        }
+
+        public void Dispose()
+        {
+            _password = null;
+            GC.SuppressFinalize(this);
         }
     }
 }
