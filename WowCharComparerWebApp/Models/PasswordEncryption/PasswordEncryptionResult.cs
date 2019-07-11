@@ -14,7 +14,7 @@
 
         public string GetSaltAsString()
         {
-            return Salt.ToString();
+            return System.Text.Encoding.UTF8.GetString(Salt);
         }    
     }
 }

@@ -32,8 +32,7 @@ namespace WowCharComparerWebApp.Logic.Security
 
         /// <summary>
         /// Decrypt and authenticate existing user's password
-        /// </summary>
-        /// <param name="user">Existing user</param>
+        /// </summary>name="user">Existing user</param>
         /// <returns>Authenticate state</returns>
         internal bool AuthenticateUserPassword(Models.Internal.User user)
         {
