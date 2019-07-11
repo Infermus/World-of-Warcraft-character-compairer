@@ -4,16 +4,21 @@ using System.Linq;
 using System.Net.Mail;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database;
+using WowCharComparerWebApp.Data.Database.Repository.Users;
+using WowCharComparerWebApp.Logic.Security;
+using WowCharComparerWebApp.Models.Internal;
 
-namespace WowCharComparerWebApp.Logic.User
+namespace WowCharComparerWebApp.Logic.Users
 {
     public class PasswordValidationManager
     {
         private readonly ComparerDatabaseContext _comparerDatabaseContext;
+        private readonly DbAccessUser _dbAccessUser;
 
-        public PasswordValidationManager(ComparerDatabaseContext comparerDatabaseCocntext)
+        public PasswordValidationManager(ComparerDatabaseContext comparerDatabaseContext, DbAccessUser dbAccessUser)
         {
-            _comparerDatabaseContext = comparerDatabaseCocntext;
+            _comparerDatabaseContext = comparerDatabaseContext;
+            _dbAccessUser = dbAccessUser;
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace WowCharComparerWebApp.Logic.User
         /// <returns>First param (bool) - is validation correct, Second param (string) - message</returns>
         internal (bool, string) CheckPasswordMatch(string password, string confirmPasword)
         {
-            return password.Equals(confirmPasword) ? (true, string.Empty) : (false, UserMessages.UserConfirmPasswordNoMatch);
+            return password.Equals(confirmPasword) ? (true, string.Empty) : (false, UserMessages.ConfirmPasswordNoMatch);
         }
 
         /// <summary>
@@ -79,17 +84,17 @@ namespace WowCharComparerWebApp.Logic.User
 
             if (!password.Any(char.IsDigit))
             {
-                passValidator.Add((false, UserMessages.UserConfirmPasswordNoMatch));
+                passValidator.Add((false, UserMessages.ConfirmPasswordNoMatch));
             }
 
             if (!password.Any(char.IsUpper))
             {
-                passValidator.Add((false, UserMessages.UserPasswordHasNoCapitalLetter));
+                passValidator.Add((false, UserMessages.PasswordHasNoCapitalLetter));
             }
 
             if (!(password.Length >= 8))
             {
-                passValidator.Add((false, UserMessages.UserPasswordLenghtTooShort));
+                passValidator.Add((false, UserMessages.PasswordLenghtTooShort));
             }
 
             return passValidator;
@@ -110,12 +115,12 @@ namespace WowCharComparerWebApp.Logic.User
 
             if (!(username.Length >= 6))
             {
-                usernameValidator.Add((false, UserMessages.UserNameLengthTooShort));
+                usernameValidator.Add((false, UserMessages.NameLengthTooShort));
             }
 
             if (!_comparerDatabaseContext.Users.All(x => x.Nickname != username))
             {
-                usernameValidator.Add((false, UserMessages.UserAlreadyExists));
+                usernameValidator.Add((false, UserMessages.AlreadyExists));
             }
 
             return usernameValidator;
@@ -127,7 +132,7 @@ namespace WowCharComparerWebApp.Logic.User
         /// <param name="email">User input email</param>
         /// <param name="db">Database context</param>
         /// <returns>First param (bool) - is validation correct, Second param (string) - message</returns>
-        public (bool, string) CheckEmail(string email)
+        internal (bool, string) CheckEmail(string email)
         {
             try
             {
@@ -137,8 +142,20 @@ namespace WowCharComparerWebApp.Logic.User
             catch (Exception)
             {
                 //TODO write to user that mail format is incorrect or already is in database
-                return (false, UserMessages.UserEmailInvalidFormat);
+                return (false, UserMessages.EmailInvalidFormat);
             }
+        }
+
+        internal bool UserLoginPasswordMatch(string username, string password)
+        {
+            User user = _dbAccessUser.GetUserByName(username).ReturnedObject;
+
+            if (user != null)
+            {
+                // TODO impelement password checking here
+            }
+
+            return true;
         }
 
     }

@@ -8,7 +8,7 @@ using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Database.Repository.Users;
-using WowCharComparerWebApp.Logic.User;
+using WowCharComparerWebApp.Logic.Users;
 
 namespace WowCharComparerWebApp
 {
