@@ -146,17 +146,18 @@ namespace WowCharComparerWebApp.Logic.Users
             }
         }
 
-        internal bool UserLoginPasswordMatch(string username, string password)
+        /// <summary>
+        /// Using password cryprography checks password match
+        /// </summary>
+        /// <param name="user">User</param>
+        /// <param name="plainPassword">Password entered by user</param>
+        /// <returns>Password match status</returns>
+        internal bool UserLoginPasswordMatch(User user, string plainPassword)
         {
-            User user = _dbAccessUser.GetUserByName(username).ReturnedObject;
-
-            if (user != null)
+            using (var userPassCrypto = new UserPasswordCryptography(plainPassword))
             {
-                // TODO impelement password checking here
+                return userPassCrypto.AuthenticateUserPassword(user);
             }
-
-            return true;
         }
-
     }
 }

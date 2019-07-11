@@ -43,17 +43,17 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
 
         [HttpPost]
         [Route("Login/Authenticate")]
-        public IActionResult Authenticate(string userName, string password)
+        public IActionResult Authenticate(string username, string password)
         {
-            var user = _dbAccessUser.GetUserByName(userName).ReturnedObject;
+            var user = _dbAccessUser.GetUserByName(username).ReturnedObject;
 
             if (user == null)
-                return Content($"User {userName} is not registered");
+                return Content($"User {username} is not registered");
 
-            if (!_passwordValidationManager.UserLoginPasswordMatch(userName, password))
+            if (!_passwordValidationManager.UserLoginPasswordMatch(user, password))
                 return Content(UserMessages.InvalidPassword);
 
-            return Content("Logged correctly");
+            return Content($"Hello {username}, you are logged in!");
         }
 
         [HttpPost]

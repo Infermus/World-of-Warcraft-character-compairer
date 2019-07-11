@@ -23,13 +23,14 @@ namespace WowCharComparerWebApp.Models.Internal
         /// <summary>
         /// Random sequence of bytes (Salt)
         /// </summary>
-        [MaxLength(32)]
+        [MaxLength(64)]
         [Required]
         public string Salt { get; set; }
 
         /// <summary>
         /// Hashed password with salt
         /// </summary>
+        [MaxLength(64)]
         [Required]
         public string HashedPassword { get; set; }
 

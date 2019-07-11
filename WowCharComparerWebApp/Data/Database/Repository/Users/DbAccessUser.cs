@@ -44,9 +44,11 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             using (var userPasswordCrypto = new UserPasswordCryptography(password))
             {
                 var encryptionResult = userPasswordCrypto.EncryptUserPassword();
-                newUser.Salt = encryptionResult.GetSaltAsString();
+                newUser.Salt = encryptionResult.Salt;
                 newUser.HashedPassword = encryptionResult.HashedPassword;
             }
+
+            var num = newUser.Salt.Count();
 
             _comparerDatabaseContext.Users.Add(newUser);
 
@@ -155,7 +157,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
                 using (var userPasswordCrypto = new UserPasswordCryptography(newPassword))
                 {
                     var encryptionResult = userPasswordCrypto.EncryptUserPassword();
-                    user.Salt = encryptionResult.GetSaltAsString();
+                    user.Salt = encryptionResult.Salt;
                     user.HashedPassword = encryptionResult.HashedPassword;
                 }
 

@@ -2,19 +2,14 @@
 {
     internal class PasswordEncryptionResult
     {
-        public byte[] Salt { get; private set; }
+        public string Salt { get; private set; }
 
         public string HashedPassword { get; private set; }
 
-        public PasswordEncryptionResult(byte[] salt, string hashedPassword)
+        public PasswordEncryptionResult(string salt, string hashedPassword)
         {
             Salt = salt;
             HashedPassword = hashedPassword;
         }
-
-        public string GetSaltAsString()
-        {
-            return System.Text.Encoding.UTF8.GetString(Salt);
-        }    
     }
 }

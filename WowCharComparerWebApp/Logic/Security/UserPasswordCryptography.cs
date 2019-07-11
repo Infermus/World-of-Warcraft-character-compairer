@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography;
-using WowCharComparerWebApp.Data.Database.Repository.Users;
 using WowCharComparerWebApp.Models.PasswordEncryption;
 
 namespace WowCharComparerWebApp.Logic.Security
@@ -24,7 +23,7 @@ namespace WowCharComparerWebApp.Logic.Security
         /// <returns>Password encryption result</returns>
         internal PasswordEncryptionResult EncryptUserPassword()
         {
-            byte[] generatedSalt = GenerateRandomSalt();
+            string generatedSalt = GenerateRandomSalt();
             string hashedPassword = HashPassword(_password, generatedSalt);
 
             return new PasswordEncryptionResult(generatedSalt, hashedPassword);
@@ -36,7 +35,7 @@ namespace WowCharComparerWebApp.Logic.Security
         /// <returns>Authenticate state</returns>
         internal bool AuthenticateUserPassword(Models.Internal.User user)
         {
-            string hashedPassword = HashPassword(_password, System.Text.Encoding.UTF8.GetBytes(user.Salt));
+            string hashedPassword = HashPassword(_password, user.Salt);
 
             return hashedPassword.Equals(user.HashedPassword);
         }
@@ -49,11 +48,12 @@ namespace WowCharComparerWebApp.Logic.Security
         /// <param name="keySize"></param>
         /// <param name="iterations"></param>
         /// <returns></returns>
-        private string HashPassword(string plainPassword, byte[] salt, int keySize = 32, int iterations = 1000)
+        private string HashPassword(string plainPassword, string salt, int keySize = 32, int iterations = 1000)
         {
             string hashedPassword = string.Empty;
 
-            using (var algorithm = new Rfc2898DeriveBytes(plainPassword, salt, iterations, HashAlgorithmName.SHA256))
+            using (var algorithm = new Rfc2898DeriveBytes(plainPassword, System.Text.Encoding.UTF8.GetBytes(salt), 
+                                                           iterations, HashAlgorithmName.SHA256))
             {
                 hashedPassword = Convert.ToBase64String(algorithm.GetBytes(keySize));
             }
@@ -65,7 +65,7 @@ namespace WowCharComparerWebApp.Logic.Security
         /// Generates random sequence of bytes to salt password
         /// </summary>
         /// <returns></returns>
-        private byte[] GenerateRandomSalt()
+        private string GenerateRandomSalt()
         {
             byte[] saltArray = new byte[32];
 
@@ -74,7 +74,7 @@ namespace WowCharComparerWebApp.Logic.Security
                 rNGCryptoProvider.GetBytes(saltArray);
             }
 
-            return saltArray;
+            return Convert.ToBase64String(saltArray);
         }
 
         public void Dispose()
