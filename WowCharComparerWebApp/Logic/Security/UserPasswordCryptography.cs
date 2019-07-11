@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography;
-using WowCharComparerWebApp.Data.Database;
-using WowCharComparerWebApp.Models.Internal;
 
 namespace WowCharComparerWebApp.Logic.Security
 {

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WowCharComparerWebApp.Data.Database.Repository.Users;
-using WowCharComparerWebApp.Logic.User;
+using WowCharComparerWebApp.Logic.Users;
 using WowCharComparerWebApp.Models.DataTransferObject;
 using WowCharComparerWebApp.Models.Internal;
 using WowCharComparerWebApp.Notifications;
