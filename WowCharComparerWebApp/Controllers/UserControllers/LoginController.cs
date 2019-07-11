@@ -4,7 +4,7 @@ using System.Linq;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Database.Repository.Users;
-using WowCharComparerWebApp.Logic.User;
+using WowCharComparerWebApp.Logic.Users;
 using WowCharComparerWebApp.Models.DataTransferObject;
 using WowCharComparerWebApp.Notifications;
 
@@ -42,6 +42,21 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
         }
 
         [HttpPost]
+        [Route("Login/Authenticate")]
+        public IActionResult Authenticate(string userName, string password)
+        {
+            var user = _dbAccessUser.GetUserByName(userName).ReturnedObject;
+
+            if (user == null)
+                return Content($"User {userName} is not registered");
+
+            if (!_passwordValidationManager.UserLoginPasswordMatch(userName, password))
+                return Content(UserMessages.InvalidPassword);
+
+            return Content("Logged correctly");
+        }
+
+        [HttpPost]
         public IActionResult ChangeUserPassword(string newPassword, string newPasswordConfirmation)
         {
             Guid userID = ViewBag.Message = TempData["userID"];
@@ -50,7 +65,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
             if (DateTime.Now < user.PasswordRecoveryExpirationTime)
             {
                 if (!newPassword.Equals(newPasswordConfirmation))
-                    return Content(UserMessages.UserConfirmPasswordNoMatch);
+                    return Content(UserMessages.ConfirmPasswordNoMatch);
 
                 if ((_passwordValidationManager.CheckPassword(newPassword).Any(x => !x.Item1)))
                     return Content(_passwordValidationManager.CheckPassword(newPassword).FirstOrDefault().Item2);
