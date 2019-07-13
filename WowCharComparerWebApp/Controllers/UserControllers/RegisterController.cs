@@ -86,8 +86,8 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                 }, protocol: HttpContext.Request.Scheme);
 
                 EmailSendStatus emailSendStatus = new EmailManager().SendMail(user.Email, "World of Warcraft Character Comparer: Verify account!",
-                                                      "<p> This is a email to verification your World of Warcraft Character Comparer account.</p>" +
-                                                      "Please active your account " + $"<a href=\"{activationLink}\">here </a>");
+                                                      $"<p> Thank you for registration {user.Nickname}. To verify your account please click on following link:</p>" +
+                                                      $"<a href=\"{activationLink}\">Activate my account!</a>");
             }
             catch (Exception ex)
             {
