@@ -21,12 +21,18 @@ namespace WowCharComparerWebApp.Models.Internal
         public string Nickname { get; set; }
 
         /// <summary>
-        /// User's Password (encrypted)
+        /// Random sequence of bytes (Salt)
         /// </summary>
-        [MaxLength(30)]
+        [MaxLength(64)]
         [Required]
-        public string Password { get; set; }
+        public string Salt { get; set; }
 
+        /// <summary>
+        /// Hashed password with salt
+        /// </summary>
+        [MaxLength(64)]
+        [Required]
+        public string HashedPassword { get; set; }
 
         /// <summary>
         /// User's Email

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WowCharComparerWebApp.Data.Database;
@@ -9,9 +10,10 @@ using WowCharComparerWebApp.Data.Database;
 namespace WowCharComparerWebApp.Migrations
 {
     [DbContext(typeof(ComparerDatabaseContext))]
-    partial class ComparerDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20190711152945_user-pass-encryption")]
+    partial class userpassencryption
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,8 +108,7 @@ namespace WowCharComparerWebApp.Migrations
                         .IsRequired();
 
                     b.Property<string>("HashedPassword")
-                        .IsRequired()
-                        .HasMaxLength(64);
+                        .IsRequired();
 
                     b.Property<bool>("IsOnline");
 
@@ -123,7 +124,7 @@ namespace WowCharComparerWebApp.Migrations
 
                     b.Property<string>("Salt")
                         .IsRequired()
-                        .HasMaxLength(64);
+                        .HasMaxLength(32);
 
                     b.Property<Guid>("VerificationToken");
 

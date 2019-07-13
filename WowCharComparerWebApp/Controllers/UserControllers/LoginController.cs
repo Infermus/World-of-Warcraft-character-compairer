@@ -50,10 +50,10 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
             if (user == null)
                 return Content($"User {userName} is not registered");
 
-            if (!_passwordValidationManager.UserLoginPasswordMatch(userName, password))
+            if (!_passwordValidationManager.UserLoginPasswordMatch(user, password))
                 return Content(UserMessages.InvalidPassword);
 
-            return Content("Logged correctly");
+            return Content($"Hello {userName}, you are logged in!");
         }
 
         [HttpPost]
