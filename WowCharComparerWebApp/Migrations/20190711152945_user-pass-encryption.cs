@@ -18,12 +18,6 @@ namespace WowCharComparerWebApp.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.AddColumn<DateTime>(
-                name: "PasswordRecoveryExpirationTime",
-                table: "Users",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-
             migrationBuilder.AddColumn<string>(
                 name: "Salt",
                 table: "Users",
@@ -37,10 +31,6 @@ namespace WowCharComparerWebApp.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "HashedPassword",
-                table: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "PasswordRecoveryExpirationTime",
                 table: "Users");
 
             migrationBuilder.DropColumn(
