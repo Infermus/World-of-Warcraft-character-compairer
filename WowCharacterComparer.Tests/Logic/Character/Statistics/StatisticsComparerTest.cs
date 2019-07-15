@@ -15,7 +15,7 @@ namespace WowCharacterComparer.Tests
     public class StatisticsComparerTest
     {
         [Fact]
-        public void PlayerStatisticsComparer_CharacterComparingCheck_ShouldReturnSameValue()
+        public void PlayerStatisticsComparer_WhenCharacterStatisticAreEquals_ShouldReturnSameValue()
         {
             //Arrange
             CharacterStatisticsCompareResult expected = new CharacterStatisticsCompareResult

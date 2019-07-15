@@ -10,7 +10,7 @@ namespace WowCharacterComparer.Test
         [Theory]
         [InlineData("Infermus123@vp.pl", true, "")]
         [InlineData("Infermus123%vp.pl", false, UserMessages.UserEmailInvalidFormat)]
-        public void CheckUserEmail_Validator_ShouldTestAllPossibilities(string userEmail, bool status, string message)
+        public void CheckUserEmail_WhenVariousUserInput_ShouldReturnExpectedBehaviour(string userEmail, bool status, string message)
         {
             //Arrange 
             (bool, string) expected = (status, message);
@@ -25,7 +25,7 @@ namespace WowCharacterComparer.Test
         [Theory]
         [InlineData("TestUser", true, "")]
         [InlineData("TestU", false, UserMessages.UserNameLengthTooShort)]
-        public void CheckUserName_Validator_ShouldTestAllPossibilities(string userName, bool status, string message)
+        public void CheckUserName_WhenVariousUserInput_ShouldReturnExpectedBehaviour(string userName, bool status, string message)
         {
             //Arrange 
             (bool, string) expected = (status, message);
@@ -42,7 +42,7 @@ namespace WowCharacterComparer.Test
         [InlineData("qazwsx123", false, UserMessages.UserPasswordHasNoCapitalLetter)]
         [InlineData("QazwsxXX", false, UserMessages.UserPasswordHasNoNumbers)]
         [InlineData("Qaz5", false, UserMessages.UserPasswordLenghtTooShort)]
-        public void CheckUserPassword_Validator_ShouldTestAllPossibilities(string password, bool status, string message)
+        public void CheckUserPassword__WhenVariousUserInput_ShouldReturnExpectedBehaviour(string password, bool status, string message)
         {
             //Arrange
             (bool, string) expected = (status, message);
@@ -57,7 +57,7 @@ namespace WowCharacterComparer.Test
         [Theory]
         [InlineData("Qazwsx123", "Qazwsx123", true, "")]
         [InlineData("Qazwsx123", "Qazwsx1234", false, UserMessages.UserConfirmPasswordNoMatch)]
-        public void CheckPasswordMatch_Validator_ShouldTestAllPossibilities(string userPassword, string userPasswordConfirmation, bool status, string message)
+        public void CheckPasswordMatch__WhenVariousUserInput_ShouldReturnExpectedBehaviour(string userPassword, string userPasswordConfirmation, bool status, string message)
         {
             //Arrange
             (bool, string) expected = (status, message);
@@ -75,7 +75,7 @@ namespace WowCharacterComparer.Test
         [InlineData("Infermus", null, "Qazwsx123", "Infermus123@vp.pl", false, UserMessages.PasswordIsRequired)]
         [InlineData("Infermus", "Qazwsx123", null, "Infermus123@vp.pl", false, UserMessages.PasswordConfirmationIsRequired)]
         [InlineData("Infermus", "Qazwsx123", "Qazwsx123", null, false, UserMessages.EmailIsRequired)]
-        public void CheckIfInputIsEmpty_Validator_ShouldTestAllPossibilities(string userName, string userPassword, string confirmUserPassword, string userEmail, bool status, string message)
+        public void CheckIfInputIsEmpty__WhenVariousUserInput_ShouldReturnExpectedBehaviour(string userName, string userPassword, string confirmUserPassword, string userEmail, bool status, string message)
         {
             //Arrange
             (bool, string) expected = (status, message);
