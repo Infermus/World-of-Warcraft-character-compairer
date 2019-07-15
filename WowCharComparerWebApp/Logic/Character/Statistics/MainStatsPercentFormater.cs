@@ -16,6 +16,11 @@
                 localText = "-" + TextToAdd;
             }
 
+            if(TextToAdd.Equals("0"))
+            {
+                localText = TextToAdd;
+            }
+
             return localText + "%";
         }
     }

@@ -52,7 +52,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
         }
 
         /// <summary>
-        /// Select user from database by username (nickname)
+        /// Select user from database by user name (nickname)
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
@@ -159,10 +159,11 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
         /// <returns></returns>
         internal DbOperationStatus<User> UpdatePassword(Guid userID, string newPassword)
         {
-            DbOperationStatus<User> status = new DbOperationStatus<User>();
-
-            status.QueryResult = _comparerDatabaseContext.Users.Where(u => u.ID.Equals(userID))
-                                                               .SingleOrDefault();
+            DbOperationStatus<User> status = new DbOperationStatus<User>
+            {
+                QueryResult = _comparerDatabaseContext.Users.Where(u => u.ID.Equals(userID))
+                                                               .SingleOrDefault()
+            };
             if (status.QueryResult != null)
             {
                 (status.QueryResult as User).Password = new UserPasswordCryptography().EncryptUserPassword(newPassword);

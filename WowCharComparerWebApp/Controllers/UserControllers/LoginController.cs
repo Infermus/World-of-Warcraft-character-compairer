@@ -63,7 +63,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                 return Content("Password has been changed");
             }
 
-            return Content("Time for changing password runned out.");
+            return Content("Time for changing password run out.");
         }
 
         [HttpPost]

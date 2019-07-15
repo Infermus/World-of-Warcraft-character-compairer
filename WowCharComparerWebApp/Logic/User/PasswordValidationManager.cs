@@ -11,29 +11,29 @@ namespace WowCharComparerWebApp.Logic.User
     {
         private readonly ComparerDatabaseContext _comparerDatabaseContext;
 
-        public PasswordValidationManager(ComparerDatabaseContext comparerDatabaseCocntext)
+        public PasswordValidationManager(ComparerDatabaseContext comparerDatabaseContext)
         {
-            _comparerDatabaseContext = comparerDatabaseCocntext;
+            _comparerDatabaseContext = comparerDatabaseContext;
         }
 
         /// <summary>
         /// Determines if any of user input is null or empty 
         /// </summary>
-        /// <param name="username">Username typed by user</param>
+        /// <param name="username">User name typed by user</param>
         /// <param name="userPassword">Password typed by user</param>
         /// <param name="confirmUserPassword">Password confirmation typed by user</param>
         /// <param name="userEmail">Email address typed by user</param>
         /// <returns>Validation list where first param (bool) is validation correct, second param (string) is message </returns>
-        internal List<(bool, string)> ValidateEmptyUserInput(string username, string userPassword, string confirmUserPassword, string userEmail)
+        internal List<(bool, string)> ValidateEmptyUserInput(string userName, string userPassword, string confirmUserPassword, string userEmail)
         {
             List<(bool, string)> emptyFieldsValidator = new List<(bool, string)>()
             {
                 (true, string.Empty)
             };
 
-            if (string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(userName))
             {
-                emptyFieldsValidator.Add((false, UserMessages.UsernameIsRequired));
+                emptyFieldsValidator.Add((false, UserMessages.UserNameIsRequired));
             }
 
             if (string.IsNullOrEmpty(userPassword))
@@ -79,7 +79,7 @@ namespace WowCharComparerWebApp.Logic.User
 
             if (!password.Any(char.IsDigit))
             {
-                passValidator.Add((false, UserMessages.UserConfirmPasswordNoMatch));
+                passValidator.Add((false, UserMessages.UserPasswordHasNoNumbers));
             }
 
             if (!password.Any(char.IsUpper))
@@ -96,29 +96,29 @@ namespace WowCharComparerWebApp.Logic.User
         }
 
         /// <summary>
-        /// Checks username validation for user input
+        /// Checks user name validation for user input
         /// </summary>
-        /// <param name="username">Username typed by user</param>
+        /// <param name="username">User name typed by user</param>
         /// <param name="db">Database context</param>
         /// <returns>Validation list where first param (bool) is validation correct, second param (string) is message </returns>
         internal List<(bool, string)> CheckUsername(string username)
         {
-            List<(bool, string)> usernameValidator = new List<(bool, string)>()
+            List<(bool, string)> userNameValidator = new List<(bool, string)>()
             {
                 (true, string.Empty)
             };
 
             if (!(username.Length >= 6))
             {
-                usernameValidator.Add((false, UserMessages.UserNameLengthTooShort));
+                userNameValidator.Add((false, UserMessages.UserNameLengthTooShort));
             }
 
-            if (!_comparerDatabaseContext.Users.All(x => x.Nickname != username))
+            if (_comparerDatabaseContext != null && !_comparerDatabaseContext.Users.All(x => x.Nickname != username))
             {
-                usernameValidator.Add((false, UserMessages.UserAlreadyExists));
+                userNameValidator.Add((false, UserMessages.UserAlreadyExists));
             }
 
-            return usernameValidator;
+            return userNameValidator;
         }
 
         /// <summary>
@@ -140,6 +140,5 @@ namespace WowCharComparerWebApp.Logic.User
                 return (false, UserMessages.UserEmailInvalidFormat);
             }
         }
-
     }
 }

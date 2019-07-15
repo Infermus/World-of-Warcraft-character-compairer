@@ -18,7 +18,7 @@ namespace WowCharacterComparer.Tests
     public class RequestLinkFormaterTest
     {
         [Fact]
-        public void Generate_APIRequestLink_BasicCharacterComparerRequestUrl()
+        public void GenerateLink_APIRequestLink_ShouldGenerateValidLinkForCharacter()
         {
             // Arrange
             string expectedLink = "https://eu.api.blizzard.com/wow/character/burning-legion/selectus?locale=en_GB";
@@ -38,14 +38,14 @@ namespace WowCharacterComparer.Tests
         }
 
         [Fact]
-        public void Generate_RaiderIORequestLink_CharacterRaiderIOComparerRequestUrl()
+        public void GenerateLink_RaiderIORequestLink_ShouldGenerateValidLinkForRadierIO()
         {
             //Arrange
             string expectedLink = "https://raider.io/api/v1/characters/profile?region=eu&realm=burning-legion&name=wykminiacz&fields=mythic_plus_best_runs%2Cmythic_plus_ranks";
 
             RequestLocalization requestLocalization = new RequestLocalization()
             {
-                CoreRegionUrlAddress = WowCharComparerWebApp.Configuration.APIConf.RaiderIOAdress,
+                CoreRegionUrlAddress = APIConf.RaiderIOAdress,
                 Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB", Timezone = "Europe/Paris"}
             };
 
@@ -55,7 +55,7 @@ namespace WowCharacterComparer.Tests
                 RaiderIOCharacterFields.MythicPlusRanks
             };
 
-            string region = requestLocalization.Realm.Timezone == "Europe/Paris" ? "eu" : throw new Exception("Choosed realm is not European");
+            string region = requestLocalization.Realm.Timezone == "Europe/Paris" ? "eu" : throw new Exception("Chosen realm is not European");
 
 
             string localFields = string.Empty;
@@ -81,7 +81,7 @@ namespace WowCharacterComparer.Tests
             {
                 new KeyValuePair<string, string>(RaiderIOCharacterParams.Region.ToString(), region),
                 new KeyValuePair<string, string>(RaiderIOCharacterParams.Realm.ToString(), requestLocalization.Realm.Slug),
-                new KeyValuePair<string, string>(RaiderIOCharacterParams.Name.ToString(), "wykminiacz")
+                new KeyValuePair<string, string>(RaiderIOCharacterParams.Name.ToString(), "Wykminiacz")
             };
             
             //Act

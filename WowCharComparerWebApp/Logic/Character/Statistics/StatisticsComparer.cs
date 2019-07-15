@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using WowCharComparerWebApp.Enums.Character;
-using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Mappers;
 
@@ -10,7 +9,7 @@ namespace WowCharComparerWebApp.Logic.Character.Statistics
 {
     internal class StatisticsComparer
     {
-        public static CharacterStatisticsCompareResult CompareCharacterStatistics(List<ExtendedCharacterModel> parsedResultList)
+        public CharacterStatisticsCompareResult CompareCharacterStatistics(List<ExtendedCharacterModel> parsedResultList)
         {
             List<KeyValuePair<CharacterMainStats, string>> finalResultList = new List<KeyValuePair<CharacterMainStats, string>>();
             try
