@@ -15,7 +15,7 @@ namespace WowCharComparerWebApp.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -107,6 +107,10 @@ namespace WowCharComparerWebApp.Migrations
                     b.Property<string>("Email")
                         .IsRequired();
 
+                    b.Property<string>("HashedPassword")
+                        .IsRequired()
+                        .HasMaxLength(64);
+
                     b.Property<bool>("IsOnline");
 
                     b.Property<DateTime>("LastLoginDate");
@@ -115,11 +119,13 @@ namespace WowCharComparerWebApp.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(30);
+                    b.Property<DateTime>("PasswordRecoveryExpirationTime");
 
                     b.Property<DateTime>("RegistrationDate");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasMaxLength(64);
 
                     b.Property<Guid>("VerificationToken");
 

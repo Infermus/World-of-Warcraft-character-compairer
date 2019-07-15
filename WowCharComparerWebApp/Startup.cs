@@ -8,7 +8,7 @@ using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Database.Repository.Users;
-using WowCharComparerWebApp.Logic.User;
+using WowCharComparerWebApp.Logic.Users;
 
 namespace WowCharComparerWebApp
 {
@@ -32,7 +32,7 @@ namespace WowCharComparerWebApp
 
             services.AddDbContext<ComparerDatabaseContext>((builder) =>
             {
-                if (Configuration.GetValue<string>("DatabaseType").Equals("PostgreSQL"))
+                if (Configuration.GetValue<string>("DatabaseType").Equals("MSSQL"))
                     builder.UseNpgsql(Configuration["ConnectionStrings:PostgreSqlConnection"]);
                 else builder.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
             });

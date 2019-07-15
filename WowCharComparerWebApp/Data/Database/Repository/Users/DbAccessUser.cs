@@ -32,7 +32,6 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             User newUser = new User()
             {
                 Nickname = nickName,
-                Password = password,//new UserPasswordCryptography().EncryptUserPassword(password),
                 Email = email,
                 ID = new Guid(),
                 IsOnline = false,
@@ -41,6 +40,15 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
                 Verified = false,
                 VerificationToken = Guid.NewGuid()
             };
+
+            using (var userPasswordCrypto = new UserPasswordCryptography(password))
+            {
+                var encryptionResult = userPasswordCrypto.EncryptUserPassword();
+                newUser.Salt = encryptionResult.Salt;
+                newUser.HashedPassword = encryptionResult.HashedPassword;
+            }
+
+            var num = newUser.Salt.Count();
 
             _comparerDatabaseContext.Users.Add(newUser);
 
@@ -52,7 +60,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
         }
 
         /// <summary>
-        /// Select user from database by user name (nickname)
+        /// Select user from database by username (nickname)
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
@@ -101,7 +109,6 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             return status;
         }
 
-
         /// <summary>
         /// Activate user's account by set verified property to true
         /// </summary>
@@ -130,27 +137,6 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             return status;
         }
 
-        internal DbOperationStatus<User> GetPassword(string username)
-        {
-            DbOperationStatus<User> status = new DbOperationStatus<User>
-            {
-                QueryResult = _comparerDatabaseContext.Users.Where(u => u.Nickname.Equals(username)).Single(),
-            };
-
-            status.OperationSuccess = status.QueryResult != null;
-
-            if (status.OperationSuccess)
-            {
-                status.QueryResult = new UserPasswordCryptography().EncryptUserPassword((status.QueryResult as User).Password);
-            }
-            else
-            {
-                _logger.LogWarning($"Can't find password for user {username}");
-            }
-
-            return status;
-        }
-
         /// <summary>
         /// Set new password to the user
         /// </summary>
@@ -162,11 +148,19 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             DbOperationStatus<User> status = new DbOperationStatus<User>
             {
                 QueryResult = _comparerDatabaseContext.Users.Where(u => u.ID.Equals(userID))
-                                                               .SingleOrDefault()
+                                                            .SingleOrDefault()
             };
             if (status.QueryResult != null)
             {
-                (status.QueryResult as User).Password = new UserPasswordCryptography().EncryptUserPassword(newPassword);
+                User user = status.QueryResult as User;
+
+                using (var userPasswordCrypto = new UserPasswordCryptography(newPassword))
+                {
+                    var encryptionResult = userPasswordCrypto.EncryptUserPassword();
+                    user.Salt = encryptionResult.Salt;
+                    user.HashedPassword = encryptionResult.HashedPassword;
+                }
+
                 status.RowsAffected = _comparerDatabaseContext.SaveChanges();
                 status.OperationSuccess = true;
             }
@@ -183,7 +177,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
         /// Set expiration time in database
         /// </summary>
         /// <param name="expirationTime"> Time for expiring, get this value from ExpirationTimers.</param>
-        /// <param name="user"></param>
+        /// <param name="user">User object to be changed</param>
         /// <returns></returns>
         internal void SetExpirationTime(int expirationTime, User user)
         {

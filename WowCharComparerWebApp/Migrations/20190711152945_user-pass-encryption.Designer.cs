@@ -2,30 +2,29 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WowCharComparerWebApp.Data.Database;
 
 namespace WowCharComparerWebApp.Migrations
 {
     [DbContext(typeof(ComparerDatabaseContext))]
-    [Migration("20190323104301_migration_23032019")]
-    partial class migration_23032019
+    [Migration("20190711152945_user-pass-encryption")]
+    partial class userpassencryption
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("WowCharComparerWebApp.Models.Achievement.AchievementCategory", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("CategoryName");
 
@@ -40,8 +39,7 @@ namespace WowCharComparerWebApp.Migrations
             modelBuilder.Entity("WowCharComparerWebApp.Models.Achievement.AchievementsData", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("AchievementCategoryID");
 
@@ -77,7 +75,7 @@ namespace WowCharComparerWebApp.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("ID")
+                    b.HasIndex("BonusStatsID")
                         .IsUnique();
 
                     b.ToTable("BonusStats");
@@ -106,6 +104,12 @@ namespace WowCharComparerWebApp.Migrations
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Email")
+                        .IsRequired();
+
+                    b.Property<string>("HashedPassword")
+                        .IsRequired();
+
                     b.Property<bool>("IsOnline");
 
                     b.Property<DateTime>("LastLoginDate");
@@ -114,11 +118,17 @@ namespace WowCharComparerWebApp.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(30);
+                    b.Property<DateTime>("PasswordRecoveryExpirationTime");
 
                     b.Property<DateTime>("RegistrationDate");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasMaxLength(32);
+
+                    b.Property<Guid>("VerificationToken");
+
+                    b.Property<bool>("Verified");
 
                     b.HasKey("ID");
 
