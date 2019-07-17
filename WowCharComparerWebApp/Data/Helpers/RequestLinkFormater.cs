@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Models.Servers;
 
-[assembly: InternalsVisibleTo("WowCharacterComparer.Tests")]
+[assembly: InternalsVisibleTo("WowCharComparerWebApp.Tests")]
 
 namespace WowCharComparerWebApp.Data.Helpers
 {
