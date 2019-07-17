@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,13 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
     {
         private readonly PasswordValidationManager _passwordValidationManager;
         private readonly DbAccessUser _dbAccessUser;
+        private readonly ILogger<RegisterController> _logger;
 
-        public RegisterController(PasswordValidationManager passwordValidationManager, DbAccessUser dbAccessUser)
+        public RegisterController(PasswordValidationManager passwordValidationManager, DbAccessUser dbAccessUser, ILogger<RegisterController> logger)
         {
             _passwordValidationManager = passwordValidationManager;
             _dbAccessUser = dbAccessUser;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -89,9 +92,17 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                                                       $"<p> Thank you for registration {user.Nickname}." +
                                                       $"<p>To verify your account please click on following link:</p>" +
                                                       $"<a href=\"{activationLink}\">Activate my account!</a>");
+
+                if (!emailSendStatus.SendSuccessfully)
+                {
+                    _dbAccessUser.RemoveByID(user.ID);
+                    _logger.LogInformation($"Removing user from database {user.Nickname}, {user.Email}, {user.ID}");
+                    _logger.LogError($"Error while sending activation email. {emailSendStatus.SendEmailException.Message}");
+                }
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Error occour while registering user. {ex.Message}");
                 return View("Error", ex);
             }
 

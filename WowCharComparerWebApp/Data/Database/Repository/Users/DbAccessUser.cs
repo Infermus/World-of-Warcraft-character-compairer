@@ -74,7 +74,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             if (status.QueryResult == null)
             {
                 status.OperationSuccess = false;
-                _logger.LogWarning($"Can't find user \"{userName}\" in database");
+                _logger.LogError($"Can't find user \"{userName}\" in database");
             }
             else
             {
@@ -99,7 +99,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             if (status.QueryResult == null)
             {
                 status.OperationSuccess = false;
-                _logger.LogWarning($"Can't find user with id: \"{userGuid}\" in database");
+                _logger.LogError($"Can't find user with id: \"{userGuid}\" in database");
             }
             else
             {
@@ -131,7 +131,7 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             else
             {
                 status.OperationSuccess = false;
-                _logger.LogWarning("Account activation failed - no user has been found");
+                _logger.LogError("Account activation failed - no user has been found");
             }
 
             return status;
@@ -166,7 +166,36 @@ namespace WowCharComparerWebApp.Data.Database.Repository.Users
             }
             else
             {
-                _logger.LogWarning("Update user's password - no user has been found");
+                _logger.LogError("Update user's password - no user has been found");
+                status.OperationSuccess = false;
+            }
+
+            return status;
+        }
+
+        /// <summary>
+        /// Remove user by ID
+        /// </summary>
+        /// <param name="userID">User ID to search and remove user</param>
+        /// <returns>Database operation result</returns>
+        internal DbOperationStatus<User> RemoveByID(Guid userID)
+        {
+            DbOperationStatus<User> status = new DbOperationStatus<User>
+            {
+                QueryResult = _comparerDatabaseContext.Users.Where(u => u.ID.Equals(userID))
+                                                      .SingleOrDefault()
+            };
+
+            if (status.QueryResult != null)
+            {
+                User user = status.QueryResult as User;
+                _comparerDatabaseContext.Remove(user);
+
+                status.OperationSuccess = true;
+            }
+            else
+            {
+                _logger.LogError("Failed to remove user - no user has been found");
                 status.OperationSuccess = false;
             }
 
