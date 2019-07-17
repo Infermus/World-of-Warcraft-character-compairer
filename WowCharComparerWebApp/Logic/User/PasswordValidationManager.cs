@@ -24,21 +24,21 @@ namespace WowCharComparerWebApp.Logic.Users
         /// <summary>
         /// Determines if any of user input is null or empty 
         /// </summary>
-        /// <param name="username">Username typed by user</param>
+        /// <param name="username">User Name typed by user</param>
         /// <param name="userPassword">Password typed by user</param>
         /// <param name="confirmUserPassword">Password confirmation typed by user</param>
         /// <param name="userEmail">Email address typed by user</param>
         /// <returns>Validation list where first param (bool) is validation correct, second param (string) is message </returns>
-        internal List<(bool, string)> ValidateEmptyUserInput(string username, string userPassword, string confirmUserPassword, string userEmail)
+        internal List<(bool, string)> ValidateEmptyUserInput(string userName, string userPassword, string confirmUserPassword, string userEmail)
         {
             List<(bool, string)> emptyFieldsValidator = new List<(bool, string)>()
             {
                 (true, string.Empty)
             };
 
-            if (string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(userName))
             {
-                emptyFieldsValidator.Add((false, UserMessages.UsernameIsRequired));
+                emptyFieldsValidator.Add((false, UserMessages.UserNameIsRequired));
             }
 
             if (string.IsNullOrEmpty(userPassword))
@@ -65,9 +65,9 @@ namespace WowCharComparerWebApp.Logic.Users
         /// <param name="password">Primary password passed by user</param>
         /// <param name="confirmPasword">Secondary (confirmation) password passed by user</param>
         /// <returns>First param (bool) - is validation correct, Second param (string) - message</returns>
-        internal (bool, string) CheckPasswordMatch(string password, string confirmPasword)
+        internal (bool, string) CheckPasswordMatch(string password, string confirmPassword)
         {
-            return password.Equals(confirmPasword) ? (true, string.Empty) : (false, UserMessages.ConfirmPasswordNoMatch);
+            return password.Equals(confirmPassword) ? (true, string.Empty) : (false, UserMessages.ConfirmPasswordNoMatch);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace WowCharComparerWebApp.Logic.Users
 
             if (!password.Any(char.IsDigit))
             {
-                passValidator.Add((false, UserMessages.ConfirmPasswordNoMatch));
+                passValidator.Add((false, UserMessages.PasswordHasNoNumbers));
             }
 
             if (!password.Any(char.IsUpper))
@@ -101,29 +101,29 @@ namespace WowCharComparerWebApp.Logic.Users
         }
 
         /// <summary>
-        /// Checks username validation for user input
+        /// Checks user name validation for user input
         /// </summary>
-        /// <param name="username">Username typed by user</param>
+        /// <param name="username">User name typed by user</param>
         /// <param name="db">Database context</param>
         /// <returns>Validation list where first param (bool) is validation correct, second param (string) is message </returns>
-        internal List<(bool, string)> CheckUsername(string username)
+        internal List<(bool, string)> CheckUsername(string userName)
         {
-            List<(bool, string)> usernameValidator = new List<(bool, string)>()
+            List<(bool, string)> userNameValidator = new List<(bool, string)>()
             {
                 (true, string.Empty)
             };
 
-            if (!(username.Length >= 6))
+            if (!(userName.Length >= 6))
             {
-                usernameValidator.Add((false, UserMessages.NameLengthTooShort));
+                userNameValidator.Add((false, UserMessages.NameLengthTooShort));
             }
 
-            if (!_comparerDatabaseContext.Users.All(x => x.Nickname != username))
+            if (_comparerDatabaseContext != null && !_comparerDatabaseContext.Users.All(x => x.Nickname != userName))
             {
-                usernameValidator.Add((false, UserMessages.AlreadyExists));
+                userNameValidator.Add((false, UserMessages.AlreadyExists));
             }
 
-            return usernameValidator;
+            return userNameValidator;
         }
 
         /// <summary>
