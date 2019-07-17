@@ -33,21 +33,19 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
         [HttpGet]
         public IActionResult Confirmation(string userID)
         {
+            try
             {
-                try
-                {
-                    DbOperationStatus<User> operationStatus = _dbAccessUser.ActivateAccount(userID);
+                DbOperationStatus<User> operationStatus = _dbAccessUser.ActivateAccount(userID);
 
-                    if (!operationStatus.OperationSuccess)
-                        throw new Exception("Error while activating account");
-                }
-
-                catch (Exception ex)
-                {
-                    return View("Error", ex);
-                }
-                return View("AccountApproval");
+                if (!operationStatus.OperationSuccess)
+                    throw new Exception("Error while activating account");
             }
+
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+            return View("AccountApproval");
         }
 
         [HttpPost]

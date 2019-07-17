@@ -16,5 +16,18 @@ namespace WowCharComparerWebApp.Configuration
         public const string PasswordIsRequired = "Password is required";
         public const string PasswordConfirmationIsRequired = "Password confirmation is required";
         public const string EmailIsRequired = "Email is required";
+
+        public const string PasswordRecoveryEmailSend = "An email has been sent to you with a link which you may use to reset your password.";
+        public const string PasswordChangeTimeout = "Time for changing password runned out. Please try again.";
+        public const string PasswordHasBeenChanged = "Password has been changed.";
+
+        #region User Message methods
+
+        public static string LoginGreetings(string userName)
+        {
+            return $"Hello {userName}, you are logged in!";
+        }
+
+        #endregion
     }
 }

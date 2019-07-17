@@ -54,7 +54,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
             if (!_passwordValidationManager.UserLoginPasswordMatch(user, password))
                 return Content(UserMessages.InvalidPassword);
 
-            return View("UserSimpleInformation", new GenericInformationModelView("Logged in!", $"Hello {userName}, you are logged in!"));
+            return View("GenericUserInformation", new GenericInformationModelView("Logged in!", UserMessages.LoginGreetings(userName)));
         }
 
         [HttpPost]
@@ -76,10 +76,10 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
 
                 _dbAccessUser.UpdatePassword(userID, newPassword);
 
-                return View("UserSimpleInformation", new GenericInformationModelView("Password change", "Password has been changed."));
+                return View("GenericUserInformation", new GenericInformationModelView("Password change", UserMessages.PasswordHasBeenChanged));
             }
 
-            return View("UserSimpleInformation", new GenericInformationModelView("Password change", "Time for changing password runned out."));
+            return View("GenericUserInformation", new GenericInformationModelView("Password change", UserMessages.PasswordChangeTimeout));
         }
 
         [HttpPost]
@@ -118,7 +118,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                 return View("Error");
             }
 
-            return View("PasswordRecoveryMailSended");
+            return View("GenericUserInformation", new GenericInformationModelView("Password recovery", UserMessages.PasswordRecoveryEmailSend));
         }
     }
 }
