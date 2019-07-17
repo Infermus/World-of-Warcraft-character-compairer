@@ -15,7 +15,7 @@ namespace WowCharComparerWebApp.Data.Connection
 {
     internal class APIDataRequestManager : IAPIDataRequestManager
     {
-        private ComparerDatabaseContext _comparerDatabaseContext;
+        private readonly ComparerDatabaseContext _comparerDatabaseContext;
 
         public APIDataRequestManager(ComparerDatabaseContext comparerDatabaseContext)
         {

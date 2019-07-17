@@ -8,11 +8,11 @@ namespace WowCharComparerWebApp.Configuration
         public const string ConfirmPasswordNoMatch = "Passwords no match";
         public const string InvalidPassword = "Invalid password";
         public const string PasswordLenghtTooShort = "Password should be at least 8 characters long";
-        public const string NameLengthTooShort = "Username should be at least 6 characters long";
-        public const string AlreadyExists = "Username already exists";
+        public const string NameLengthTooShort = "User Name should be at least 6 characters long";
+        public const string AlreadyExists = "User Name already exists";
         public const string EmailInvalidFormat = "Email address has invalid format";
 
-        public const string UsernameIsRequired = "Username is required";
+        public const string UserNameIsRequired = "User Name is required";
         public const string PasswordIsRequired = "Password is required";
         public const string PasswordConfirmationIsRequired = "Password confirmation is required";
         public const string EmailIsRequired = "Email is required";
