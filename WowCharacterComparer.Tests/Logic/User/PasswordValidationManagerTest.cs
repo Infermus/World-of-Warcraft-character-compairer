@@ -8,7 +8,7 @@ namespace WowCharacterComparer.Test
     public class PasswordValidationManagerTest
     {
         [Fact]
-        public void CheckUserEmail_WhenUserInputIsCorrect_ShouldReturnCorrectResult()
+        public void CheckUserEmail_WhenUserEmailIsCorrect_ShouldReturnCorrectResult()
         {
             //Arrange 
             (bool, string) expected = (true, string.Empty);
@@ -22,7 +22,7 @@ namespace WowCharacterComparer.Test
         }
 
         [Fact]
-        public void CheckUserEmail_WhenUserInputIsInvalid_ShouldReturnErrorWithSuitableMessage()
+        public void CheckUserEmail_WhenUserEmailIsInvalid_ShouldReturnErrorWithSuitableMessage()
         {
             //Arrange 
             (bool, string) expected = (false, UserMessages.EmailInvalidFormat);
@@ -36,7 +36,7 @@ namespace WowCharacterComparer.Test
         }
 
         [Fact]
-        public void CheckUserName_WhenUserInputIsInvalid_ShouldReturnErrorWithSuitableMessage()
+        public void CheckUserName_WhenUserNameIsInvalid_ShouldReturnErrorWithSuitableMessage()
         {
             //Arrange 
             (bool, string) expected = (false, UserMessages.NameLengthTooShort);
@@ -50,7 +50,7 @@ namespace WowCharacterComparer.Test
         }
 
         [Fact]
-        public void CheckUserName_WhenUserInputIsCorrect_ShouldReturnCorrectResult()
+        public void CheckUserName_WhenUserNameIsCorrect_ShouldReturnCorrectResult()
         {
             //Arrange 
             (bool, string) expected = (true, string.Empty);
@@ -61,15 +61,13 @@ namespace WowCharacterComparer.Test
 
             //Assert
             Assert.Equal(expected, result);
-
         }
-
 
         [Theory]
         [InlineData("qazwsx123", false, UserMessages.PasswordHasNoCapitalLetter)]
         [InlineData("QazwsxXX", false, UserMessages.PasswordHasNoNumbers)]
         [InlineData("Qaz5", false, UserMessages.PasswordLenghtTooShort)]
-        public void CheckUserPassword_WhenUserInputIsInvalid_ShouldReturnErrorWithSuitableMessage(string password, bool status, string message)
+        public void CheckUserPassword_WhenUserPasswordIsInvalid_ShouldReturnErrorWithSuitableMessage(string password, bool status, string message)
         {
             //Arrange
             (bool, string) expected = (status, message);
@@ -82,7 +80,7 @@ namespace WowCharacterComparer.Test
         }
 
         [Fact]
-        public void CheckUserPassword__WhenUserInputIsCorrect_ShouldReturnCorrectResult()
+        public void CheckUserPassword_WhenUserPasswordIsCorrect_ShouldReturnCorrectResult()
         {
             //Arrange
             (bool, string) expected = (true, string.Empty);
@@ -96,7 +94,7 @@ namespace WowCharacterComparer.Test
         }
 
         [Fact]
-        public void CheckPasswordMatch__WhenUserInputIsCorrect_ShouldReturnErrorWithSuitableMessage()
+        public void CheckPasswordMatch_WhenUserPasswordIsMatching_ShouldReturnCorrectResult()
         {
             //Arrange
             (bool, string) expected = (true, string.Empty);
@@ -108,11 +106,10 @@ namespace WowCharacterComparer.Test
 
             //Assert
             Assert.Equal(result, expected);
-
         }
 
         [Fact]
-        public void CheckPasswordMatch__WhenUserInputIsInvalid_ShouldReturnCorrectResult()
+        public void CheckPasswordMatch_WhenUserPasswordNoMatch_ShouldReturnErrorWithSuitableMessage()
         {
             //Arrange
             (bool, string) expected = (false, UserMessages.ConfirmPasswordNoMatch);
@@ -124,7 +121,6 @@ namespace WowCharacterComparer.Test
 
             //Assert
             Assert.Equal(result, expected);
-
         }
 
         [Theory]
@@ -132,7 +128,7 @@ namespace WowCharacterComparer.Test
         [InlineData("Infermus", null, "Qazwsx123", "Infermus123@vp.pl", false, UserMessages.PasswordIsRequired)]
         [InlineData("Infermus", "Qazwsx123", null, "Infermus123@vp.pl", false, UserMessages.PasswordConfirmationIsRequired)]
         [InlineData("Infermus", "Qazwsx123", "Qazwsx123", null, false, UserMessages.EmailIsRequired)]
-        public void CheckIfInputIsEmpty_WhenUserIsTryingToPassNullData_ShouldReturnErrorWithSuitableMessage(string userName, string userPassword, string confirmUserPassword, string userEmail, bool status, string message)
+        public void ValidateEmptyUserInput_WhenUserIsTryingToPassNullData_ShouldReturnErrorWithSuitableMessage(string userName, string userPassword, string confirmUserPassword, string userEmail, bool status, string message)
         {
             //Arrange
             (bool, string) expected = (status, message);
@@ -145,7 +141,7 @@ namespace WowCharacterComparer.Test
         }
 
         [Fact]
-        public void CheckIfInputIsEmpty_WhenUserFilledAllFields_ShouldReturnCorrectResult()
+        public void ValidateEmptyUserInput_WhenUserFilledAllFields_ShouldReturnCorrectResult()
         {
             //Arrange
             (bool, string) expected = (true, string.Empty);
@@ -159,7 +155,6 @@ namespace WowCharacterComparer.Test
 
             //Assert
             Assert.Equal(result, expected);
-
         }
     }
 }

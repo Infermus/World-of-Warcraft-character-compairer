@@ -18,7 +18,7 @@ namespace WowCharacterComparer.Tests
     public class RequestLinkFormaterTest
     {
         [Fact]
-        public void GenerateAPIRequestLink_GenerateLink_ShouldGenerateValidLinkForCharacter()
+        public void GenerateAPIRequestLink_WhenGenerateLink_ShouldGenerateValidLinkForCharacter()
         {
             // Arrange
             string expectedLink = "https://eu.api.blizzard.com/wow/character/burning-legion/selectus?locale=en_GB";
@@ -38,7 +38,7 @@ namespace WowCharacterComparer.Tests
         }
 
         [Fact]
-        public void GenerateRaiderIOApiRequestLink_GenerateLink_ShouldGenerateValidLinkForRadierIO()
+        public void GenerateRaiderIOApiRequestLink_WhenGenerateLink_ShouldGenerateValidLinkForRadierIO()
         {
             //Arrange
             string expectedLink = "https://raider.io/api/v1/characters/profile?region=eu&realm=burning-legion&name=wykminiacz&fields=mythic_plus_best_runs%2Cmythic_plus_ranks";
