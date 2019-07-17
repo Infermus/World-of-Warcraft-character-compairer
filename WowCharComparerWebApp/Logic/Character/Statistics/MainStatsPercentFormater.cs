@@ -2,26 +2,14 @@
 {
     public static class MainStatsPercentFormater
     {
-        public static string AddPlusToPrimaryStatPercent(string TextToAdd)
+        public static string AddPlusToPrimaryStatPercent(string textToAdd)
         {
-            return "+" + TextToAdd + "%";
+            return "+" + textToAdd + "%";
         }
 
-        public static string AddMinusToPrimaryStatPercent(string TextToAdd)
+        public static string AddMinusToPrimaryStatPercent(string textToAdd)
         {
-            string localText = string.Empty;
-
-            if (!TextToAdd.Equals("0"))
-            {
-                localText = "-" + TextToAdd;
-            }
-
-            if(TextToAdd.Equals("0"))
-            {
-                localText = TextToAdd;
-            }
-
-            return localText + "%";
+            return textToAdd.Equals("0") ? textToAdd + "%" : "-" + textToAdd + "%";
         }
     }
 }

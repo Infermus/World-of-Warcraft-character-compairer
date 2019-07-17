@@ -26,8 +26,8 @@ namespace WowCharacterComparer.Tests
                 CharacterCompareStaDifference = "0%"
             };
 
-            //Act
             List<ExtendedCharacterModel> extendedCharacterModels = new List<ExtendedCharacterModel>();
+            //Act
             {
                 for (int i = 0; i <= 1; i++)
                 {
@@ -43,8 +43,7 @@ namespace WowCharacterComparer.Tests
                     });
                 }              
             }
-            StatisticsComparer statisticsComparer = new StatisticsComparer();
-            CharacterStatisticsCompareResult result = statisticsComparer.CompareCharacterStatistics(extendedCharacterModels);
+            CharacterStatisticsCompareResult result = new StatisticsComparer().CompareCharacterStatistics(extendedCharacterModels);
 
             //Assert
             Assert.Equal(result.CharacterCompareAgiDifference, expected.CharacterCompareAgiDifference);
