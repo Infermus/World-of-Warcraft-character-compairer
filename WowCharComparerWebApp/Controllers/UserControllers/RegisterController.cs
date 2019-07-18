@@ -4,10 +4,12 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database.Repository.Users;
 using WowCharComparerWebApp.Logic.Users;
 using WowCharComparerWebApp.Models.DataTransferObject;
 using WowCharComparerWebApp.Models.Internal;
+using WowCharComparerWebApp.Models.ModelView;
 using WowCharComparerWebApp.Notifications;
 
 namespace WowCharComparerWebApp.Controllers.UserControllers
@@ -45,7 +47,8 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
             {
                 return View("Error", ex);
             }
-            return View("AccountApproval");
+
+            return View("GenericUserInformation", new GenericInformationModelView("Account activated!", UserMessages.AccountHasBeenActivated));
         }
 
         [HttpPost]

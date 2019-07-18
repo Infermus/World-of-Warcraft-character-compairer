@@ -21,12 +21,15 @@ namespace WowCharComparerWebApp.Configuration
         public const string PasswordChangeTimeout = "Time for changing password runned out. Please try again.";
         public const string PasswordHasBeenChanged = "Password has been changed.";
 
+        public const string AccountHasBeenActivated = "Your account has been activated. Now, you can log in.";
+
         #region User Message methods
 
         public static string LoginGreetings(string userName)
         {
             return $"Hello {userName}, you are logged in!";
         }
+
 
         #endregion
     }
