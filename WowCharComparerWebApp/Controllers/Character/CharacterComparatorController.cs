@@ -158,7 +158,6 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             return View("CompareResult");
         }
 
-
         private List<string> GetRealmListByRegion(Region region)
         {
             List<string> realmsNames = new List<string>();

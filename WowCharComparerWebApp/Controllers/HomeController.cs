@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using WowCharComparerWebApp.Models;
+using WowCharComparerWebApp.Models.ModelView;
 
 namespace WowCharComparerWebApp.Controllers
 {

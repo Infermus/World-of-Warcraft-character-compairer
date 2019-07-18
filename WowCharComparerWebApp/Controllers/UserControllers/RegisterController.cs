@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.Database.Repository.Users;
 using WowCharComparerWebApp.Logic.Users;
 using WowCharComparerWebApp.Models.DataTransferObject;
 using WowCharComparerWebApp.Models.Internal;
+using WowCharComparerWebApp.Models.ModelView;
 using WowCharComparerWebApp.Notifications;
 
 namespace WowCharComparerWebApp.Controllers.UserControllers
@@ -15,11 +18,13 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
     {
         private readonly PasswordValidationManager _passwordValidationManager;
         private readonly DbAccessUser _dbAccessUser;
+        private readonly ILogger<RegisterController> _logger;
 
-        public RegisterController(PasswordValidationManager passwordValidationManager, DbAccessUser dbAccessUser)
+        public RegisterController(PasswordValidationManager passwordValidationManager, DbAccessUser dbAccessUser, ILogger<RegisterController> logger)
         {
             _passwordValidationManager = passwordValidationManager;
             _dbAccessUser = dbAccessUser;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -30,21 +35,20 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
         [HttpGet]
         public IActionResult Confirmation(string userID)
         {
+            try
             {
-                try
-                {
-                    DbOperationStatus<User> operationStatus = _dbAccessUser.ActivateAccount(userID);
+                DbOperationStatus<User> operationStatus = _dbAccessUser.ActivateAccount(userID);
 
-                    if (!operationStatus.OperationSuccess)
-                        throw new Exception("Error while activating account");
-                }
-
-                catch (Exception ex)
-                {
-                    return View("Error", ex);
-                }
-                return View("AccountApproval");
+                if (!operationStatus.OperationSuccess)
+                    throw new Exception("Error while activating account");
             }
+
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+
+            return View("GenericUserInformation", new GenericInformationModelView("Account activated!", UserMessages.AccountHasBeenActivated));
         }
 
         [HttpPost]
@@ -89,9 +93,18 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                                                       $"<p> Thank you for registration {user.Nickname}." +
                                                       $"<p>To verify your account please click on following link:</p>" +
                                                       $"<a href=\"{activationLink}\">Activate my account!</a>");
+
+                if (!emailSendStatus.SendSuccessfully)
+                {
+                    _dbAccessUser.RemoveByID(user.ID);
+                    _logger.LogInformation($"Removing user from database {user.Nickname}, {user.Email}, {user.ID}");
+                    _logger.LogError($"Error while sending activation email. {emailSendStatus.SendEmailException.Message}");
+                    return View("GenericUserInformation", new GenericInformationModelView("Ops! Registration failed", UserMessages.ServiceErrorTechnicalProblems));
+                }
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Error occour while registering user. {ex.Message}");
                 return View("Error", ex);
             }
 

@@ -1,5 +1,5 @@
 
-namespace WowCharComparerWebApp.Models
+namespace WowCharComparerWebApp.Models.ModelView
 {
     public class ErrorViewModel
     {

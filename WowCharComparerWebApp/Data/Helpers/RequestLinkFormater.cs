@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Models.Servers;
-
-[assembly: InternalsVisibleTo("WowCharacterComparer.Tests")]
 
 namespace WowCharComparerWebApp.Data.Helpers
 {

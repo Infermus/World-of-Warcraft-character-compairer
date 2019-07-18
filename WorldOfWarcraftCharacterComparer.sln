@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WowCharComparerWebApp", "WowCharComparerWebApp\WowCharComparerWebApp.csproj", "{5DD21260-0A5A-499C-8803-0A41DEF39FFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WowCharacterComparer.Tests", "WowCharacterComparer.Tests\WowCharacterComparer.Tests.csproj", "{5DEC97FB-821F-4CF6-8280-FC14CFA56034}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WowCharComparerWebApp.Tests", "WowCharacterComparer.Tests\WowCharComparerWebApp.Tests.csproj", "{5DEC97FB-821F-4CF6-8280-FC14CFA56034}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

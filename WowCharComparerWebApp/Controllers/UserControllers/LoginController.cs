@@ -6,6 +6,7 @@ using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Database.Repository.Users;
 using WowCharComparerWebApp.Logic.Users;
 using WowCharComparerWebApp.Models.DataTransferObject;
+using WowCharComparerWebApp.Models.ModelView;
 using WowCharComparerWebApp.Notifications;
 
 namespace WowCharComparerWebApp.Controllers.UserControllers
@@ -53,7 +54,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
             if (!_passwordValidationManager.UserLoginPasswordMatch(user, password))
                 return Content(UserMessages.InvalidPassword);
 
-            return Content($"Hello {userName}, you are logged in!");
+            return View("GenericUserInformation", new GenericInformationModelView("Logged in!", UserMessages.LoginGreetings(userName)));
         }
 
         [HttpPost]
@@ -75,10 +76,10 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
 
                 _dbAccessUser.UpdatePassword(userID, newPassword);
 
-                return Content("Password has been changed");
+                return View("GenericUserInformation", new GenericInformationModelView("Password change", UserMessages.PasswordHasBeenChanged));
             }
 
-            return Content("Time for changing password run out.");
+            return View("GenericUserInformation", new GenericInformationModelView("Password change", UserMessages.PasswordChangeTimeout));
         }
 
         [HttpPost]
@@ -117,7 +118,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                 return View("Error");
             }
 
-            return View("PasswordRecoveryMailSended");
+            return View("GenericUserInformation", new GenericInformationModelView("Password recovery", UserMessages.PasswordRecoveryEmailSend));
         }
     }
 }
