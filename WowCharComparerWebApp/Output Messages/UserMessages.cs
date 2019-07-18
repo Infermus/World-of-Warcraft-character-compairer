@@ -23,6 +23,8 @@ namespace WowCharComparerWebApp.Configuration
 
         public const string AccountHasBeenActivated = "Your account has been activated. Now, you can log in.";
 
+        public const string ServiceErrorTechnicalProblems = "Sorry but we are struggling with some technical problems. Please try again later";
+
         #region User Message methods
 
         public static string LoginGreetings(string userName)

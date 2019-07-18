@@ -99,6 +99,7 @@ namespace WowCharComparerWebApp.Controllers.UserControllers
                     _dbAccessUser.RemoveByID(user.ID);
                     _logger.LogInformation($"Removing user from database {user.Nickname}, {user.Email}, {user.ID}");
                     _logger.LogError($"Error while sending activation email. {emailSendStatus.SendEmailException.Message}");
+                    return View("GenericUserInformation", new GenericInformationModelView("Ops! Registration failed", UserMessages.ServiceErrorTechnicalProblems));
                 }
             }
             catch (Exception ex)
