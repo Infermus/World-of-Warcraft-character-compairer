@@ -7,7 +7,7 @@ using WowCharComparerWebApp.Enums.RaiderIO;
 using WowCharComparerWebApp.Models.Servers;
 using Xunit;
 
-namespace WowCharacterComparer.Tests
+namespace WowCharComparerWebApp.Tests.Data.Helpers
 {
     // Convention
     // method name : UnitOfWork_StateUnderTest_ExpectedBehavior

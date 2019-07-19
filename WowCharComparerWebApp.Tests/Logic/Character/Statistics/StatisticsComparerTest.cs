@@ -4,7 +4,7 @@ using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Mappers;
 using Xunit;
 
-namespace WowCharacterComparer.Tests
+namespace WowCharComparerWebApp.Tests.Logic.Character.Statistics
 {
     // Convention
     // method name : UnitOfWork_StateUnderTest_ExpectedBehavior

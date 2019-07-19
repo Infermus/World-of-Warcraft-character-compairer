@@ -3,7 +3,7 @@ using Xunit;
 using System.Linq;
 using WowCharComparerWebApp.Logic.Users;
 
-namespace WowCharacterComparer.Test
+namespace WowCharComparerWebApp.Tests.Logic.User
 {
     public class PasswordValidationManagerTest
     {
