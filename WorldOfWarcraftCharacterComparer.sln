@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WowCharComparerWebApp", "WowCharComparerWebApp\WowCharComparerWebApp.csproj", "{5DD21260-0A5A-499C-8803-0A41DEF39FFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WowCharComparerWebApp.Tests", "WowCharacterComparer.Tests\WowCharComparerWebApp.Tests.csproj", "{5DEC97FB-821F-4CF6-8280-FC14CFA56034}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WowCharComparerWebApp.Tests", "WowCharComparerWebApp.Tests\WowCharComparerWebApp.Tests.csproj", "{1A1AA49D-D00A-4474-B2FB-3DD09D049B5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DD21260-0A5A-499C-8803-0A41DEF39FFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DEC97FB-821F-4CF6-8280-FC14CFA56034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DEC97FB-821F-4CF6-8280-FC14CFA56034}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DEC97FB-821F-4CF6-8280-FC14CFA56034}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DEC97FB-821F-4CF6-8280-FC14CFA56034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A1AA49D-D00A-4474-B2FB-3DD09D049B5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A1AA49D-D00A-4474-B2FB-3DD09D049B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A1AA49D-D00A-4474-B2FB-3DD09D049B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A1AA49D-D00A-4474-B2FB-3DD09D049B5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
