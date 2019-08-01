@@ -32,7 +32,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
         public async Task<IActionResult> Index()
         {
             //Note: Local variable to to avoid 2x requests for both players at default;
-            List<string> defaultRegionForBothPlayer = await new RealmsRequests(_comparerDatabaseContext).GetRealmListByRegion(Region.Europe);
+            List<string> defaultRegionForBothPlayer = await GetRealmsList(Region.Europe);
 
             currentRealmListPlayerLeft = defaultRegionForBothPlayer;
             currentRealmListPlayerRight = defaultRegionForBothPlayer;
@@ -41,6 +41,16 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             ViewData["realmsListRightPlayer"] = currentRealmListPlayerRight;
 
             return View();
+        }
+
+        /// <summary>
+        /// Gets realms list for selected region
+        /// </summary>
+        /// <param name="region">Region</param>
+        /// <returns>List of realms from Blizzard's api request</returns>
+        public async Task<List<string>> GetRealmsList(Region region)
+        {
+            return await new RealmsRequests(_comparerDatabaseContext).GetRealmListByRegion(region);
         }
 
         public async Task<IActionResult> ComparePlayers(ExtendedCharacterModel firstPlayer, ExtendedCharacterModel secondPlayer)

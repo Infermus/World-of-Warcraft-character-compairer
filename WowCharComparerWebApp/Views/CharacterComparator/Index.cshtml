@@ -21,20 +21,32 @@
                        class="form-control"
                        style="margin: auto; width: 300px" />
 
-                <h4>Region</h4>s
-                <form onsubmit="changeRealmList()">
-                    <div class="btn-group" role="group">
-                        <button type="submit" class="btn btn-primary" id="europa-button">@WowCharComparerWebApp.Enums.Region.Europe</button>
-                        <button type="submit" class="btn btn-default" id="america-button">@WowCharComparerWebApp.Enums.Region.America</button>
-                        <button type="submit" class="btn btn-default" id="korea-button">@WowCharComparerWebApp.Enums.Region.Korea</button>
-                        <button type="submit" class="btn btn-default" id="taiwan-button">@WowCharComparerWebApp.Enums.Region.Taiwan</button>
-                    </div>
-                </form>
+                <h4>Region</h4>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <form onclick="changeRealmList(event)">
+                        <label class="btn region-selection-button active">
+                            <input type="hidden" name="front-image" id="europe-button" autocomplete="off" checked>
+                            @WowCharComparerWebApp.Enums.Region.Europe
+                        </label>
+                        <label class="btn btn region-selection-button">
+                            <input type="hidden" name="side-image" id="america-button" autocomplete="off">
+                            @WowCharComparerWebApp.Enums.Region.America
+                        </label>
+                        <label class="btn btn region-selection-button">
+                            <input type="hidden" name="back-image" id="korea-button" autocomplete="off">
+                            @WowCharComparerWebApp.Enums.Region.Korea
+                        </label>
+                        <label class="btn btn region-selection-button">
+                            <input type="hidden" name="back-image" id="taiwan-button" autocomplete="off">
+                            @WowCharComparerWebApp.Enums.Region.Taiwan
+                        </label>
+                    </form>
+                </div>
                 <div id="realms-wrapper" style="padding: 20px">
 
                     <h4>Realms</h4>
 
-                    <div class="list-group" style="height: 170px; overflow-x: hidden; padding: 5px">
+                    <div id="1st-player-realms-list list-group" style="height: 170px; overflow-x: hidden; padding: 5px">
                         @foreach (var item in ViewData["realmsListLeftPlayer"] as IList<string>)
                         {
                             <a href="#" class="list-group-item list-group-item-action">@item</a>
@@ -150,37 +162,3 @@
         </form>
     </div>
 }
-
-
-@*@model WowCharComparerWebApp.Models.Servers.Realm
-    <form asp-controller="CharacterComparator" asp-action="LoadRealmData" method="post" class="form-horizontal" role="form">
-        <div class="form-group">
-            <div class="row">
-                <div class="alert-danger" asp-validation-summary="ModelOnly"></div>
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                    <label asp-for="Name" class="control-label"></label>
-                    <select asp-for="Name"
-                            class="form-control"
-                            asp-items="@(new SelectList(@ViewBag.ListOfRealms, "Name"))">
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                    <input id="Submit1" type="submit" value="submit" />
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                    @if (ViewBag.SelectedValue != null)
-                    {
-                        <text>Selected Country ID: </text> @ViewBag.SelectedValue;
-                    }
-                </div>
-            </div>
-        </div>
-    </form>*@
