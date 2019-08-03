@@ -1,6 +1,10 @@
-﻿function changeRealmList(event) {
-    $('.region-selection-button').removeClass('active');
+﻿function changeActiveState(event) {
+    $(event.target).parent().find('.active').removeClass('active');
     $(event.target).addClass('active');
+}
+
+function changeRealmList(event, elementID) {
+    changeActiveState(event);
 
     $.ajax({
         method: 'get',
@@ -8,21 +12,20 @@
         data: { region: $(event.target).text() },
         dataType:'json',
         success: function (data) {
-            var nodes = document.getElementById("1st-player-realms-list list-group");
-            //while (nodes.firstChild) {
-            //    nodes.removeChild(nodes.firstChild);
-            //}
+            var nodes = document.getElementById(elementID);
+            var templateChild = nodes.lastElementChild;
+            while (nodes.firstChild) {
+                nodes.removeChild(nodes.firstChild);
+            }
 
-            var node = document.createElement("list-group-item list-group-item-action");
-            var textnode = document.createTextNode("Water");
-            node.appendChild(textnode); 
-            console.log(node);
-            document.getElementById("1st-player-realms-list list-group").appendChild(node);
-
-            //for (let i = 0; i < data.length; ++i) {
-            //}
-
-            //$("1st-player-realms-list list-group").addClass("list-group-item list-group-item-action", data[0]);
+            for (let i = 0; i < data.length; ++i) {
+                var div = document.createElement('a');
+                div.setAttribute('href', '#');
+                div.setAttribute('onclick', 'setToActive(event)');
+                div.className = templateChild.className;
+                div.innerHTML = data[i];
+                nodes.appendChild(div);
+            }
         }
     });
 }
