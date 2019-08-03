@@ -4,7 +4,7 @@
 }
 
 function changeRealmList(event, elementID) {
-    changeActiveState(event);
+    changeActiveState(event);   
 
     $.ajax({
         method: 'get',
@@ -21,7 +21,7 @@ function changeRealmList(event, elementID) {
             for (let i = 0; i < data.length; ++i) {
                 var div = document.createElement('a');
                 div.setAttribute('href', '#');
-                div.setAttribute('onclick', 'setToActive(event)');
+                div.setAttribute('onclick', 'changeActiveState(event)');
                 div.className = templateChild.className;
                 div.innerHTML = data[i];
                 nodes.appendChild(div);
