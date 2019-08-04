@@ -1,6 +1,4 @@
-﻿
-using WowCharComparerWebApp.Models.CharacterProfile;
-using WowCharComparerWebApp.Models.CharacterProfile.FeedModels;
+﻿using WowCharComparerWebApp.Models.CharacterProfile.FeedModels;
 using WowCharComparerWebApp.Models.CharacterProfile.GuildModels;
 using WowCharComparerWebApp.Models.CharacterProfile.HunterPetsModels;
 using WowCharComparerWebApp.Models.CharacterProfile.MountsModels;
@@ -24,7 +22,7 @@ namespace WowCharComparerWebApp.Models.CharacterProfile
 
         public HunterPets[] HunterPets { get; set; }
 
-        public CharacterProfile.ItemsModels.Others.Items Items { get; set; }
+        public ItemsModels.Others.Items Items { get; set; }
 
         public Mounts Mounts { get; set; }
 
@@ -42,9 +40,9 @@ namespace WowCharComparerWebApp.Models.CharacterProfile
 
         public Reputation[] Reputation { get; set; }
 
-        public CharacterProfile.StatisticsModels.Statistics Statistics { get; set; }
+        public StatisticsModels.Statistics Statistics { get; set; }
 
-        public CharacterProfile.Stats Stats { get; set; }
+        public Stats Stats { get; set; }
 
         public Talents[] Talents { get; set; }
 

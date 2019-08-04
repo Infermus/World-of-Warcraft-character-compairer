@@ -2,13 +2,11 @@
 
 namespace WowCharComparerWebApp.Models.CharacterProfile
 {
-    public class BasicCharacterModel
+    public class BasicCharacterModel : ServerCharacterModel
     {
         public double LastModified { get; set; }
 
         public string Name { get; set; }
-
-        public string Realm { get; set; }
 
         public string BattleGroup { get; set; }
 

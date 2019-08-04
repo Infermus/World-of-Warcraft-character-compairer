@@ -7,7 +7,6 @@ namespace WowCharComparerWebApp.Data.Helpers
 {
     internal static class RequestLinkFormater
     {
-
         internal static Uri GenerateAPIRequestLink(BlizzardAPIProfiles profile, RequestLocalization requestLocalization, List<KeyValuePair<string, string>> fields, string endPointPart1 = null, string endPointPart2 = null)
         {
             string processingUriAddress = string.Empty;
@@ -25,8 +24,7 @@ namespace WowCharComparerWebApp.Data.Helpers
                 fields.Add(new KeyValuePair<string, string>("?locale", requestLocalization.Realm.Locale));
             }
 
-
-            foreach (KeyValuePair<string, string> parameter in fields) // use this (look down)
+            foreach (KeyValuePair<string, string> parameter in fields)
             {
                 processingUriAddress = processingUriAddress.AddParameterToUrl(parameter.Key + "=" + parameter.Value);
             }

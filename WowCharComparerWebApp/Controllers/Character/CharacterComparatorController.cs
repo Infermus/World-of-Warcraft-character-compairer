@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WowCharComparerWebApp.Configuration;
@@ -10,6 +11,7 @@ using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Logic.DataResources;
 using WowCharComparerWebApp.Models;
+using WowCharComparerWebApp.Models.Achievement;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
 
@@ -53,26 +55,54 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             return await new RealmsRequests(_comparerDatabaseContext).GetRealmListByRegion(region);
         }
 
-        public async Task<IActionResult> ComparePlayers(ExtendedCharacterModel firstPlayer, ExtendedCharacterModel secondPlayer)
+        public async Task<IActionResult> CompareCharacters(ExtendedCharacterModel firstCharacter, ExtendedCharacterModel secondCharacter)
         {
-            List<ProcessedCharacterModel> processedCharacterData = new List<ProcessedCharacterModel>();
+            var coreRegionUrlAdress = string.Empty;
+            var processedCharacterData = new List<ProcessedCharacterModel>();
 
-            //TODO Get input from view to fill up request localization
-            RequestLocalization requestLocalization = new RequestLocalization()
-            {
-                CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper[Region.Europe], // refactor this
-                Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB", Timezone = "Europe/Paris" }
-            };
+            var charactersToCompare = new List<ExtendedCharacterModel>() { firstCharacter, secondCharacter };
 
-            foreach (string characterName in new List<string>() { firstPlayer.Name, secondPlayer.Name })
+            foreach (ExtendedCharacterModel character in charactersToCompare)
             {
-                //TODO Get input from view to fill up character fields (check boxes which determines what to compare)
-                var result = await new CharacterRequests(_iAPIDataRequestManager).GetCharacterDataAsJsonAsync(characterName, requestLocalization,
-                                                                                    new List<CharacterFields>()
-                                                                                    {
-                                                                                        CharacterFields.Items,
-                                                                                        CharacterFields.Achievements
-                                                                                    });
+                RequestLocalization requestLocalization = new RequestLocalization()
+                {
+                    CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper.ContainsKey(EnumDictonaryWrapper.viewRegionsWrapper.ContainsKey(character.Region) ?
+                                            EnumDictonaryWrapper.viewRegionsWrapper[character.Region] 
+                                            : throw new NotSupportedException("Region not supported")) ?
+                                                APIConf.BlizzadAPIAddressWrapper[EnumDictonaryWrapper.viewRegionsWrapper[character.Region]] 
+                                                : throw new NotSupportedException("Core region url nor supported"),
+
+                    Realm = new Realm()
+                    {
+                        Slug = character.ServerName.ToLower().Replace(" ", "-"),
+                        Locale = EnumDictonaryWrapper.viewLocaleWrapper.ContainsKey(character.Region) ?
+                                    EnumDictonaryWrapper.viewLocaleWrapper[character.Region]
+                                    : throw new NotSupportedException("Locale not supported"),
+                    }
+                };
+
+                var selectedCharacterFields = new List<CharacterFields>();
+
+                //TODO find better way to process it
+                if (character.ItemsField)
+                    selectedCharacterFields.Add(CharacterFields.Items);
+                if(character.AchievementsField)
+                    selectedCharacterFields.Add(CharacterFields.Achievements);
+                if (character.ProgressionField)
+                    selectedCharacterFields.Add(CharacterFields.Progression);
+                if (character.PVPField)
+                    selectedCharacterFields.Add(CharacterFields.PVP);
+                if (character.ReputationField)
+                    selectedCharacterFields.Add(CharacterFields.Reputation);
+                if (character.StatisticsField)
+                    selectedCharacterFields.Add(CharacterFields.Statistics);
+                if (character.TalentsField)
+                    selectedCharacterFields.Add(CharacterFields.Talents);
+
+                var result = await new CharacterRequests(_iAPIDataRequestManager).GetCharacterDataAsJsonAsync(character.Name, requestLocalization, selectedCharacterFields);
+
+                if (result.Exception != null)
+                    return View("CompareResult", result.Exception.Message);
 
                 ExtendedCharacterModel currentCharacter = JsonProcessing.DeserializeJsonData<ExtendedCharacterModel>(result.Data);
                 CharacterExtendedDataManager characterDataManager = new CharacterExtendedDataManager(_comparerDatabaseContext);
@@ -83,7 +113,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                     {
                         LastModified = currentCharacter.LastModified,
                         Name = currentCharacter.Name,
-                        Realm = currentCharacter.Realm,
+                        ServerName = currentCharacter.ServerName,
                         BattleGroup = currentCharacter.BattleGroup,
                         CharacterClass = currentCharacter.CharacterClass,
                         Race = currentCharacter.Race,
@@ -95,8 +125,13 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                         TotalHonorableKills = currentCharacter.TotalHonorableKills
                     },
 
-                    AchievementsData = characterDataManager.MatchCompletedPlayerAchievement(currentCharacter),
-                    Items = characterDataManager.MatchItemsBonusStatistics(currentCharacter)
+                    AchievementsData = currentCharacter.Achievements is null ? new List<AchievementsData>() : characterDataManager.MatchCompletedPlayerAchievement(currentCharacter),
+                    Items = currentCharacter.Items ?? characterDataManager.MatchItemsBonusStatistics(currentCharacter),
+                    Progression = currentCharacter.Progression,
+                    Pvp = currentCharacter.Pvp,
+                    Reputation = currentCharacter.Reputation,
+                    Statistics = currentCharacter.Statistics,
+                    Talents = currentCharacter.Talents
                 });
             }
 
