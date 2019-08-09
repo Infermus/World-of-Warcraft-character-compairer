@@ -70,7 +70,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                                             EnumDictonaryWrapper.viewRegionsWrapper[character.Region] 
                                             : throw new NotSupportedException("Region not supported")) ?
                                                 APIConf.BlizzadAPIAddressWrapper[EnumDictonaryWrapper.viewRegionsWrapper[character.Region]] 
-                                                : throw new NotSupportedException("Core region url nor supported"),
+                                                : throw new NotSupportedException("Core region url not supported"),
 
                     Realm = new Realm()
                     {
