@@ -66,5 +66,26 @@ namespace WowCharComparerWebApp.Enums
             { RaiderIOCharacterFields.RaidAchievementMeta, "raid_achievement_meta" },
             { RaiderIOCharacterFields.RaidAchievementCurve, "raid_achievement_curve" }
         };
+
+        #region From-view wrappers
+
+        public static Dictionary<string, Region> viewRegionsWrapper = new Dictionary<string, Region>
+        {
+            { "Europe", Region.Europe },
+            { "America", Region.America },
+            { "Korea", Region.Korea },
+            { "Taiwan", Region.Taiwan }
+        };
+
+        public static Dictionary<string, string> viewLocaleWrapper = new Dictionary<string, string>
+        {
+            { "Europe", "en_GB" },
+            { "America", "en_US" },
+            { "Korea", "ko_KR" },
+            { "Taiwan", "zh_TW" }
+        };
+
+        #endregion
+
     }
 }

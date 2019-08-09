@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WowCharComparerWebApp.Configuration;
 using WowCharComparerWebApp.Data.ApiRequests;
 using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database;
-using WowCharComparerWebApp.Data.Database.Repository.Others;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
-using WowCharComparerWebApp.Enums.Locale;
 using WowCharComparerWebApp.Logic.DataResources;
 using WowCharComparerWebApp.Models;
 using WowCharComparerWebApp.Models.Achievement;
@@ -32,10 +31,10 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             _iAPIDataRequestManager = iAPIDataRequestManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             //Note: Local variable to to avoid 2x requests for both players at default;
-            List<string> defaultRegionForBothPlayer = GetRealmListByRegion(Region.Europe);
+            List<string> defaultRegionForBothPlayer = await GetRealmsList(Region.Europe);
 
             currentRealmListPlayerLeft = defaultRegionForBothPlayer;
             currentRealmListPlayerRight = defaultRegionForBothPlayer;
@@ -46,88 +45,64 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             return View();
         }
 
-        #region Selecting region actions (Experimental)
-
-        [Route("selected-region-left")]
-        public IActionResult SelectedRegionLeftPlayer(Region region)
+        /// <summary>
+        /// Gets realms list for selected region
+        /// </summary>
+        /// <param name="region">Region</param>
+        /// <returns>List of realms from Blizzard's api request</returns>
+        public async Task<List<string>> GetRealmsList(Region region)
         {
-            currentRealmListPlayerLeft = GetRealmListByRegion(region);
-
-            ViewData["realmsListLeftPlayer"] = currentRealmListPlayerLeft;
-            ViewData["realmsListRightPlayer"] = currentRealmListPlayerRight;
-
-            return View("Index");
+            return await new RealmsRequests(_comparerDatabaseContext).GetRealmListByRegion(region);
         }
 
-        [Route("selected-region-right")]
-        public IActionResult SelectedRegionRightPlayer(Region region)
+        public async Task<IActionResult> CompareCharacters(ExtendedCharacterModel firstCharacter, ExtendedCharacterModel secondCharacter)
         {
-            currentRealmListPlayerRight = GetRealmListByRegion(region);
+            var coreRegionUrlAdress = string.Empty;
+            var processedCharacterData = new List<ProcessedCharacterModel>();
 
-            ViewData["realmsListLeftPlayer"] = currentRealmListPlayerLeft;
-            ViewData["realmsListRightPlayer"] = currentRealmListPlayerRight;
+            var charactersToCompare = new List<ExtendedCharacterModel>() { firstCharacter, secondCharacter };
 
-            return View("Index");
-        }
-
-        #endregion
-
-        public IActionResult TestActionOne()
-        {
-            return StatusCode(404);
-        }
-
-        public IActionResult TestActionTwo()
-        {
-            new DbAccessBonusStats(_comparerDatabaseContext).InsertBonusStatsTableFromJsonFile();
-            return Content("Action two - executed");
-        }
-
-        public IActionResult TestActionThree()
-        {
-            string returnContent = string.Empty;
-
-            var data = new DataResources(_comparerDatabaseContext).GetCharacterAchievements(new RequestLocalization()
+            foreach (ExtendedCharacterModel character in charactersToCompare)
             {
-                CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper[Region.Europe],
-                Realm = new Realm() { Locale = EULocale.en_GB.ToString() }
-            });
+                RequestLocalization requestLocalization = new RequestLocalization()
+                {
+                    CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper.ContainsKey(EnumDictonaryWrapper.viewRegionsWrapper.ContainsKey(character.Region) ?
+                                            EnumDictonaryWrapper.viewRegionsWrapper[character.Region] 
+                                            : throw new NotSupportedException("Region not supported")) ?
+                                                APIConf.BlizzadAPIAddressWrapper[EnumDictonaryWrapper.viewRegionsWrapper[character.Region]] 
+                                                : throw new NotSupportedException("Core region url not supported"),
 
-            if (data.Result.Exception is null)
-            {
-                Achievement parsedResult = JsonProcessing.DeserializeJsonData<Achievement>(data.Result.Data);
-                new DbAccessAchievements(_comparerDatabaseContext).InsertAllAchievementsDataFromApiRequest(parsedResult);
+                    Realm = new Realm()
+                    {
+                        Slug = character.ServerName.ToLower().Replace(" ", "-"),
+                        Locale = EnumDictonaryWrapper.viewLocaleWrapper.ContainsKey(character.Region) ?
+                                    EnumDictonaryWrapper.viewLocaleWrapper[character.Region]
+                                    : throw new NotSupportedException("Locale not supported"),
+                    }
+                };
 
-                returnContent = "Test action three executed - achievements insertion to database";
-            }
-            else
-            {
-                returnContent = data.Result.Exception.Message;
-            }
+                var selectedCharacterFields = new List<CharacterFields>();
 
-            return Content(returnContent);
-        }
+                //TODO find better way to process it
+                if (character.ItemsField)
+                    selectedCharacterFields.Add(CharacterFields.Items);
+                if(character.AchievementsField)
+                    selectedCharacterFields.Add(CharacterFields.Achievements);
+                if (character.ProgressionField)
+                    selectedCharacterFields.Add(CharacterFields.Progression);
+                if (character.PVPField)
+                    selectedCharacterFields.Add(CharacterFields.PVP);
+                if (character.ReputationField)
+                    selectedCharacterFields.Add(CharacterFields.Reputation);
+                if (character.StatisticsField)
+                    selectedCharacterFields.Add(CharacterFields.Statistics);
+                if (character.TalentsField)
+                    selectedCharacterFields.Add(CharacterFields.Talents);
 
-        public IActionResult ComparePlayers(ExtendedCharacterModel firstPlayer, ExtendedCharacterModel secondPlayer)
-        {
-            List<ProcessedCharacterModel> processedCharacterData = new List<ProcessedCharacterModel>();
+                var result = await new CharacterRequests(_iAPIDataRequestManager).GetCharacterDataAsJsonAsync(character.Name, requestLocalization, selectedCharacterFields);
 
-            //TODO Get input from view to fill up request localization
-            RequestLocalization requestLocalization = new RequestLocalization()
-            {
-                CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper[Region.Europe], // refactor this
-                Realm = new Realm() { Slug = "burning-legion", Locale = "en_GB", Timezone = "Europe/Paris" }
-            };
-
-            foreach (string characterName in new List<string>() { firstPlayer.Name, secondPlayer.Name })
-            {
-                //TODO Get input from view to fill up character fields (check boxes which determines what to compare)
-                var result = new CharacterRequests(_iAPIDataRequestManager).GetCharacterDataAsJsonAsync(characterName, requestLocalization,
-                                                                            new List<CharacterFields>()
-                                                                            {
-                                                                                CharacterFields.Items,
-                                                                                CharacterFields.Achievements
-                                                                            }).Result;
+                if (result.Exception != null)
+                    return View("CompareResult", result.Exception.Message);
 
                 ExtendedCharacterModel currentCharacter = JsonProcessing.DeserializeJsonData<ExtendedCharacterModel>(result.Data);
                 CharacterExtendedDataManager characterDataManager = new CharacterExtendedDataManager(_comparerDatabaseContext);
@@ -138,7 +113,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                     {
                         LastModified = currentCharacter.LastModified,
                         Name = currentCharacter.Name,
-                        Realm = currentCharacter.Realm,
+                        ServerName = currentCharacter.ServerName,
                         BattleGroup = currentCharacter.BattleGroup,
                         CharacterClass = currentCharacter.CharacterClass,
                         Race = currentCharacter.Race,
@@ -150,46 +125,17 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                         TotalHonorableKills = currentCharacter.TotalHonorableKills
                     },
 
-                    AchievementsData = characterDataManager.MatchCompletedPlayerAchievement(currentCharacter),
-                    Items = characterDataManager.MatchItemsBonusStatistics(currentCharacter)
+                    AchievementsData = currentCharacter.Achievements is null ? new List<AchievementsData>() : characterDataManager.MatchCompletedPlayerAchievement(currentCharacter),
+                    Items = currentCharacter.Items ?? characterDataManager.MatchItemsBonusStatistics(currentCharacter),
+                    Progression = currentCharacter.Progression,
+                    Pvp = currentCharacter.Pvp,
+                    Reputation = currentCharacter.Reputation,
+                    Statistics = currentCharacter.Statistics,
+                    Talents = currentCharacter.Talents
                 });
             }
 
             return View("CompareResult");
-        }
-
-        private List<string> GetRealmListByRegion(Region region)
-        {
-            List<string> realmsNames = new List<string>();
-            string regionCoreAdress = string.Empty;
-
-            try
-            {
-                if (APIConf.BlizzadAPIAddressWrapper.TryGetValue(region, out regionCoreAdress) == false)
-                {
-                    throw new KeyNotFoundException($"Cannot find region in {APIConf.BlizzadAPIAddressWrapper.GetType().Name} dictionary");
-                }
-
-                RequestLocalization requestLocalization = new RequestLocalization()
-                {
-                    CoreRegionUrlAddress = regionCoreAdress,
-                };
-
-                RealmsRequests realmsRequests = new RealmsRequests(_comparerDatabaseContext);
-                var realmResponse = realmsRequests.GetRealmsDataAsJsonAsync(requestLocalization);
-                RealmStatus realmStatus = JsonProcessing.DeserializeJsonData<RealmStatus>(realmResponse.Result.Data);
-
-                foreach (Realm realmsData in realmStatus.Realms)
-                {
-                    realmsNames.Add(realmsData.Name);
-                }
-            }
-            catch (Exception)
-            {
-                realmsNames = new List<string>();
-            }
-
-            return realmsNames;
         }
     }
 }

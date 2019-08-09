@@ -12,3 +12,19 @@
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
 }
+
+.region-selection-button {
+    background-color: #333a40;
+    color: white;
+}
+
+    .region-selection-button:hover {
+        background-color: #3bacfe;
+        color: white;
+    }
+
+
+    .region-selection-button.active {
+        background-color: #0094ff;
+        color: white;
+    }
