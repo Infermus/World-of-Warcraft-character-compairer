@@ -11,7 +11,6 @@ using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Logic.DataResources;
 using WowCharComparerWebApp.Models;
-using WowCharComparerWebApp.Models.Achievement;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
 
@@ -24,6 +23,8 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
 
         private static List<string> currentRealmListPlayerLeft;
         private static List<string> currentRealmListPlayerRight;
+
+        private static List<ProcessedCharacterModel> processedCharacterData;
 
         public CharacterComparatorController(ComparerDatabaseContext comparerDatabaseContext, IAPIDataRequestManager iAPIDataRequestManager)
         {
@@ -55,12 +56,11 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             return await new RealmsRequests(_comparerDatabaseContext).GetRealmListByRegion(region);
         }
 
+        [HttpPost]
         public async Task<IActionResult> CompareCharacters(ExtendedCharacterModel firstCharacter, ExtendedCharacterModel secondCharacter)
         {
-            var coreRegionUrlAdress = string.Empty;
-            var processedCharacterData = new List<ProcessedCharacterModel>();
-
             var charactersToCompare = new List<ExtendedCharacterModel>() { firstCharacter, secondCharacter };
+            processedCharacterData = new List<ProcessedCharacterModel>();
 
             foreach (ExtendedCharacterModel character in charactersToCompare)
             {
@@ -125,17 +125,26 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                         TotalHonorableKills = currentCharacter.TotalHonorableKills
                     },
 
-                    AchievementsData = currentCharacter.Achievements is null ? new List<AchievementsData>() : characterDataManager.MatchCompletedPlayerAchievement(currentCharacter),
-                    Items = currentCharacter.Items ?? characterDataManager.MatchItemsBonusStatistics(currentCharacter),
-                    Progression = currentCharacter.Progression,
-                    Pvp = currentCharacter.Pvp,
-                    Reputation = currentCharacter.Reputation,
-                    Statistics = currentCharacter.Statistics,
-                    Talents = currentCharacter.Talents
+                    AchievementsData = characterDataManager.MatchCompletedPlayerAchievement(currentCharacter),
+                    Items = characterDataManager.MatchItemsBonusStatistics(currentCharacter.Items),
+                    Progression = currentCharacter.Progression ?? new Models.CharacterProfile.ProgressionModels.Progression(),
+                    Pvp = currentCharacter.Pvp ?? new Models.CharacterProfile.PvpModels.Pvp(),
+                    Reputation = currentCharacter.Reputation ?? new List<Reputation>().ToArray(),
+                    Statistics = currentCharacter.Statistics ?? new Models.CharacterProfile.StatisticsModels.Statistics(),
+                    Talents = currentCharacter.Talents ?? new List<Models.CharacterProfile.TalentsModels.Talents>().ToArray()
                 });
             }
 
-            return View("CompareResult");
+            return Json(new
+            {
+                message = "success",
+                url = Url.Action(nameof(RedirectToComparatorResult), GetType().Name.Remove(GetType().Name.Length - "Controller".Length))
+            });
+        }
+
+        public IActionResult RedirectToComparatorResult()
+        {
+            return View("CompareCharacters", processedCharacterData);
         }
     }
 }

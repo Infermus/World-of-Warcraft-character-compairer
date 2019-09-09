@@ -1,0 +1,7 @@
+﻿@model List<WowCharComparerWebApp.Models.ProcessedCharacterModel>;
+
+
+@foreach (var character in Model)
+{ 
+    <li>@character.RawCharacterData.Name</li>
+}

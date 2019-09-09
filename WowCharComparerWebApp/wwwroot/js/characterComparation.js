@@ -75,6 +75,9 @@ function compareCharacter() {
             firstCharacter: firstCharacterData,
             secondCharacter: secondCharacterData
         },
+        success: function (result) {
+            window.location.href = result.url;
+        }
     });
 }
 

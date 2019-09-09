@@ -1,21 +1,21 @@
 ﻿@{
     ViewData["Title"] = "CharacterComparatorView";
-    @model WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel;
 }
 
 <link rel="stylesheet" href="~/css/character-comparator.css" />
 <script src="~/js/characterComparation.js"></script>
 
-@{
+@{ 
     WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel firstPlayerData = new WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel();
     WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel secondPlayerData = new WowCharComparerWebApp.Models.CharacterProfile.ExtendedCharacterModel();
-
+}
     <div class="single-character-column">
         <div class="row">
             <div class="col-md-6">
 
                 <h4>Nickname</h4>
                 <input class="1st-character-nick form-control"
+                       value="Selectus"
                        type="text"
                        aria-label="FirstCharacterName"
                        style="margin: auto; width: 300px" />
@@ -58,6 +58,7 @@
 
                 <h4>Nickname</h4>
                 <input class="2nd-character-nick form-control"
+                       value="Wykminiacz"
                        type="text"
                        aria-label="SecondCharacterName"
                        style="margin: auto; width: 300px" />
@@ -130,4 +131,3 @@
             Compare!
         </button>
     </div>
-}
