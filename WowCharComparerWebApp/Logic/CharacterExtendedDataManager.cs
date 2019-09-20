@@ -23,9 +23,12 @@ namespace WowCharComparerWebApp.Logic.DataResources
         /// <returns></returns>
         internal IEnumerable<AchievementsData> MatchCompletedPlayerAchievement(Models.CharacterProfile.ExtendedCharacterModel extendedCharacterModel)
         {
+            if (extendedCharacterModel.Achievements is null)
+                return new List<AchievementsData>();
+
             List<AchievementsData> achievementsDatasDB = new DbAccessAchievements(_comparerDatabaseContext).GetAllAchievementsData().ToList();
 
-            return achievementsDatasDB.Join(extendedCharacterModel.Achievements.AchievementsCompleted.ToList(),
+             return achievementsDatasDB.Join(extendedCharacterModel.Achievements.AchievementsCompleted.ToList(),
                                             dbAchievement => dbAchievement.ID,
                                             playerAchievement => playerAchievement,
                                             (dbAchievement, playerAchievement) => dbAchievement);
@@ -35,65 +38,68 @@ namespace WowCharComparerWebApp.Logic.DataResources
         /// Gets items id bonus stats parameters and try to match them to pre-prepared list of bonus stats name
         /// </summary>
         /// <param name="parsedJson"></param>
-        internal Models.CharacterProfile.ItemsModels.Others.Items MatchItemsBonusStatistics(Models.CharacterProfile.ExtendedCharacterModel extendedCharacterModel)
+        internal Models.CharacterProfile.ItemsModels.Others.Items MatchItemsBonusStatistics(Models.CharacterProfile.ItemsModels.Others.Items characterItems)
         {
+            if (characterItems is null)
+                return new Models.CharacterProfile.ItemsModels.Others.Items();
+
             var dbBonusStats = new DbAccessBonusStats(_comparerDatabaseContext).GetAllBonusStats().ToList();
 
-            if (extendedCharacterModel.Items.Head != null)
-                extendedCharacterModel.Items.Head.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Head.Stats);
+            if (characterItems.Head != null)
+                characterItems.Head.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Head.Stats);
 
-            if (extendedCharacterModel.Items.Neck != null)
-                extendedCharacterModel.Items.Neck.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Neck.Stats);
+            if (characterItems.Neck != null)
+                characterItems.Neck.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Neck.Stats);
 
-            if (extendedCharacterModel.Items.Shoulder != null)
-                extendedCharacterModel.Items.Shoulder.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Shoulder.Stats);
+            if (characterItems.Shoulder != null)
+                characterItems.Shoulder.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Shoulder.Stats);
 
-            if (extendedCharacterModel.Items.Back != null)
-                extendedCharacterModel.Items.Back.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Back.Stats);
+            if (characterItems.Back != null)
+                characterItems.Back.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Back.Stats);
 
-            if (extendedCharacterModel.Items.Chest != null)
-                extendedCharacterModel.Items.Chest.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Chest.Stats);
+            if (characterItems.Chest != null)
+                characterItems.Chest.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Chest.Stats);
 
-            if (extendedCharacterModel.Items.Shirt != null)
-                extendedCharacterModel.Items.Shirt.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Shirt.Stats);
+            if (characterItems.Shirt != null)
+                characterItems.Shirt.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Shirt.Stats);
 
-            if (extendedCharacterModel.Items.Wrist != null)
-                extendedCharacterModel.Items.Wrist.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Wrist.Stats);
+            if (characterItems.Wrist != null)
+                characterItems.Wrist.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Wrist.Stats);
 
-            if (extendedCharacterModel.Items.Hands != null)
-                extendedCharacterModel.Items.Hands.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Hands.Stats);
+            if (characterItems.Hands != null)
+                characterItems.Hands.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Hands.Stats);
 
-            if (extendedCharacterModel.Items.Waist != null)
-                extendedCharacterModel.Items.Waist.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Waist.Stats);
+            if (characterItems.Waist != null)
+                characterItems.Waist.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Waist.Stats);
 
-            if (extendedCharacterModel.Items.Legs != null)
-                extendedCharacterModel.Items.Legs.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Legs.Stats);
+            if (characterItems.Legs != null)
+                characterItems.Legs.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Legs.Stats);
 
-            if (extendedCharacterModel.Items.Feet != null)
-                extendedCharacterModel.Items.Feet.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Feet.Stats);
+            if (characterItems.Feet != null)
+                characterItems.Feet.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Feet.Stats);
 
-            if (extendedCharacterModel.Items.Finger1 != null)
-                extendedCharacterModel.Items.Finger1.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Finger1.Stats);
+            if (characterItems.Finger1 != null)
+                characterItems.Finger1.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Finger1.Stats);
 
-            if (extendedCharacterModel.Items.Finger2 != null)
-                extendedCharacterModel.Items.Finger2.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Finger2.Stats);
+            if (characterItems.Finger2 != null)
+                characterItems.Finger2.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Finger2.Stats);
 
-            if (extendedCharacterModel.Items.Trinket1 != null)
-                extendedCharacterModel.Items.Trinket1.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Trinket1.Stats);
+            if (characterItems.Trinket1 != null)
+                characterItems.Trinket1.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Trinket1.Stats);
 
-            if (extendedCharacterModel.Items.Trinket2 != null)
-                extendedCharacterModel.Items.Trinket2.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Trinket2.Stats);
+            if (characterItems.Trinket2 != null)
+                characterItems.Trinket2.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Trinket2.Stats);
 
-            if (extendedCharacterModel.Items.MainHand != null)
-                extendedCharacterModel.Items.MainHand.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.MainHand.Stats);
+            if (characterItems.MainHand != null)
+                characterItems.MainHand.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.MainHand.Stats);
 
-            if (extendedCharacterModel.Items.OffHand != null)
-                extendedCharacterModel.Items.OffHand.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.OffHand.Stats);
+            if (characterItems.OffHand != null)
+                characterItems.OffHand.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.OffHand.Stats);
 
-            if (extendedCharacterModel.Items.Tabard != null)
-                extendedCharacterModel.Items.Tabard.Stats = PerformItemBonusStatsMatch(dbBonusStats, extendedCharacterModel.Items.Tabard.Stats);
+            if (characterItems.Tabard != null)
+                characterItems.Tabard.Stats = PerformItemBonusStatsMatch(dbBonusStats, characterItems.Tabard.Stats);
 
-            return extendedCharacterModel.Items;
+            return characterItems;
         }
 
         private Models.CharacterProfile.ItemsModels.Others.Stats[] PerformItemBonusStatsMatch(List<BonusStats> dbBonusStats,
