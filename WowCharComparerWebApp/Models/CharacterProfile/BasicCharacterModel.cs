@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using WowCharComparerWebApp.Enums.Character;
 
 namespace WowCharComparerWebApp.Models.CharacterProfile
 {
@@ -23,7 +24,7 @@ namespace WowCharComparerWebApp.Models.CharacterProfile
 
         public char CalcClass { get; set; }
 
-        public int Faction { get; set; }
+        public Faction Faction { get; set; }
 
         public int TotalHonorableKills { get; set; }
     }

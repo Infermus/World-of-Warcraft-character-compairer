@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using WowCharComparerWebApp.Models.CharacterProfile;
+using System.Linq;
 using WowCharComparerWebApp.Models.Mappers;
+using WowCharComparerWebApp.ViewModel.CharacterProfile;
 
 namespace WowCharComparerWebApp.Logic.HeartOfAzeroth
 {
     public class HeartOfAzerothComparer
     {
-        public static CharacterHeartOfAzerothCompareResult CompareHeartOfAzerothLevel(List<ExtendedCharacterModel> parsedResultList)
+        public CharacterHeartOfAzerothCompareResult CompareHeartOfAzerothLevel(List<ProcessedCharacterViewModel> parsedResultList)
         {
-            float hoALevelCountResult = Math.Abs(parsedResultList[0].Items.Neck.AzeriteItem.AzeriteLevel - parsedResultList[1].Items.Neck.AzeriteItem.AzeriteLevel);
+            var result = new CharacterHeartOfAzerothCompareResult();
 
-            return new CharacterHeartOfAzerothCompareResult()
+            if (parsedResultList.Any(x => x.Items.Neck != null) && parsedResultList.Any(x => x.Items.Neck.AzeriteItem != null))
             {
-                HeartOfAzerothLevelDifferance = hoALevelCountResult
-            };
+                result.HeartOfAzerothLevelDifferance = Math.Abs(parsedResultList[0].Items.Neck.AzeriteItem.AzeriteLevel - parsedResultList[1].Items.Neck.AzeriteItem.AzeriteLevel);
+            }
+
+            return result;
         }
     }
 }

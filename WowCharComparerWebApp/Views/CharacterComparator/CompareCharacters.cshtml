@@ -1,7 +1,42 @@
-﻿@model List<WowCharComparerWebApp.Models.ProcessedCharacterModel>;
+﻿@model WowCharComparerWebApp.ViewModel.CharacterProfile.CompareResultViewModel;
 
+@{
+    var firstCharacterViewModel = Model.ProcessedCharacterViewModel.FirstOrDefault();
+    var secondCharacterViewModel = Model.ProcessedCharacterViewModel.LastOrDefault();
 
-@foreach (var character in Model)
-{ 
-    <li>@character.RawCharacterData.Name</li>
+    var characterRenderUrl = "https://render-eu.worldofwarcraft.com/character/";
 }
+
+<link rel="stylesheet" href="~/css/character-comparator.css" />
+
+<div class="single-character-column">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@characterRenderUrl@firstCharacterViewModel.BasicCharacterData.Thumbnail" class="img-thumbnail">
+            <h3>@firstCharacterViewModel.BasicCharacterData.Name (@firstCharacterViewModel.BasicCharacterData.Level)</h3>
+            <h4>@firstCharacterViewModel.BasicCharacterData.Race, @firstCharacterViewModel.BasicCharacterData.Faction</h4>
+
+        </div>
+        <div class="col-md-6">
+            <img src="@characterRenderUrl@secondCharacterViewModel.BasicCharacterData.Thumbnail" class="img-thumbnail">
+            <h3>@secondCharacterViewModel.BasicCharacterData.Name (@secondCharacterViewModel.BasicCharacterData.Level)</h3>
+            <h4>@secondCharacterViewModel.BasicCharacterData.Race, @secondCharacterViewModel.BasicCharacterData.Faction</h4>
+
+        </div>
+    </div>
+</div>
+
+<h4 style="text-align:center">Basics</h4>
+<table class="table table-striped">
+    <tbody>
+        <tr>
+            <th scope="row">Achievement</th>
+            <td>@secondCharacterViewModel.BasicCharacterData.AchievementPoints</td>
+            <td>@Model.AchievementPointsCompareResult.AchievementPointsDifferance</td>
+        </tr>
+        <tr>
+            <th scope="row">Honorable Kills</th>
+            <td>@secondCharacterViewModel.BasicCharacterData.TotalHonorableKills</td>
+        </tr>
+    </tbody>
+</table>

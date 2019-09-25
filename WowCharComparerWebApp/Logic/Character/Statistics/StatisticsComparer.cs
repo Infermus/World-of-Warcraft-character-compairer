@@ -2,43 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using WowCharComparerWebApp.Enums.Character;
-using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Mappers;
+using WowCharComparerWebApp.ViewModel.CharacterProfile;
 
 namespace WowCharComparerWebApp.Logic.Character.Statistics
 {
     internal class StatisticsComparer
     {
-        public CharacterStatisticsCompareResult CompareCharacterStatistics(List<ExtendedCharacterModel> parsedResultList)
+        public CharacterStatisticsCompareResult CompareCharacterStatistics(List<ProcessedCharacterViewModel> parsedResultList)
         {
             List<KeyValuePair<CharacterMainStats, string>> finalResultList = new List<KeyValuePair<CharacterMainStats, string>>();
-            try
+
+            List<KeyValuePair<int, int>> primaryStatsList = new List<KeyValuePair<int, int>>
             {
-                List<KeyValuePair<int, int>> primaryStatsList = new List<KeyValuePair<int, int>>()
-                {
-                    new KeyValuePair<int, int>(parsedResultList[0].Stats.Str,parsedResultList[1].Stats.Str),
-                    new KeyValuePair<int, int>(parsedResultList[0].Stats.Int,parsedResultList[1].Stats.Int),
-                    new KeyValuePair<int, int>(parsedResultList[0].Stats.Agi,parsedResultList[1].Stats.Agi),
-                    new KeyValuePair<int, int>(parsedResultList[0].Stats.Sta,parsedResultList[1].Stats.Sta)
-                };
+                    new KeyValuePair<int, int>(parsedResultList[0].CharStats.Str,parsedResultList[1].CharStats.Str),
+                    new KeyValuePair<int, int>(parsedResultList[0].CharStats.Int,parsedResultList[1].CharStats.Int),
+                    new KeyValuePair<int, int>(parsedResultList[0].CharStats.Agi,parsedResultList[1].CharStats.Agi),
+                    new KeyValuePair<int, int>(parsedResultList[0].CharStats.Sta,parsedResultList[1].CharStats.Sta)
+            };
 
-                var countedPrimaryStatsPercent = ComparePrimaryCharacterStats(parsedResultList);
+            if (primaryStatsList.Any(x => x.Key == default(int) || x.Value == default(int)))
+                return new CharacterStatisticsCompareResult();
 
-                List<CharacterMainStats> countedPrimaryStatsPercentKeys = (from list in countedPrimaryStatsPercent
-                                                                           select list.Key).ToList();
+            var countedPrimaryStatsPercent = ComparePrimaryCharacterStats(parsedResultList);
 
-                for (int index = 0; index < countedPrimaryStatsPercent.Count; index++)
-                {
-                    string result = primaryStatsList[index].Key > primaryStatsList[index].Value ? MainStatsPercentFormater.AddPlusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString())
-                                                                                                : MainStatsPercentFormater.AddMinusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString());
+            List<CharacterMainStats> countedPrimaryStatsPercentKeys = (from list in countedPrimaryStatsPercent
+                                                                       select list.Key).ToList();
 
-                    finalResultList.Add(new KeyValuePair<CharacterMainStats, string>(countedPrimaryStatsPercentKeys[index], result));
-                }
-            }
-
-            catch (Exception ex)
+            for (int index = 0; index < countedPrimaryStatsPercent.Count; index++)
             {
-                Console.WriteLine(ex);
+                string result = primaryStatsList[index].Key > primaryStatsList[index].Value ? MainStatsPercentFormater.AddPlusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString())
+                                                                                            : MainStatsPercentFormater.AddMinusToPrimaryStatPercent(countedPrimaryStatsPercent[index].Value.ToString());
+
+                finalResultList.Add(new KeyValuePair<CharacterMainStats, string>(countedPrimaryStatsPercentKeys[index], result));
             }
 
             CharacterStatisticsCompareResult characterStatistics = new CharacterStatisticsCompareResult()
@@ -51,7 +47,7 @@ namespace WowCharComparerWebApp.Logic.Character.Statistics
             return characterStatistics;
         }
 
-        private static List<KeyValuePair<CharacterMainStats, decimal>> ComparePrimaryCharacterStats(List<ExtendedCharacterModel> parsedResultList)
+        private static List<KeyValuePair<CharacterMainStats, decimal>> ComparePrimaryCharacterStats(List<ProcessedCharacterViewModel> parsedResultList)
         {
             List<KeyValuePair<CharacterMainStats, decimal>> countedPrimaryStatsPercent = new List<KeyValuePair<CharacterMainStats, decimal>>();
 
@@ -62,17 +58,17 @@ namespace WowCharComparerWebApp.Logic.Character.Statistics
                     List<Tuple<CharacterMainStats, int, int>> minMaxPrimaryStatsTuple = new List<Tuple<CharacterMainStats, int, int>>
                     {
                         new Tuple<CharacterMainStats, int, int>(CharacterMainStats.Str,
-                                                    Math.Max(parsedResultList[0].Stats.Str, parsedResultList[1].Stats.Str),
-                                                    Math.Min(parsedResultList[0].Stats.Str, parsedResultList[1].Stats.Str)),
+                                                    Math.Max(parsedResultList[0].CharStats.Str, parsedResultList[1].CharStats.Str),
+                                                    Math.Min(parsedResultList[0].CharStats.Str, parsedResultList[1].CharStats.Str)),
                         new Tuple<CharacterMainStats, int, int>(CharacterMainStats.Int,
-                                                    Math.Max(parsedResultList[0].Stats.Int, parsedResultList[1].Stats.Int),
-                                                    Math.Min(parsedResultList[0].Stats.Int, parsedResultList[1].Stats.Int)),
+                                                    Math.Max(parsedResultList[0].CharStats.Int, parsedResultList[1].CharStats.Int),
+                                                    Math.Min(parsedResultList[0].CharStats.Int, parsedResultList[1].CharStats.Int)),
                         new Tuple<CharacterMainStats, int, int>(CharacterMainStats.Agi,
-                                                    Math.Max(parsedResultList[0].Stats.Agi, parsedResultList[1].Stats.Agi),
-                                                    Math.Min(parsedResultList[0].Stats.Agi, parsedResultList[1].Stats.Agi)),
+                                                    Math.Max(parsedResultList[0].CharStats.Agi, parsedResultList[1].CharStats.Agi),
+                                                    Math.Min(parsedResultList[0].CharStats.Agi, parsedResultList[1].CharStats.Agi)),
                         new Tuple<CharacterMainStats, int, int>(CharacterMainStats.Sta,
-                                                    Math.Max(parsedResultList[0].Stats.Sta, parsedResultList[1].Stats.Sta),
-                                                    Math.Min(parsedResultList[0].Stats.Sta, parsedResultList[1].Stats.Sta)),
+                                                    Math.Max(parsedResultList[0].CharStats.Sta, parsedResultList[1].CharStats.Sta),
+                                                    Math.Min(parsedResultList[0].CharStats.Sta, parsedResultList[1].CharStats.Sta)),
                     };
 
                     countedPrimaryStatsPercent = PrimaryStatsPercentCalculation(minMaxPrimaryStatsTuple);

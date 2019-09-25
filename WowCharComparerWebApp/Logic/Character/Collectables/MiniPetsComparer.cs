@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using WowCharComparerWebApp.Models;
-using WowCharComparerWebApp.Models.CharacterProfile;
+using System.Linq;
 using WowCharComparerWebApp.Models.Mappers;
+using WowCharComparerWebApp.ViewModel.CharacterProfile;
 
 namespace WowCharComparerWebApp.Logic.Character
 {
     public class MiniPetsComparer
     {
-        public static CharacterMiniPetsCompareResult CompareMiniPets(List<ExtendedCharacterModel> parsedResultList)
+        public CharacterMiniPetsCompareResult CompareMiniPets(List<ProcessedCharacterViewModel> parsedResultList)
         {
-            int numberOfCollected = Math.Abs(parsedResultList[0].Pets.NumberOfCollectedPets - parsedResultList[1].Pets.NumberOfCollectedPets);
+            var result = new CharacterMiniPetsCompareResult();
 
-            int numberOfNotCollected = Math.Abs(parsedResultList[0].Pets.NumberOfNotCollectedPets - parsedResultList[1].Pets.NumberOfNotCollectedPets);
-
-            return new CharacterMiniPetsCompareResult()
+            if (parsedResultList.Any(x => x.Pets != null))
             {
-                CollectedMiniPetsDifferance = numberOfCollected,
-                NotCollectedMiniPestDifferance = numberOfNotCollected
-            };
+                result.CollectedMiniPetsDifferance = Math.Abs(parsedResultList[0].Pets.NumberOfCollectedPets - parsedResultList[1].Pets.NumberOfCollectedPets);
+                result.NotCollectedMiniPestDifferance = Math.Abs(parsedResultList[0].Pets.NumberOfNotCollectedPets - parsedResultList[1].Pets.NumberOfNotCollectedPets);
+            }
+
+            return result;
         }
     }
 }

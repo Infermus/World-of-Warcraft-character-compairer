@@ -1,20 +1,23 @@
 ﻿using System.Collections.Generic;
-using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Mappers;
 using System;
+using WowCharComparerWebApp.ViewModel.CharacterProfile;
+using System.Linq;
 
 namespace WowCharComparerWebApp.Logic.Character.Pvp
 {
     public class HonorableKillsComparer
     {
-        public static CharacterHonorableKillsCompareResult CompareHonorableKills(List<ExtendedCharacterModel> parsedResultList)
+        public CharacterHonorableKillsCompareResult CompareHonorableKills(List<ProcessedCharacterViewModel> parsedResultList)
         {
-            int killsResult = Math.Abs(parsedResultList[0].TotalHonorableKills - parsedResultList[0].TotalHonorableKills);
+            var result = new CharacterHonorableKillsCompareResult();
 
-            return new CharacterHonorableKillsCompareResult()
+            if (parsedResultList.Any(x => x.BasicCharacterData != null))
             {
-                HonorableKillResult = killsResult
-            };
+                result.HonorableKillResult = Math.Abs(parsedResultList[0].BasicCharacterData.TotalHonorableKills - parsedResultList[1].BasicCharacterData.TotalHonorableKills);
+            }
+
+            return result;
         }
     }
 }
