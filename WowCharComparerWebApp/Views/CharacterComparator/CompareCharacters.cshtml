@@ -26,17 +26,71 @@
     </div>
 </div>
 
-<h4 style="text-align:center">Basics</h4>
-<table class="table table-striped">
-    <tbody>
-        <tr>
-            <th scope="row">Achievement</th>
-            <td>@secondCharacterViewModel.BasicCharacterData.AchievementPoints</td>
-            <td>@Model.AchievementPointsCompareResult.AchievementPointsDifferance</td>
-        </tr>
-        <tr>
-            <th scope="row">Honorable Kills</th>
-            <td>@secondCharacterViewModel.BasicCharacterData.TotalHonorableKills</td>
-        </tr>
-    </tbody>
-</table>
+<div class="card-header" style="text-align:center">
+    <div class="standard-toggle" data-toggle="collapse" data-target="#standard-collapse-frame" aria-expanded="true" aria-controls="standard-collapse-frame">
+        <h3>Standard</h3>
+    </div>
+</div>
+
+<div id="standard-collapse-frame" class="collapse-in" aria-expanded="true">
+    <table class="table table-striped" style="text-align:center;">
+        <tbody>
+            <tr>
+                <td width="33%"></td>
+                <td width="33%" style="font-weight:700">Level</td>
+                <td width="33%"></td>
+            </tr>
+            <tr>
+                <td width="33%">@firstCharacterViewModel.BasicCharacterData.Name</td>
+                <td width="33%">Difference</td>
+                <td width="33%">@secondCharacterViewModel.BasicCharacterData.Name</td>
+            </tr>
+            <tr>
+                <td>@firstCharacterViewModel.BasicCharacterData.Level</td>
+                <td><b>@Math.Abs(firstCharacterViewModel.BasicCharacterData.Level - @secondCharacterViewModel.BasicCharacterData.Level)</b></td>
+                <td>@secondCharacterViewModel.BasicCharacterData.Level</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="standard-collapse-frame" class="collapse-in" aria-expanded="true">
+        <table class="table table-striped" style="text-align:center;">
+            <tbody>
+                <tr>
+                    <td width="33%"></td>
+                    <td width="33%" style="font-weight:700">Achievements points earned</td>
+                    <td width="33%"></td>
+                </tr>
+                <tr>
+                    <td width="33%">@firstCharacterViewModel.BasicCharacterData.Name</td>
+                    <td width="33%">Difference</td>
+                    <td width="33%">@secondCharacterViewModel.BasicCharacterData.Name</td>
+                </tr>
+                <tr>
+                    <td>@firstCharacterViewModel.BasicCharacterData.AchievementPoints</td>
+                    <td><b>@Model.AchievementPointsCompareResult.AchievementPointsDifferance</b></td>
+                    <td>@secondCharacterViewModel.BasicCharacterData.AchievementPoints</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-striped" style="text-align:center;">
+            <tbody style="max-width:20px">
+                <tr>
+                    <td width="33%"></td>
+                    <td width="33%" style="font-weight:700">Honorable kills</td>
+                    <td width="33%"></td>
+                </tr>
+                <tr>
+                    <td width="33%">@firstCharacterViewModel.BasicCharacterData.Name</td>
+                    <td width="33%">Difference</td>
+                    <td width="33%">@secondCharacterViewModel.BasicCharacterData.Name</td>
+                </tr>
+                <tr>
+                    <td>@firstCharacterViewModel.BasicCharacterData.TotalHonorableKills</td>
+                    <td><b>@Model.HonorableKillsCompareResult.HonorableKillResult</b></td>
+                    <td>@secondCharacterViewModel.BasicCharacterData.TotalHonorableKills</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
