@@ -1,7 +1,96 @@
-﻿@model List<WowCharComparerWebApp.Models.ProcessedCharacterModel>;
+﻿@model WowCharComparerWebApp.ViewModel.CharacterProfile.CompareResultViewModel;
 
+@{
+    var firstCharacterViewModel = Model.ProcessedCharacterViewModel.FirstOrDefault();
+    var secondCharacterViewModel = Model.ProcessedCharacterViewModel.LastOrDefault();
 
-@foreach (var character in Model)
-{ 
-    <li>@character.RawCharacterData.Name</li>
+    var characterRenderUrl = "https://render-eu.worldofwarcraft.com/character/";
 }
+
+<link rel="stylesheet" href="~/css/character-comparator.css" />
+
+<div class="single-character-column">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@characterRenderUrl@firstCharacterViewModel.BasicCharacterData.Thumbnail" class="img-thumbnail">
+            <h3>@firstCharacterViewModel.BasicCharacterData.Name (@firstCharacterViewModel.BasicCharacterData.Level)</h3>
+            <h4>@firstCharacterViewModel.BasicCharacterData.Race, @firstCharacterViewModel.BasicCharacterData.Faction</h4>
+
+        </div>
+        <div class="col-md-6">
+            <img src="@characterRenderUrl@secondCharacterViewModel.BasicCharacterData.Thumbnail" class="img-thumbnail">
+            <h3>@secondCharacterViewModel.BasicCharacterData.Name (@secondCharacterViewModel.BasicCharacterData.Level)</h3>
+            <h4>@secondCharacterViewModel.BasicCharacterData.Race, @secondCharacterViewModel.BasicCharacterData.Faction</h4>
+
+        </div>
+    </div>
+</div>
+
+<div class="card-header" style="text-align:center">
+    <div class="standard-toggle" data-toggle="collapse" data-target="#standard-collapse-frame" aria-expanded="true" aria-controls="standard-collapse-frame">
+        <h3>Standard</h3>
+    </div>
+</div>
+
+<div id="standard-collapse-frame" class="collapse-in" aria-expanded="true">
+    <table class="table table-striped" style="text-align:center;">
+        <tbody>
+            <tr>
+                <td width="33%"></td>
+                <td width="33%" style="font-weight:700">Level</td>
+                <td width="33%"></td>
+            </tr>
+            <tr>
+                <td width="33%">@firstCharacterViewModel.BasicCharacterData.Name</td>
+                <td width="33%">Difference</td>
+                <td width="33%">@secondCharacterViewModel.BasicCharacterData.Name</td>
+            </tr>
+            <tr>
+                <td>@firstCharacterViewModel.BasicCharacterData.Level</td>
+                <td><b>@Math.Abs(firstCharacterViewModel.BasicCharacterData.Level - @secondCharacterViewModel.BasicCharacterData.Level)</b></td>
+                <td>@secondCharacterViewModel.BasicCharacterData.Level</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="standard-collapse-frame" class="collapse-in" aria-expanded="true">
+        <table class="table table-striped" style="text-align:center;">
+            <tbody>
+                <tr>
+                    <td width="33%"></td>
+                    <td width="33%" style="font-weight:700">Achievements points earned</td>
+                    <td width="33%"></td>
+                </tr>
+                <tr>
+                    <td width="33%">@firstCharacterViewModel.BasicCharacterData.Name</td>
+                    <td width="33%">Difference</td>
+                    <td width="33%">@secondCharacterViewModel.BasicCharacterData.Name</td>
+                </tr>
+                <tr>
+                    <td>@firstCharacterViewModel.BasicCharacterData.AchievementPoints</td>
+                    <td><b>@Model.AchievementPointsCompareResult.AchievementPointsDifferance</b></td>
+                    <td>@secondCharacterViewModel.BasicCharacterData.AchievementPoints</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-striped" style="text-align:center;">
+            <tbody style="max-width:20px">
+                <tr>
+                    <td width="33%"></td>
+                    <td width="33%" style="font-weight:700">Honorable kills</td>
+                    <td width="33%"></td>
+                </tr>
+                <tr>
+                    <td width="33%">@firstCharacterViewModel.BasicCharacterData.Name</td>
+                    <td width="33%">Difference</td>
+                    <td width="33%">@secondCharacterViewModel.BasicCharacterData.Name</td>
+                </tr>
+                <tr>
+                    <td>@firstCharacterViewModel.BasicCharacterData.TotalHonorableKills</td>
+                    <td><b>@Model.HonorableKillsCompareResult.HonorableKillResult</b></td>
+                    <td>@secondCharacterViewModel.BasicCharacterData.TotalHonorableKills</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using WowCharComparerWebApp.Models.CharacterProfile;
+using System.Linq;
 using WowCharComparerWebApp.Models.Mappers;
+using WowCharComparerWebApp.ViewModel.CharacterProfile;
 
 namespace WowCharComparerWebApp.Logic.ItemLevel
 {
     public class ItemLevelComparer
     {
-        public static CharacterItemLevelCompareResult CompareCharactersItemLevel(List<ExtendedCharacterModel> parsedResultList)
+        public CharacterItemLevelCompareResult CompareCharactersItemLevel(List<ProcessedCharacterViewModel> parsedResultList)
         {
-            float equippedResult = Math.Abs(parsedResultList[0].Items.AverageItemLevelEquipped - parsedResultList[1].Items.AverageItemLevelEquipped);
+            var result = new CharacterItemLevelCompareResult();
 
-            float notEquippedResult = Math.Abs(parsedResultList[0].Items.AverageItemLevel - parsedResultList[1].Items.AverageItemLevelEquipped);
-
-            return new CharacterItemLevelCompareResult()
+            if (parsedResultList.Any(x => x.Items != null))
             {
-                AverageItemLevelEquippedDifferance = equippedResult,
-                AverageItemLevelNotEquippedDifferance = notEquippedResult
-            };
+                result.AverageItemLevelEquippedDifferance = Math.Abs(parsedResultList[0].Items.AverageItemLevelEquipped - parsedResultList[1].Items.AverageItemLevelEquipped);
+                result.AverageItemLevelNotEquippedDifferance = Math.Abs(parsedResultList[0].Items.AverageItemLevel - parsedResultList[1].Items.AverageItemLevel);
+            }
+
+            return result;
         }
     }
 }

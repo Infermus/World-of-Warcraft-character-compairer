@@ -8,6 +8,7 @@ using WowCharComparerWebApp.Models.Servers;
 using WowCharComparerWebApp.Data.Helpers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Data.Connection;
+using WowCharComparerWebApp.Data.Wrappers;
 
 namespace WowCharComparerWebApp.Data.ApiRequests
 {
@@ -31,7 +32,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
 
                 foreach (CharacterFields field in characterFields)
                 {
-                    string wrappedField = EnumDictonaryWrapper.characterFieldsWrapper[field];
+                    string wrappedField = EnumDictionaryWrapper.characterFieldsWrapper[field];
                     localFields = localFields.AddFieldToUrl(wrappedField);
                 }
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Helpers;
+using WowCharComparerWebApp.Data.Wrappers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Models.APIResponse;
@@ -25,7 +26,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
             Uri generatedLink = RequestLinkFormater.GenerateAPIRequestLink(BlizzardAPIProfiles.Data, requestLocalization, 
                                                                                                      new List<KeyValuePair<string, string>>(), 
                                                                                                      BlizzardAPIProfiles.Character.ToString(), 
-                                                                                                     EnumDictonaryWrapper.dataResourcesFieldsWrapper[DataResourcesFields.CharacterAchievements]);
+                                                                                                     EnumDictionaryWrapper.dataResourcesFieldsWrapper[DataResourcesFields.CharacterAchievements]);
 
             return await new APIDataRequestManager(_comparerDatabaseContext).GetDataByHttpRequest<BlizzardAPIResponse>(generatedLink);
         }

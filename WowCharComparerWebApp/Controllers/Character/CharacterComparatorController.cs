@@ -7,12 +7,20 @@ using WowCharComparerWebApp.Data.ApiRequests;
 using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Helpers;
+using WowCharComparerWebApp.Data.Wrappers;
 using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
+using WowCharComparerWebApp.Logic.Character;
+using WowCharComparerWebApp.Logic.Character.AchievementPoints;
+using WowCharComparerWebApp.Logic.Character.Collectables;
+using WowCharComparerWebApp.Logic.Character.Pvp;
+using WowCharComparerWebApp.Logic.Character.Statistics;
 using WowCharComparerWebApp.Logic.DataResources;
-using WowCharComparerWebApp.Models;
+using WowCharComparerWebApp.Logic.HeartOfAzeroth;
+using WowCharComparerWebApp.Logic.ItemLevel;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Servers;
+using WowCharComparerWebApp.ViewModel.CharacterProfile;
 
 namespace WowCharComparerWebApp.Controllers.CharacterControllers
 {
@@ -24,7 +32,9 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
         private static List<string> currentRealmListPlayerLeft;
         private static List<string> currentRealmListPlayerRight;
 
-        private static List<ProcessedCharacterModel> processedCharacterData;
+        private static CompareResultViewModel compareResultViewModel;
+
+        //private static List<ProcessedCharacterViewModel> processedCharacterData; // TODO: found better way pass data from ajax request to compare result view
 
         public CharacterComparatorController(ComparerDatabaseContext comparerDatabaseContext, IAPIDataRequestManager iAPIDataRequestManager)
         {
@@ -60,23 +70,23 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
         public async Task<IActionResult> CompareCharacters(ExtendedCharacterModel firstCharacter, ExtendedCharacterModel secondCharacter)
         {
             var charactersToCompare = new List<ExtendedCharacterModel>() { firstCharacter, secondCharacter };
-            processedCharacterData = new List<ProcessedCharacterModel>();
+            var processedCharacterData = new List<ProcessedCharacterViewModel>();
 
             foreach (ExtendedCharacterModel character in charactersToCompare)
             {
                 RequestLocalization requestLocalization = new RequestLocalization()
                 {
-                    CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper.ContainsKey(EnumDictonaryWrapper.viewRegionsWrapper.ContainsKey(character.Region) ?
-                                            EnumDictonaryWrapper.viewRegionsWrapper[character.Region] 
+                    CoreRegionUrlAddress = APIConf.BlizzadAPIAddressWrapper.ContainsKey(EnumDictionaryWrapper.viewRegionsWrapper.ContainsKey(character.Region) ?
+                                            EnumDictionaryWrapper.viewRegionsWrapper[character.Region]
                                             : throw new NotSupportedException("Region not supported")) ?
-                                                APIConf.BlizzadAPIAddressWrapper[EnumDictonaryWrapper.viewRegionsWrapper[character.Region]] 
+                                                APIConf.BlizzadAPIAddressWrapper[EnumDictionaryWrapper.viewRegionsWrapper[character.Region]]
                                                 : throw new NotSupportedException("Core region url not supported"),
 
                     Realm = new Realm()
                     {
                         Slug = character.ServerName.ToLower().Replace(" ", "-"),
-                        Locale = EnumDictonaryWrapper.viewLocaleWrapper.ContainsKey(character.Region) ?
-                                    EnumDictonaryWrapper.viewLocaleWrapper[character.Region]
+                        Locale = StringDictionaryWrapper.viewLocaleWrapper.ContainsKey(character.Region) ?
+                                    StringDictionaryWrapper.viewLocaleWrapper[character.Region]
                                     : throw new NotSupportedException("Locale not supported"),
                     }
                 };
@@ -86,7 +96,7 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                 //TODO find better way to process it
                 if (character.ItemsField)
                     selectedCharacterFields.Add(CharacterFields.Items);
-                if(character.AchievementsField)
+                if (character.AchievementsField)
                     selectedCharacterFields.Add(CharacterFields.Achievements);
                 if (character.ProgressionField)
                     selectedCharacterFields.Add(CharacterFields.Progression);
@@ -107,21 +117,19 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                 ExtendedCharacterModel currentCharacter = JsonProcessing.DeserializeJsonData<ExtendedCharacterModel>(result.Data);
                 CharacterExtendedDataManager characterDataManager = new CharacterExtendedDataManager(_comparerDatabaseContext);
 
-                processedCharacterData.Add(new ProcessedCharacterModel()
+                processedCharacterData.Add(new ProcessedCharacterViewModel()
                 {
-                    RawCharacterData = new BasicCharacterModel
+                    BasicCharacterData = new BasicCharacterViewModel
                     {
-                        LastModified = currentCharacter.LastModified,
                         Name = currentCharacter.Name,
-                        ServerName = currentCharacter.ServerName,
-                        BattleGroup = currentCharacter.BattleGroup,
-                        CharacterClass = currentCharacter.CharacterClass,
-                        Race = currentCharacter.Race,
+                        Class = IntDictionaryWrapper.characterClassWrapper.ContainsKey(currentCharacter.CharacterClass) ?
+                        IntDictionaryWrapper.characterClassWrapper[currentCharacter.CharacterClass] : string.Empty,
+                        Race = IntDictionaryWrapper.characterRaceWrapper.ContainsKey(currentCharacter.Race) ?
+                                IntDictionaryWrapper.characterRaceWrapper[currentCharacter.Race] : string.Empty,
                         Level = currentCharacter.Level,
                         AchievementPoints = currentCharacter.AchievementPoints,
                         Thumbnail = currentCharacter.Thumbnail,
-                        CalcClass = currentCharacter.CalcClass,
-                        Faction = currentCharacter.Faction,
+                        Faction = currentCharacter.Faction.ToString(),
                         TotalHonorableKills = currentCharacter.TotalHonorableKills
                     },
 
@@ -131,9 +139,26 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
                     Pvp = currentCharacter.Pvp ?? new Models.CharacterProfile.PvpModels.Pvp(),
                     Reputation = currentCharacter.Reputation ?? new List<Reputation>().ToArray(),
                     Statistics = currentCharacter.Statistics ?? new Models.CharacterProfile.StatisticsModels.Statistics(),
-                    Talents = currentCharacter.Talents ?? new List<Models.CharacterProfile.TalentsModels.Talents>().ToArray()
+                    Talents = currentCharacter.Talents ?? new List<Models.CharacterProfile.TalentsModels.Talents>().ToArray(),
+                    CharStats = currentCharacter.Stats ?? new Stats(),
+                    Mounts = currentCharacter.Mounts ?? new Models.CharacterProfile.MountsModels.Mounts(),
+                    Pets = currentCharacter.Pets ?? new Models.CharacterProfile.PetsModels.Pets()
                 });
             }
+
+            //TODO: Maybe those whole compilers object should be moved to 1 class ?
+            compareResultViewModel = new CompareResultViewModel()
+            {
+                ProcessedCharacterViewModel = processedCharacterData,
+                AchievementPointsCompareResult = new AchievementPointsComparer().CompareAchievementPoints(processedCharacterData),
+                ArenaRatingsCompareResult = new RatingComparer().CompareRating(processedCharacterData),
+                HeartOfAzerothCompareResult = new HeartOfAzerothComparer().CompareHeartOfAzerothLevel(processedCharacterData),
+                HonorableKillsCompareResult = new HonorableKillsComparer().CompareHonorableKills(processedCharacterData),
+                ItemLevelCompareResult = new ItemLevelComparer().CompareCharactersItemLevel(processedCharacterData),
+                MiniPetsCompareResult = new MiniPetsComparer().CompareMiniPets(processedCharacterData),
+                MountsCompareResult = new MountsComparer().CompareMounts(processedCharacterData),
+                StatisticsCompareResult = new StatisticsComparer().CompareCharacterStatistics(processedCharacterData)
+            };
 
             return Json(new
             {
@@ -142,9 +167,10 @@ namespace WowCharComparerWebApp.Controllers.CharacterControllers
             });
         }
 
+        [Route("compare_result")]
         public IActionResult RedirectToComparatorResult()
         {
-            return View("CompareCharacters", processedCharacterData);
+            return View("CompareCharacters", compareResultViewModel);
         }
     }
 }

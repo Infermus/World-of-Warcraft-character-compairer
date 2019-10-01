@@ -2,6 +2,7 @@
 using WowCharComparerWebApp.Logic.Character.Statistics;
 using WowCharComparerWebApp.Models.CharacterProfile;
 using WowCharComparerWebApp.Models.Mappers;
+using WowCharComparerWebApp.ViewModel.CharacterProfile;
 using Xunit;
 
 namespace WowCharComparerWebApp.Tests.Logic.Character.Statistics
@@ -26,14 +27,14 @@ namespace WowCharComparerWebApp.Tests.Logic.Character.Statistics
                 CharacterCompareStaDifference = "0%"
             };
 
-            List<ExtendedCharacterModel> extendedCharacterModels = new List<ExtendedCharacterModel>();
+            List<ProcessedCharacterViewModel> processedCharacterViewModel = new List<ProcessedCharacterViewModel>();
             //Act
             {
                 for (int i = 0; i <= 1; i++)
                 {
-                    extendedCharacterModels.Add(new ExtendedCharacterModel()
+                    processedCharacterViewModel.Add(new ProcessedCharacterViewModel()
                     {
-                        Stats = new Stats()
+                        CharStats = new Stats()
                         {
                             Agi = 50,
                             Int = 50,
@@ -41,9 +42,9 @@ namespace WowCharComparerWebApp.Tests.Logic.Character.Statistics
                             Str = 50,
                         }
                     });
-                }              
+                }
             }
-            CharacterStatisticsCompareResult result = new StatisticsComparer().CompareCharacterStatistics(extendedCharacterModels);
+            CharacterStatisticsCompareResult result = new StatisticsComparer().CompareCharacterStatistics(processedCharacterViewModel);
 
             //Assert
             Assert.Equal(result.CharacterCompareAgiDifference, expected.CharacterCompareAgiDifference);

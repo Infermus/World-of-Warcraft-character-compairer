@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using WowCharComparerWebApp.Enums;
 using WowCharComparerWebApp.Enums.BlizzardAPIFields;
 using WowCharComparerWebApp.Enums.RaiderIO;
 
-namespace WowCharComparerWebApp.Enums
+namespace WowCharComparerWebApp.Data.Wrappers
 {
-    public static class EnumDictonaryWrapper
+    public static class EnumDictionaryWrapper
     {
         public static Dictionary<CharacterFields, string> characterFieldsWrapper = new Dictionary<CharacterFields, string>()
         {
@@ -75,14 +76,6 @@ namespace WowCharComparerWebApp.Enums
             { "America", Region.America },
             { "Korea", Region.Korea },
             { "Taiwan", Region.Taiwan }
-        };
-
-        public static Dictionary<string, string> viewLocaleWrapper = new Dictionary<string, string>
-        {
-            { "Europe", "en_GB" },
-            { "America", "en_US" },
-            { "Korea", "ko_KR" },
-            { "Taiwan", "zh_TW" }
         };
 
         #endregion

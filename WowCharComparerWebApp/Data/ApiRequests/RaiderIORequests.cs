@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using WowCharComparerWebApp.Data.Connection;
 using WowCharComparerWebApp.Data.Database;
 using WowCharComparerWebApp.Data.Helpers;
-using WowCharComparerWebApp.Enums;
+using WowCharComparerWebApp.Data.Wrappers;
 using WowCharComparerWebApp.Enums.RaiderIO;
 using WowCharComparerWebApp.Models.APIResponse;
 using WowCharComparerWebApp.Models.Servers;
@@ -41,7 +41,7 @@ namespace WowCharComparerWebApp.Data.ApiRequests
 
                 foreach (RaiderIOCharacterFields field in characterFields)
                 {
-                    string wrappedField = EnumDictonaryWrapper.rioCharacterFieldWrapper[field];
+                    string wrappedField = EnumDictionaryWrapper.rioCharacterFieldWrapper[field];
                     localFields = localFields.AddFieldToUrl(wrappedField);
 
                     localFields = localFields.EndsWith("+") ? localFields.Remove(localFields.Length - 1, 1)

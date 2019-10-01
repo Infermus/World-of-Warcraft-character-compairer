@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using WowCharComparerWebApp.Models.CharacterProfile;
+using System.Linq;
 using WowCharComparerWebApp.Models.Mappers;
+using WowCharComparerWebApp.ViewModel.CharacterProfile;
 
 namespace WowCharComparerWebApp.Logic.Character.Collectables
 {
     public class MountsComparer
     {
-        public static CharacterMountsCompareResult CompareMounts(List<ExtendedCharacterModel> parsedResultList)
+        public CharacterMountsCompareResult CompareMounts(List<ProcessedCharacterViewModel> parsedResultList)
         {
-            int mountCollectedResult = Math.Abs(parsedResultList[0].Mounts.NumberOfCollectedMounts - parsedResultList[1].Mounts.NumberOfCollectedMounts);
-            int mountNotCollectedResult = Math.Abs(parsedResultList[0].Mounts.NumberOfNotCollectedMounts - parsedResultList[1].Mounts.NumberOfNotCollectedMounts);
+            var result = new CharacterMountsCompareResult();
 
-            return new CharacterMountsCompareResult()
+            if (parsedResultList.Any(x => x.Mounts != null))
             {
-                CollectedMountifferance = mountCollectedResult,
-                NotCollectedMountDifferance = mountNotCollectedResult
-            };
+                result.CollectedMountifferance = Math.Abs(parsedResultList[0].Mounts.NumberOfCollectedMounts - parsedResultList[1].Mounts.NumberOfCollectedMounts);
+                result.NotCollectedMountDifferance = Math.Abs(parsedResultList[0].Mounts.NumberOfNotCollectedMounts - parsedResultList[1].Mounts.NumberOfNotCollectedMounts);
+            }
+
+            return result;
         }
     }
 }
